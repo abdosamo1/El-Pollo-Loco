@@ -1,0 +1,25 @@
+*{
+    font-size: larger;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+html, body{
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(252, 168, 168, 0.263);
+}
+
+h1{
+    font-size: 61px;
+    font-weight: 900;
+}
+
+canvas{
+    background-color: black;
+    border-radius: 32px;
+}

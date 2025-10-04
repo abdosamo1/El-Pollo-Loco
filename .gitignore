@@ -1,0 +1,10 @@
+# Visual Studio / Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+# Project
+node_modules/
+dist/
