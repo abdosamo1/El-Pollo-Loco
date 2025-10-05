@@ -2,6 +2,7 @@ class Level {
     enemies;
     clouds;
     backgroundObjects = [];
+    level_end_x = 500 * 10; // end of level in x direction
 
     constructor(enemies, clouds, backgroundPaths) {
         this.enemies = enemies;
