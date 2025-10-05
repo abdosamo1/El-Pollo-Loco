@@ -4,17 +4,31 @@ class MovableObject {
     img;
     width;
     height;
+    speed = 0.15;
+    otherDirection = false;
+    imageCache = {};
 
-    loadImages(path) {
-        this.img= new Image();
+    loadImage(path) {
+        this.img = new Image();
         this.img.src = path;
     }
 
-    moveRight() {
-        this.x += 5;
+    loadImages(arrPaths) {
+        arrPaths.forEach((path) => {
+            let img = new Image();
+            img.src = path;
+            this.imageCache[path] = img;
+        });
     }
-
+    
+    moveRight() {
+        setInterval(() => {
+            this.x += this.speed;
+        }, 100 / 12);
+    }
     moveLeft() {
-        this.x -= 5;
+        setInterval(() => {
+            this.x -= this.speed;
+        }, 100 / 12);
     }
 }   
