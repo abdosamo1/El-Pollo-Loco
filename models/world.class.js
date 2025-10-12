@@ -11,11 +11,22 @@ class World {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
         this.keyboard = keyboard;
-        
+
         this.draw();
         this.setWorld();
+        this.checkCollisions();
     }
 
+    checkCollisions() {
+        setInterval(() => {
+            this.level.enemies.forEach((enemy) => {
+                if (this.character.isColliding(enemy)) {
+                    this.character.hit();
+                    console.log('Character energy: ' + (this.character.energy / 10));
+                }
+            }); 
+        }, 100 / 12);
+    }
 
     setWorld() {
         this.character.world = this;
@@ -44,16 +55,23 @@ class World {
 
     addToMap(object) {
         if (object.otherDirection) {
-            this.ctx.save();
-            this.ctx.translate(object.width, 0);
-            this.ctx.scale(-1, 1);
-            object.x = object.x * -1;
-
+            this.flipImage(object);
         }
-        this.ctx.drawImage(object.img, object.x, object.y, object.width, object.height);
+        object.drawImage(this.ctx);
         if (object.otherDirection) {
-            object.x = object.x * -1;
-            this.ctx.restore();
+            this.flipImageBack(object);
         }
+    }
+
+    flipImage(object) {
+        this.ctx.save();
+        this.ctx.translate(object.width, 0);
+        this.ctx.scale(-1, 1);
+        object.x = object.x * -1;
+    }
+
+    flipImageBack(object) {
+        object.x = object.x * -1;
+        this.ctx.restore();
     }
 }
