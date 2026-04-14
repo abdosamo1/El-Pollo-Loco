@@ -1,34 +1,11 @@
-class MovableObject {
-    x;
-    y;
-    img;
-    width;
-    height;
+class MovableObject extends DrawableObject {
+    
     speed = 0.15;
     otherDirection = false;
-    imageCache = {};
-    currentImage = 0;
     speedY = 0;
     acceleration = 1;
     lastHit = 0;
     energy = 1000;
-
-    loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-    }
-
-    loadImages(arrPaths) {
-        arrPaths.forEach((path) => {
-            let img = new Image();
-            img.src = path;
-            this.imageCache[path] = img;
-        });
-    }
-
-    drawImage(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-    }
 
     isColliding(object) {
         return this.x + this.width > object.x &&
@@ -62,11 +39,15 @@ class MovableObject {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             }
-        }, 100 / 12);
+        }, 1000 / 25);
     }
 
     aboveGround() {
-        return this.y < 125;
+        if (this instanceof ThrowableObject) {
+            return true;
+        } else {
+            return this.y < 125;
+        }
     }
 
     playAnimation(arr) {

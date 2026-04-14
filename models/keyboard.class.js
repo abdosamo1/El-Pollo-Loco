@@ -4,6 +4,7 @@ class Keyboard {
     UP = false;
     DOWN = false;
     SPACE = false;
+    D = false;
 
 
     constructor() {
@@ -28,6 +29,9 @@ class Keyboard {
                 case ' ':
                     this.SPACE = true;
                     break;
+                case 'd':
+                    this.D = true;
+                    break;
             }
         });
         window.addEventListener('keyup', (e) => {
@@ -46,6 +50,10 @@ class Keyboard {
                     break;
                 case ' ':
                     this.SPACE = false;
+                    break;
+                case 'd':
+                    this.D = false;
+                    break;
             }
         });
     }
