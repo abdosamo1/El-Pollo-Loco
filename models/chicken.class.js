@@ -24,10 +24,12 @@ class Chicken extends MovableObject {
     animate() {
         
         setInterval(() => {
+            if (!this.world?.gameStarted) return;
             this.moveLeft();
         }, 100 / 12);
 
         setInterval(() => {
+            if (!this.world?.gameStarted) return;
             this.playAnimation(this.Chicken_Walk);
         }, 100);
     }

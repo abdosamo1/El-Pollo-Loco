@@ -8,29 +8,56 @@ class StatusBar extends DrawableObject {
         './img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png'
     ];
 
-    percentage = 100;
+    COINBAR_IMAGES = [
+        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png',
+        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png',
+        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/40.png',
+        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/60.png',
+        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png',
+        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png'
+    ];
 
-    constructor() {
+    BOTTLEBAR_IMAGES = [
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/60.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/80.png',
+        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png'
+    ];
+
+
+    percentage = 0;
+
+    constructor(type) {
         super();
-        this.loadImages(this.HELTHBAR_IMAGES);
-        this.setPercentage(100);
+        this.type = type;
+        this.loadImages(type == 'health' ? this.HELTHBAR_IMAGES : type == 'coin' ? this.COINBAR_IMAGES : this.BOTTLEBAR_IMAGES);
+        this.setPercentage(type == 'health' ? 100 : 0);
         this.x = 20;
-        this.y = 10;    
+        switch (type) {
+            case 'health': this.y = 20; break;
+            case 'coin': this.y = 70; break;
+            case 'bottle': this.y = 120; break;    
+        }
         this.width = 200;
         this.height = 60;
     }
 
     setPercentage(percentage) {
         this.percentage = percentage; 
-        let path = this.HELTHBAR_IMAGES[this.resolveImageIndex()];
+        let path = 
+            this.type == 'health' ? this.HELTHBAR_IMAGES[this.resolveImageIndex()]
+            : this.type == 'coin' ? this.COINBAR_IMAGES[this.resolveImageIndex()]
+            : this.BOTTLEBAR_IMAGES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
     resolveImageIndex() {
-        if (this.percentage == 100) {return 5;}
-        else if (this.percentage > 80) {return 4;}
-        else if (this.percentage > 60) {return 3;}
-        else if (this.percentage > 40) {return 2;}
-        else if (this.percentage > 20) {return 1;}
-        else {return 0;}
+        const percentage = Math.max(0, Math.min(100, this.percentage));
+        return percentage == 100 ? 5 :
+        percentage > 80 ? 4 :
+        percentage > 60 ? 3 :
+        percentage > 40 ? 2 :
+        percentage > 20 ? 1 : 0;
     }
 }

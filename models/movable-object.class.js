@@ -16,7 +16,7 @@ class MovableObject extends DrawableObject {
 
     hit(){
         this.energy -= 5;
-        if(this.energy < 0){
+        if(this.energy < 6){
             this.energy = 0;
         } else {
             this.lastHit = new Date().getTime();
@@ -35,6 +35,7 @@ class MovableObject extends DrawableObject {
 
     applyGravity() {
         setInterval(() => {
+            if (!this.isGameStarted()) return;
             if (this.aboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
@@ -48,6 +49,10 @@ class MovableObject extends DrawableObject {
         } else {
             return this.y < 125;
         }
+    }
+
+    isGameStarted() {
+        return this.world?.gameStarted ?? false;
     }
 
     playAnimation(arr) {

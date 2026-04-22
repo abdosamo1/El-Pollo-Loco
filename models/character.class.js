@@ -55,6 +55,7 @@ class Character extends MovableObject {
     animate() {
 
         setInterval(() => {
+            if (!this.isGameStarted()) return;
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
@@ -67,9 +68,10 @@ class Character extends MovableObject {
                 this.jump();
             }
             this.world.camera_x = -this.x + 100;
-        }, 1000 / 120);
+        }, 100 / 12);
 
         setInterval(() => {
+            if (!this.isGameStarted()) return;
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
             } else if (this.isHurt()) {
