@@ -16,6 +16,10 @@
         <button id="start-button">Start Game</button>
         <button id="tutorial-button" onclick="showTutorial()">Tutorial</button>
     </div>
+    <div id="gameover-screen-buttons" >
+        <button id="restart-button">Restart Game</button>
+        <button id="main-screen-button">Back to Main Screen</button>
+    </div>
 
     <div id="tutorial-screen">
         <h2>Tutorial</h2>
@@ -34,14 +38,16 @@
 
 
     <!-- JavaScript -->
+    <script src="./models/keyboard.class.js"></script>
     <script src="./models/drawable-object.class.js"></script>
-    <script src="./models/start.class.js"></script> 
     <script src="./models/movable-object.class.js"></script>
+    <script src="./js/game.js"></script>
+    <script src="./models/cloud.class.js"></script>
+    <script src="./models/start.class.js"></script> 
     <script src="./models/status-bar.class.js"></script>
     <script src="./models/character.class.js"></script>
     <script src="./models/chicken.class.js"></script>
     <script src="./models/small-chicken.class.js"></script>
-    <script src="./models/cloud.class.js"></script>
     <script src="./models/endboss.class.js"></script>
     <script src="./models/background-object.class.js"></script>
     <script src="./models/throwable-object.class.js"></script>
@@ -49,7 +55,5 @@
     <script src="./models/level.class.js"></script>
     <script src="./levels/level1.js"></script>
     <script src="./models/world.class.js"></script>
-    <script src="./models/keyboard.class.js"></script>
-    <script src="./js/game.js"></script>
 </body>
 </html>

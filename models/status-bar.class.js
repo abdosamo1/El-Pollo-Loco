@@ -58,6 +58,7 @@ class StatusBar extends DrawableObject {
         percentage > 80 ? 4 :
         percentage > 60 ? 3 :
         percentage > 40 ? 2 :
-        percentage > 20 ? 1 : 0;
+        percentage > 20 ? 1 :
+        percentage > 0 ? 1 : 0;
     }
 }

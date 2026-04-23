@@ -1,5 +1,5 @@
 class SmallChicken extends MovableObject {
-;
+    groundY = 375;
     y = 375;
     width = 50;
     height = 50;
@@ -18,24 +18,31 @@ class SmallChicken extends MovableObject {
         this.speed = 0.15 + Math.random() * 0.25;
 
         this.animate();
+        this.applyGravity();
     }
 
     animate() {
         
-        setInterval(() => {
+        setStopableInterval(() => {
             if (!this.world?.gameStarted) return;
             this.moveLeft();
         }, 100 / 12);
 
-        setInterval(() => {
+        setStopableInterval(() => {
             if (!this.world?.gameStarted) return;
-            this.jump();
+            if (!this.aboveGround()) {
+                this.jump(5);
+            }
         }, 100 / 12);
 
-        setInterval(() => {
+        setStopableInterval(() => {
             if (!this.world?.gameStarted) return;
             this.playAnimation(this.SmallChicken_Walk);
         }, 100);
+    }
+
+    aboveGround() {
+        return this.y < this.groundY;
     }
 
 }

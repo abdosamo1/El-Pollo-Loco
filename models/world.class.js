@@ -9,8 +9,10 @@ class World {
     camera_x = 0;
     gameStarted = false;
     gameOver = false;
+    characterDied = false;
+    deathDelay = 0;
     startButtonsShown = false;
-    gameOverScreen = new GameOver();
+    gameOverButtonsShown = false;
     healthBar = new StatusBar('health');
     coinBar = new StatusBar('coin');
     bottleBar = new StatusBar('bottle');
@@ -22,6 +24,8 @@ class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.startScreen = new startGame(this);
+        this.gameOverScreen = new GameOver(this);
+
 
         this.draw();
         this.setWorld();
@@ -35,32 +39,54 @@ class World {
         this.run();
     }
 
+    restart() {
+        this.gameOver = false;
+        this.characterDied = false;
+        this.deathDelay = 0;
+        this.healthBar.setPercentage(100);
+        this.camera_x = 0;
+        this.character = new Character();
+        this.level = level1;
+        this.throwableObjects = [];
+        this.setWorld();
+        this.run();
+    }
+
+
     checkCollisions() {
-        if (this.gameOver) return;
+        if (this.gameOver || this.characterDied) return;
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
                 this.healthBar.setPercentage(this.character.energy / 10);
                 if (this.character.energy === 0) {
-                    this.endGame();
+                    this.characterDied = true;
+                    this.deathDelay = 0;
                 }
             }
         });
     }
 
     run() {
-        this.gameInterval = setInterval(() => {
-            if (this.gameOver) return;
-            this.checkCollisions();
-            this.checkThrowObjects();
-        }, 200);
+        this.gameInterval = setStopableInterval(() => this.runGameLogic(), 100);
+    }
+
+    runGameLogic() {
+        if (this.gameOver) return;
+        if (this.characterDied) {
+            this.deathDelay += 200;
+            if (this.deathDelay >= 1000) {
+                this.endGame();
+            }
+            return;
+        }
+        this.checkCollisions();
+        this.checkThrowObjects();
     }
 
     endGame() {
         this.gameOver = true;
-        if (this.gameInterval) {
-            clearInterval(this.gameInterval);
-        }
+        stopGame();
     }
 
     checkThrowObjects() {
@@ -80,8 +106,8 @@ class World {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.startScreen ? this.drawStartScreen() : 
-        this.gameOver ? this.addToMap(this.gameOverScreen) : this.startGame();
+        this.startScreen ? this.drawStartScreen() :
+            this.gameOver ? this.drawGameOverScreen() : this.startGame();
 
         requestAnimationFrame(() => this.draw());
     }
@@ -89,17 +115,17 @@ class World {
     startGame() {
         this.ctx.translate(this.camera_x, 0); // camera movement
 
-            this.addObjectsToMap(this.level.backgroundObjects);
-            this.addObjectsToMap(this.level.clouds);
-            this.addToMap(this.character);
-            this.addObjectsToMap(this.level.enemies);
-            this.addObjectsToMap(this.throwableObjects);
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addObjectsToMap(this.level.clouds);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.throwableObjects);
 
-            this.ctx.translate(-this.camera_x, 0); // reset camera
+        this.ctx.translate(-this.camera_x, 0); // reset camera
 
-            this.addToMap(this.healthBar);
-            this.addToMap(this.coinBar);
-            this.addToMap(this.bottleBar);
+        this.addToMap(this.healthBar);
+        this.addToMap(this.coinBar);
+        this.addToMap(this.bottleBar);
     }
 
     drawStartScreen() {
@@ -112,6 +138,18 @@ class World {
             this.startButtonsShown = true;
         }
     }
+
+    drawGameOverScreen() {
+        this.addToMap(this.gameOverScreen);
+        if (!this.gameOverButtonsShown) {
+            const gameOverButtons = document.getElementById('gameover-screen-buttons');
+            if (gameOverButtons) {
+                gameOverButtons.style.display = 'flex';
+            }
+            this.gameOverButtonsShown = true;
+        }
+    }
+
 
     addObjectsToMap(objects) {
         objects.forEach(object => {

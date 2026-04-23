@@ -17,21 +17,25 @@ class Endboss extends MovableObject {
         this.y = 50;
         this.speed = 0.5;
         this.animate();
-    } 
+    }
     animate() {
-        setInterval(() => {
-            if (!this.world?.gameStarted) return;
-            this.playAnimation(this.IMAGES_WALKING);
-        }, 200);
-        setInterval(() => {
-            if (!this.world?.gameStarted || !this.world.character) return;
-            if (this.x > this.world.character.x) {
-                this.moveLeft();
-                this.otherDirection = false;
-            } else {
-                this.moveRight();
-                this.otherDirection = true;
-            }
-        }, 100 / 12);
+        setStopableInterval(() => this.playEndBossAnimations(), 200);
+        setStopableInterval(() => this.moveEndBoss(), 100 / 12);
+    }
+
+    playEndBossAnimations() {
+        if (!this.isGameStarted()) return;
+        this.playAnimation(this.IMAGES_WALKING);
+    }
+
+    moveEndBoss() {
+        if (!this.world?.gameStarted || !this.world.character) return;
+        if (this.x > this.world.character.x) {
+            this.moveLeft();
+            this.otherDirection = false;
+        } else {
+            this.moveRight();
+            this.otherDirection = true;
+        }
     }
 }
