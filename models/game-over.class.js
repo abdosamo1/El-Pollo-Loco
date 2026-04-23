@@ -37,6 +37,8 @@
         if (this.mainScreenButton) {
             this.gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
             this.gameOverButtonsDiv.style.display = 'none';
+            this.startScreenButtonsDiv = document.getElementById('start-screen-buttons');
+            this.startScreenButtonsDiv ? this.startScreenButtonsDiv.style.display = 'flex' : null;
         }
         if (this.world) {
             this.world.showMainScreen();

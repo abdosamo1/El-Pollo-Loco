@@ -46,10 +46,27 @@ class World {
         this.healthBar.setPercentage(100);
         this.camera_x = 0;
         this.character = new Character();
-        this.level = level1;
+        this.level = createLevel1();
         this.throwableObjects = [];
         this.setWorld();
+        this.gameOverButtonsShown = false;
         this.run();
+    }
+
+    showMainScreen() {
+        this.gameOver = false;
+        this.gameStarted = false;
+        this.startScreen = new startGame(this);
+        this.characterDied = false;
+        this.deathDelay = 0;
+        this.healthBar.setPercentage(100);
+        this.camera_x = 0;
+        this.character = new Character();
+        this.level = createLevel1();
+        this.throwableObjects = [];
+        this.setWorld();
+        this.startButtonsShown = false;
+        this.gameOverButtonsShown = false;
     }
 
 
