@@ -44,11 +44,7 @@ class MovableObject extends DrawableObject {
     }
 
     aboveGround() {
-        if (this instanceof ThrowableObject) {
-            return true;
-        } else {
-            return this.y < 125;
-        }
+        return this instanceof ThrowableObject ? true : this.y < 125;
     }
 
     isGameStarted() {

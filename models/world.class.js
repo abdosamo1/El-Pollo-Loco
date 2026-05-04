@@ -16,6 +16,8 @@ class World {
     healthBar = new StatusBar('health');
     coinBar = new StatusBar('coin');
     bottleBar = new StatusBar('bottle');
+    Coins = new CollectableItems();
+    CoinsCollected = 0;
 
     throwableObjects = [];
 
@@ -73,7 +75,15 @@ class World {
     checkCollisions() {
         if (this.gameOver || this.characterDied) return;
         this.level.enemies.forEach((enemy) => {
+            if (enemy.isDead()) return;
             if (this.character.isColliding(enemy)) {
+                if (this.character.isAbove(enemy) && this.character.speedY <= 0) {
+                    enemy.energy = 0;
+                    enemy.speed = 0;
+                    enemy.deathTime = Date.now();
+                    this.character.jump(15);
+                    return;
+                }
                 this.character.hit();
                 this.healthBar.setPercentage(this.character.energy / 10);
                 if (this.character.energy === 0) {
@@ -98,7 +108,29 @@ class World {
             return;
         }
         this.checkCollisions();
+        this.checkCollectables();
         this.checkThrowObjects();
+        this.cleanDeadEnemies();
+    }
+
+    checkCollectables() {
+        this.level.collectables = this.level.collectables.filter(collectable => {
+            if (this.character.isColliding(collectable)) {
+                collectable.getCollected();
+                this.coinBar.setPercentage(this.coinBar.percentage + 20);
+                return false;
+            }
+            return true;
+        });
+    }
+
+    cleanDeadEnemies() {
+        const now = Date.now();
+        this.level.enemies = this.level.enemies.filter(enemy => {
+            if (!enemy.isDead()) return true;
+            if (!enemy.deathTime) enemy.deathTime = now;
+            return now - enemy.deathTime < 4000;
+        });
     }
 
     endGame() {
@@ -108,7 +140,8 @@ class World {
 
     checkThrowObjects() {
         if (this.keyboard.D) {
-            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
+            const direction = this.character.otherDirection;
+            let bottle = new ThrowableObject(this.character.otherDirection ? this.character.x : this.character.x + 100, this.character.y + 100, direction);
             bottle.world = this;
             this.throwableObjects.push(bottle);
         }
@@ -118,6 +151,7 @@ class World {
         this.character.world = this;
         this.level.enemies.forEach(enemy => enemy.world = this);
         this.level.clouds.forEach(cloud => cloud.world = this);
+        this.level.collectables.forEach(collectable => collectable.world = this);
     }
 
     draw() {
@@ -136,6 +170,7 @@ class World {
         this.addObjectsToMap(this.level.clouds);
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.collectables);
         this.addObjectsToMap(this.throwableObjects);
 
         this.ctx.translate(-this.camera_x, 0); // reset camera

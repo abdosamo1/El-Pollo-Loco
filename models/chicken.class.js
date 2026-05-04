@@ -13,13 +13,14 @@ class Chicken extends MovableObject {
     ];
     currentImage = 0;
 
-    constructor() {
+    constructor(startX = 500 + Math.random() * 500) {
         super();
         this.loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
         this.loadImages(this.Chicken_Walk);
+        this.loadImages(this.Chicken_Dead);
 
-        this.x = 200 + Math.random() * 500;
-        this.speed = 0.15 + Math.random() * 0.25;
+        this.x = startX;
+        this.speed = 0.5;
 
         this.animate();
     }
@@ -32,13 +33,13 @@ class Chicken extends MovableObject {
     }
 
     chickenMovement() {
-        if (!this.world?.gameStarted) return;
+        if (!this.world?.gameStarted || this.isDead()) return;
         this.moveLeft();
     }
 
     playChickenAnimation() {
         if (!this.world?.gameStarted) return;
-        this.playAnimation(this.Chicken_Walk);
+        this.isDead() ? this.playAnimation(this.Chicken_Dead) : this.playAnimation(this.Chicken_Walk);
     }
 
 }
