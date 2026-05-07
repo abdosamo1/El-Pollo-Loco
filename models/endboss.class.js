@@ -49,6 +49,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
+        this.startX = startX;
         this.x = startX;
         this.width = 300;
         this.height = 400;
@@ -57,8 +58,11 @@ class Endboss extends MovableObject {
         this.speed = 0.5;
         this.isAttacking = false;
         this.isAlert = false;
+        this.attackPhase = 'idle';
+        this.attackTimer = 0;
         this.animate();
     }
+
     animate() {
         setStopableInterval(() => this.playEndBossAnimations(), 200);
         setStopableInterval(() => this.moveEndBoss(), 100 / 12);
@@ -66,47 +70,107 @@ class Endboss extends MovableObject {
 
     playEndBossAnimations() {
         if (!this.isGameStarted()) return;
-        
-        // Update state basierend auf Charakter-Distanz
+
         this.updateState();
-        
-        if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
-        } else if (this.isDead()) {
-            this.win();
-        } else if (this.isAttacking) {
-            this.playAnimation(this.IMAGES_ATTACK);
-        } else if (this.isAlert) {
-            this.playAnimation(this.IMAGES_ALERT);
-        } else {
-            this.playAnimation(this.IMAGES_WALKING);
-        }
+
+        this.isHurt() ? this.playAnimation(this.IMAGES_HURT) :
+            this.isDead() ? this.playAnimation(this.IMAGES_DEAD) :
+                this.isAttacking ? this.playAnimation(this.IMAGES_ATTACK) :
+                    this.isAlert ? this.playAnimation(this.IMAGES_ALERT) : this.playAnimation(this.IMAGES_WALKING);
     }
-    
+
     updateState() {
-        if (!this.world.character) return;
+        if (!this.world.character || this.attackPhase !== 'idle') return;
         const distance = Math.abs(this.world.character.x - this.x);
-        
-        if (distance < 200) {
-            this.isAttacking = true;
-            this.isAlert = false;
-        } else if (distance < 300) {
-            this.isAttacking = false;
-            this.isAlert = true;
-        } else {
-            this.isAttacking = false;
-            this.isAlert = false;
-        }
+
+        distance < 200 ? this.startAttack() :
+            distance < 300 ? this.startAlert() : this.startWalking();
+    }
+
+    startAttack() {
+        if (this.attackPhase !== 'idle') return;
+        this.attackPhase = 'attacking';
+        this.isAttacking = true;
+        this.isAlert = false;
+        this.attackTimer = 0;
+        this.attackDirection = this.world.character.x > this.x ? 1 : -1;
+        this.attackTargetX = this.x + this.attackDirection * 40;
+        this.alertTargetX = this.world.character.x - this.attackDirection * 300;
+        this.startY = this.y;
+    }
+
+    startAlert() {
+        this.isAlert = true,
+            this.isAttacking = false,
+            this.attackPhase = 'idle'
+    }
+
+    startWalking() {
+        this.isAlert = false,
+            this.isAttacking = false,
+            this.attackPhase = 'idle'
     }
 
     moveEndBoss() {
-        if (!this.world?.gameStarted || !this.world.character || this.isAttacking) return;
-        if (this.x > this.world.character.x) {
-            this.moveLeft();
-            this.otherDirection = false;
+        if (!this.world?.gameStarted || !this.world.character) return;
+
+        if (this.attackPhase !== 'idle') {
+            this.performAttack();
+            return;
+        }
+
+        const distance = Math.abs(this.world.character.x - this.x);
+
+        distance > 300 ? this.moveToCharacter() :
+            distance > 200 ? this.bossAllerted() : this.startAttack();
+    }
+
+
+    bossAllerted() {
+        this.isAlert = true;
+        this.isAttacking = false;
+        if (this.world.character.x > this.x) {
+            this.x += 1.5;
+            this.otherDirection = true;
         } else {
+            this.x -= 1.5;
+            this.otherDirection = false;
+        }
+    }
+
+    moveToCharacter() {
+        this.isAlert = false;
+        this.isAttacking = false;
+        if (this.world.character.x > this.x) {
             this.moveRight();
             this.otherDirection = true;
+        } else {
+            this.moveLeft();
+            this.otherDirection = false;
+        }
+    }
+
+    performAttack() {
+        this.attackTimer += 8.333;
+        const attackStage = this.attackTimer;
+
+        if (attackStage < 500) {
+            this.y = this.startY - Math.sin((attackStage / 500) * Math.PI) * 15;
+            this.x += this.attackDirection * 2.5;
+        } else if (attackStage < 1300) {
+            this.y = this.startY;
+            this.isAlert = true;
+            const targetX = this.alertTargetX;
+            if (Math.abs(this.x - targetX) > 2) {
+                this.x += this.x < targetX ? 2.5 : -2.5;
+                this.otherDirection = this.x < targetX;
+            }
+        } else {
+            this.attackPhase = 'idle';
+            this.isAttacking = false;
+            this.isAlert = true;
+            this.attackTimer = 0;
+            this.y = this.startY;
         }
     }
 }
