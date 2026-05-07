@@ -14,13 +14,10 @@ class MovableObject extends DrawableObject {
             this.y < object.y + object.height;
     }
 
-    hit(){
-        this.energy -= 5;
-        if(this.energy < 6){
-            this.energy = 0;
-        } else {
+    hit(damge){
+        this.energy -= damge;
+        this.energy < 6 ? this.energy = 0 :
             this.lastHit = new Date().getTime();
-        }
     }
 
     isHurt(){

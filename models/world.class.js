@@ -20,6 +20,7 @@ class World {
     CoinsCollected = 0;
 
     throwableObjects = [];
+    endBossSpawned = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
@@ -46,10 +47,13 @@ class World {
         this.characterDied = false;
         this.deathDelay = 0;
         this.healthBar.setPercentage(100);
+        this.coinBar.setPercentage(0);
+        this.bottleBar.setPercentage(0);
         this.camera_x = 0;
         this.character = new Character();
         this.level = createLevel1();
         this.throwableObjects = [];
+        this.endBossSpawned = false;
         this.setWorld();
         this.gameOverButtonsShown = false;
         this.run();
@@ -76,22 +80,38 @@ class World {
         if (this.gameOver || this.characterDied) return;
         this.level.enemies.forEach((enemy) => {
             if (enemy.isDead()) return;
-            if (this.character.isColliding(enemy)) {
-                if (this.character.isAbove(enemy) && this.character.speedY <= 0) {
-                    enemy.energy = 0;
-                    enemy.speed = 0;
-                    enemy.deathTime = Date.now();
-                    this.character.jump(15);
-                    return;
-                }
-                this.character.hit();
-                this.healthBar.setPercentage(this.character.energy / 10);
-                if (this.character.energy === 0) {
-                    this.characterDied = true;
-                    this.deathDelay = 0;
-                }
-            }
+            this.character.isColliding(enemy) ? this.handleCollision(this.character, enemy, this) : null;
         });
+    }
+
+    handleCollision(character, enemy, world) {
+        this.character.isAbove(enemy) && this.character.speedY <= 0 ? this.killEnemy(enemy) :
+            this.damgeCharacter(enemy);
+    }
+
+    killEnemy(enemy) {
+        enemy.energy = 0;
+        enemy.speed = 0;
+        enemy.deathTime = Date.now();
+
+        this.dropCoin(enemy);
+        this.character.jump(15);
+        return;
+    }
+
+    dropCoin(enemy) {
+        const droppedCoin = new CollectableItems(enemy.x + enemy.width / 2, enemy.y, false, true);
+        droppedCoin.world = this;
+        this.level.collectables.push(droppedCoin);
+    }
+
+    damgeCharacter(enemy) {
+        enemy instanceof Endboss ? this.character.hit(50) : this.character.hit(5);
+        this.healthBar.setPercentage(this.character.energy / 10);
+        if (this.character.energy === 0) {
+            this.characterDied = true;
+            this.deathDelay = 0;
+        }
     }
 
     run() {
@@ -115,10 +135,19 @@ class World {
 
     checkCollectables() {
         this.level.collectables = this.level.collectables.filter(collectable => {
-            if (this.character.isColliding(collectable)) {
-                collectable.getCollected();
-                this.coinBar.setPercentage(this.coinBar.percentage + 20);
-                return false;
+            if (collectable.canBeCollected && this.character.isColliding(collectable)) {
+                if (collectable.isBottle) {
+                    // Bottles können nur gesammelt werden, wenn nicht 100%
+                    if (this.bottleBar.percentage < 100) {
+                        this.bottleBar.setPercentage(Math.min(100, this.bottleBar.percentage + 10));
+                        collectable.getCollected();
+                        return false;
+                    }
+                } else {
+                    this.coinBar.setPercentage(Math.min(100, this.coinBar.percentage + 10));
+                    collectable.getCollected();
+                    return false;
+                }
             }
             return true;
         });
@@ -131,6 +160,14 @@ class World {
             if (!enemy.deathTime) enemy.deathTime = now;
             return now - enemy.deathTime < 4000;
         });
+
+        // Spawn Endboss when all regular enemies are defeated
+        if (!this.endBossSpawned && this.level.enemies.length === 0) {
+            const endboss = new Endboss(this.character.x + 500);
+            endboss.world = this;
+            this.level.enemies.push(endboss);
+            this.endBossSpawned = true;
+        }
     }
 
     endGame() {
@@ -139,11 +176,12 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D) {
+        if (this.keyboard.D && this.bottleBar.percentage > 0) {
             const direction = this.character.otherDirection;
             let bottle = new ThrowableObject(this.character.otherDirection ? this.character.x : this.character.x + 100, this.character.y + 100, direction);
             bottle.world = this;
             this.throwableObjects.push(bottle);
+            this.bottleBar.setPercentage(this.bottleBar.percentage - 10);
         }
     }
 

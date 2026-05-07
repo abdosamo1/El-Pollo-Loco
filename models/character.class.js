@@ -128,7 +128,7 @@ class Character extends MovableObject {
     }
 
     isAbove(object) {
-        return this.y + this.height < object.y + 30;
+        return this.y + this.height < object.y + 50;
     }
 
     isWalking() {

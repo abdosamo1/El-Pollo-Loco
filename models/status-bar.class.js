@@ -55,10 +55,10 @@ class StatusBar extends DrawableObject {
     resolveImageIndex() {
         const percentage = Math.max(0, Math.min(100, this.percentage));
         return percentage == 100 ? 5 :
-        percentage > 80 ? 4 :
-        percentage > 60 ? 3 :
-        percentage > 40 ? 2 :
-        percentage > 20 ? 1 :
-        percentage > 0 ? 1 : 0;
+        percentage >= 80 ? 4 :
+        percentage >= 60 ? 3 :
+        percentage >= 40 ? 2 :
+        percentage >= 20 ? 1 :
+        0;
     }
 }
