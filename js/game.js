@@ -16,6 +16,17 @@ function closeTutorial() {
     document.getElementById("tutorial-screen").classList.remove("show-tutorial");
 }
 
+function toggleFullscreen() {
+    const canvasContainer = document.getElementById('canvas-container');
+    if (!canvasContainer) return;
+
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    } else {
+        canvasContainer.requestFullscreen?.();
+    }
+}
+
 // Close tutorial when clicking outside
 document.addEventListener('click', (e) => {
     const tutorialScreen = document.getElementById("tutorial-screen");

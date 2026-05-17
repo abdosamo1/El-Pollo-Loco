@@ -12,31 +12,31 @@
 
     <h1>El Pollo Loco</h1>
 
-    <div id="start-screen-buttons">
-        <button id="start-button">Start Game</button>
-        <button id="tutorial-button" onclick="showTutorial()">Tutorial</button>
+    <div id="canvas-container">
+        <canvas width="720" height="480" id="canvas"></canvas>
+        <button id="fullscreen-button" title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
+
+        <div id="start-screen-buttons">
+            <button id="start-button">Start Game</button>
+            <button id="tutorial-button" onclick="showTutorial()">Tutorial</button>
+        </div>
+        <div id="gameover-screen-buttons" >
+            <button id="restart-button">Restart Game</button>
+            <button id="main-screen-button">Back to Main Screen</button>
+        </div>
+
+        <div id="win-score"></div>
+
+        <div id="tutorial-screen">
+            <h2>Tutorial</h2>
+            <button id="back-button" onclick="closeTutorial()">X</button>
+            <p>Use the arrow keys to move right and left,
+                and space to jump. Collect bottles and press 'D' to throw them on enimies. 
+                You can also jump on chickens to kill them, but be careful not to get hit by them!
+                Collect coins from killing chickens to increase your score.
+                Endboss will spawn after killing all chickens. Defeat the Endboss to win the game!</p>
+        </div>
     </div>
-    <div id="gameover-screen-buttons" >
-        <button id="restart-button">Restart Game</button>
-        <button id="main-screen-button">Back to Main Screen</button>
-    </div>
-
-    <div id="win-score"></div>
-
-    <div id="tutorial-screen">
-        <h2>Tutorial</h2>
-        <button id="back-button" onclick="closeTutorial()">X</button>
-        <p>Use the arrow keys to move right and left,
-            and space to jump. Collect bottles and press 'D' to throw them on enimies. 
-            You can also jump on chickens to kill them, but be careful not to get hit by them!
-            Collect coins from killing chickens to increase your score.
-            Endboss will spawn after killing all chickens. Defeat the Endboss to win the game!</p>
-    </div>
-
-    
-    <canvas width="720" height="480" id="canvas">
-
-    </canvas>
 
 
     <!-- JavaScript -->

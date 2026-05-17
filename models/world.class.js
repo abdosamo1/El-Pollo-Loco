@@ -121,6 +121,9 @@ class World {
     }
 
     dropCoin(enemy) {
+        if (this.coinBar.percentage >= 100) return;
+        if (Math.random() >= 0.7) return;
+
         const droppedCoin = new CollectableItems(enemy.x + enemy.width / 2, enemy.y, false, true);
         droppedCoin.world = this;
         this.level.collectables.push(droppedCoin);
@@ -248,6 +251,7 @@ class World {
                 if (hitEndboss.isDead()) {
                     hitEndboss.speed = 0;
                     hitEndboss.deathTime = Date.now();
+                    this.coinBar.setPercentage(Math.min(100, this.coinBar.percentage + 30));
                     this.winGame();
                 }
                 return true;
