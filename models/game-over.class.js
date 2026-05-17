@@ -2,11 +2,11 @@
     constructor(world) {
         super();
         this.world = world;
-        this.loadImage('./img/9_intro_outro_screens/game_over/game over.png');
-        this.x = 0;
-        this.y = 0;
-        this.width = 720;
-        this.height = 480;
+        this.loadImage('./img/You won, you lost/Game Over.png');
+        this.x = (720 - 360) / 2;
+        this.y = (480 - 240) / 2;
+        this.width = 360;
+        this.height = 240;
 
         this.addGameOverButtons();
     }

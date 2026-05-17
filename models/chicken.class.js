@@ -17,6 +17,8 @@ class Chicken extends MovableObject {
         this.loadImage(this.WALK_IMAGES[0]);
         this.loadImages(this.WALK_IMAGES);
         this.loadImages(this.DEAD_IMAGES);
+        this.fullscreenY = 500;
+
 
         this.x = startX;
         this.patrolStartX = startX;

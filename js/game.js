@@ -6,6 +6,22 @@ let intervalIds = [];
 function init() {
     canvas = document.getElementById("canvas");
     world = new World(canvas , keyboard);
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+    document.addEventListener('fullscreenchange', updateCanvasSize);
+    document.addEventListener('webkitfullscreenchange', updateCanvasSize);
+}
+
+function updateCanvasSize() {
+    const container = document.getElementById('canvas-container');
+    if (!canvas || !container) return;
+
+    const rect = container.getBoundingClientRect();
+    canvas.width = Math.floor(rect.width);
+    canvas.height = Math.floor(rect.height);
+
+    canvas.style.width = `${canvas.width}px`;
+    canvas.style.height = `${canvas.height}px`;
 }
 
 function showTutorial() {

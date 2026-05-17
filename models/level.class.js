@@ -16,7 +16,7 @@ class Level {
     createBackgroundsObjects(arrPaths) {
         for (let i = -10; i <= 10; i++) {
             const set = i % 2 === 0 ? '1' : '2';
-            const x = 719 * i;
+            const x = 720* i;
             arrPaths.forEach(path => {
                 if (path.includes('set')) {
                     const realPath = path.replace('set', `${set}`);

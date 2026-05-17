@@ -9,4 +9,12 @@ class BackgroundObject extends MovableObject {
         this.height = height;
     }
 
+    drawImage(ctx) {
+        const x = Math.round(this.x);
+        const y = Math.round(this.y);
+        const width = Math.round(this.width);
+        const height = Math.round(this.height);
+        ctx.drawImage(this.img, x, y, width, height);
+    }
+
 }

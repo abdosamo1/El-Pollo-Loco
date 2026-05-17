@@ -14,6 +14,8 @@ class World {
     startButtonsShown = false;
     gameOverButtonsShown = false;
     winButtonsShown = false;
+    isFullscreen = false;
+    fullscreenObjectScale = 0.8;
     healthBar = new StatusBar('health');
     coinBar = new StatusBar('coin');
     bottleBar = new StatusBar('bottle');
@@ -133,7 +135,8 @@ class World {
         if (this.endBossSpawned) return;
         const regularEnemiesAlive = this.level.enemies.some(enemy => !(enemy instanceof Endboss) && !enemy.isDead());
         if (!regularEnemiesAlive) {
-            const endboss = new Endboss(this.character.x + 500);
+            const spawnDistance = Math.max(720, this.canvas ? this.canvas.width : 720);
+            const endboss = new Endboss(this.character.x + spawnDistance);
             endboss.world = this;
             this.level.enemies.push(endboss);
             this.endBossSpawned = true;
@@ -283,20 +286,64 @@ class World {
     }
 
     draw() {
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.startScreen ? this.drawStartScreen() :
+        if (this.startScreen) {
+            this.ctx.drawImage(this.startScreen.img, 0, 0, this.canvas.width, this.canvas.height);
+            this.drawStartScreen();
+            requestAnimationFrame(() => this.draw());
+            return;
+        }
+
+        const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+        this.isFullscreen = isFullscreen;
+
+        if (isFullscreen) {
+            const scale = Math.max(1, Math.floor(Math.min(this.canvas.width / 720, this.canvas.height / 480)));
+            const offsetX = (this.canvas.width - 720 * scale) / 2;
+            const offsetY = (this.canvas.height - 480 * scale) / 2;
+
+            if (this.youWin || this.gameOver) {
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                const centerX = (this.canvas.width - 720 * scale) / 2;
+                const centerY = (this.canvas.height - 480 * scale) / 2;
+                this.ctx.setTransform(scale, 0, 0, scale, centerX, centerY);
+                this.youWin ? this.drawWinScreen() : this.drawGameOverScreen();
+            } else {
+                this.ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
+                this.startGame(false, true);
+
+                this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+                this.addToMap(this.healthBar);
+                this.addToMap(this.coinBar);
+                this.addToMap(this.bottleBar);
+                if (this.endBossBar) {
+                    const originalX = this.endBossBar.x;
+                    this.endBossBar.x = this.canvas.width - this.endBossBar.width - 20;
+                    this.addToMap(this.endBossBar);
+                    this.endBossBar.x = originalX;
+                }
+            }
+        } else {
+            const scale = Math.max(1, Math.floor(Math.min(this.canvas.width / 720, this.canvas.height / 480)));
+            const offsetX = (this.canvas.width - 720 * scale) / 2;
+            const offsetY = (this.canvas.height - 480 * scale) / 2;
+            this.ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
             this.youWin ? this.drawWinScreen() :
-            this.gameOver ? this.drawGameOverScreen() : this.startGame();
+                this.gameOver ? this.drawGameOverScreen() : this.startGame();
+        }
 
         requestAnimationFrame(() => this.draw());
     }
 
-    startGame() {
+    startGame(skipBackground = false, skipStatusBars = false) {
         this.ctx.translate(this.camera_x, 0); // camera movement
 
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.addObjectsToMap(this.level.clouds);
+        if (!skipBackground) {
+            this.addObjectsToMap(this.level.backgroundObjects);
+            this.addObjectsToMap(this.level.clouds);
+        }
         this.addObjectsToMap(this.level.collectables);
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
@@ -304,16 +351,17 @@ class World {
 
         this.ctx.translate(-this.camera_x, 0); // reset camera
 
-        this.addToMap(this.healthBar);
-        this.addToMap(this.coinBar);
-        this.addToMap(this.bottleBar);
-        if (this.endBossBar) {
-            this.addToMap(this.endBossBar);
+        if (!skipStatusBars) {
+            this.addToMap(this.healthBar);
+            this.addToMap(this.coinBar);
+            this.addToMap(this.bottleBar);
+            if (this.endBossBar) {
+                this.addToMap(this.endBossBar);
+            }
         }
     }
 
     drawStartScreen() {
-        this.addToMap(this.startScreen);
         if (!this.startButtonsShown) {
             const startButtons = document.getElementById('start-screen-buttons');
             if (startButtons) {
@@ -360,10 +408,13 @@ class World {
     }
 
     addToMap(object) {
+        const scale = this.isFullscreen && (object instanceof Character || object instanceof Chicken || object instanceof Endboss)
+            ? this.fullscreenObjectScale
+            : 1;
         if (object.otherDirection) {
             this.flipImage(object);
         }
-        object.drawImage(this.ctx);
+        object.drawImage(this.ctx, scale);
         if (object.otherDirection) {
             this.flipImageBack(object);
         }

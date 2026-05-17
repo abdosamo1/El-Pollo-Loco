@@ -3,10 +3,10 @@ class YouWin extends DrawableObject {
         super();
         this.world = world;
         this.loadImage('./img/You won, you lost/You won A.png');
-        this.x = 0;
-        this.y = 0;
-        this.width = 720;
-        this.height = 480;
+        this.x = (720 - 360) / 2;
+        this.y = (480 - 240) / 2;
+        this.width = 360;
+        this.height = 240;
 
         this.addWinButtons();
     }
