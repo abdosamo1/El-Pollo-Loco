@@ -13,9 +13,11 @@ class startGame extends DrawableObject {
 
     addStartButtons() {
         this.startButton = document.getElementById('start-button');
-        this.startButton.addEventListener('click', () => {
-            this.startGame();
-        });
+        if (this.startButton) {
+            this.startButton.onclick = () => {
+                this.startGame();
+            };
+        }
     }
 
     startGame() {

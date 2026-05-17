@@ -5,7 +5,11 @@ class CollectableItems extends MovableObject {
         './img/8_coin/coin_2.png'
     ];
 
-    salsaBottle = './img/6_salsa_bottle/salsa_bottle.png';    
+    salsaBottles = [
+        './img/6_salsa_bottle/salsa_bottle.png',
+        './img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
+        './img/6_salsa_bottle/2_salsa_bottle_on_ground.png',
+    ];
 
     bottleRotation = [
         'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
@@ -27,8 +31,7 @@ class CollectableItems extends MovableObject {
         this.canBeCollected = !isDropped;
         this.currentImage = 0;
 
-        isBottle ? this.loadImage(this.salsaBottle) : this.loadImages(this.coins);
-        !isBottle ? this.loadImage(this.coins[0]) : null;
+        isBottle ? this.loadBottleImages() : this.loadCoinsImages();
 
         if (!isBottle && !isDropped) {
             this.animate();
@@ -41,7 +44,7 @@ class CollectableItems extends MovableObject {
 
     animate() {
         setStopableInterval(() => {
-            this.playAnimation(this.coins);
+            this.playAnimation(this.isBottle ? this.bottleRotation : this.coins);
         }, 200);
     }
 
@@ -50,15 +53,15 @@ class CollectableItems extends MovableObject {
         this.speed = 5;
         this.acceleration = 0.5;
         this.animate();
-        
+
         const movementInterval = setStopableInterval(() => {
             // Horizontal movement
             this.moveRight();
-            
+
             // Apply gravity
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
-            
+
             // Stop when landed
             if (this.speedY <= 0 && this.y >= 350) {
                 clearInterval(movementInterval);
@@ -72,5 +75,18 @@ class CollectableItems extends MovableObject {
 
     getCollected() {
         this.energy = 0;
+    }
+
+    loadBottleImages() {
+        this.loadImages(this.salsaBottles);
+        this.y === 330 ? (() => {
+            const groundIndex = Math.random() < 0.5 ? 1 : 2;
+            this.loadImage(this.salsaBottles[groundIndex]);
+        })() : this.loadImage(this.salsaBottles[0]);
+    }
+
+    loadCoinsImages() {
+        this.loadImages(this.coins);
+        this.loadImage(this.coins[0]);
     }
 }

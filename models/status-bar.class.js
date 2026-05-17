@@ -26,19 +26,35 @@ class StatusBar extends DrawableObject {
         './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png'
     ];
 
+    ENDBOSSBAR_IMAGES = [
+        './img/7_statusbars/2_statusbar_endboss/orange/orange0.png',
+        './img/7_statusbars/2_statusbar_endboss/orange/orange20.png',
+        './img/7_statusbars/2_statusbar_endboss/orange/orange40.png',
+        './img/7_statusbars/2_statusbar_endboss/orange/orange60.png',
+        './img/7_statusbars/2_statusbar_endboss/orange/orange80.png',
+        './img/7_statusbars/2_statusbar_endboss/orange/orange100.png'
+    ];
 
     percentage = 0;
 
     constructor(type) {
         super();
-        this.type = type;
-        this.loadImages(type == 'health' ? this.HELTHBAR_IMAGES : type == 'coin' ? this.COINBAR_IMAGES : this.BOTTLEBAR_IMAGES);
-        this.setPercentage(type == 'health' ? 100 : 0);
+        this.type = String(type).toLowerCase();
+
+        const images = this.type == 'health' ? this.HELTHBAR_IMAGES
+            : this.type == 'coin' ? this.COINBAR_IMAGES
+            : this.type == 'bottle' ? this.BOTTLEBAR_IMAGES
+            : (this.type == 'endboss' || this.type == 'endbos') ? this.ENDBOSSBAR_IMAGES
+            : this.BOTTLEBAR_IMAGES;
+        this.loadImages(images);
+        this.setPercentage(this.type == 'health' ? 100 : 0);
         this.x = 20;
-        switch (type) {
+        switch (this.type) {
             case 'health': this.y = 20; break;
             case 'coin': this.y = 70; break;
-            case 'bottle': this.y = 120; break;    
+            case 'bottle': this.y = 120; break;
+            case 'endboss': this.y = 20; break;
+            default: this.y = 20; break;
         }
         this.width = 200;
         this.height = 60;
@@ -49,6 +65,8 @@ class StatusBar extends DrawableObject {
         let path = 
             this.type == 'health' ? this.HELTHBAR_IMAGES[this.resolveImageIndex()]
             : this.type == 'coin' ? this.COINBAR_IMAGES[this.resolveImageIndex()]
+            : this.type == 'bottle' ? this.BOTTLEBAR_IMAGES[this.resolveImageIndex()]
+            : this.type == 'endboss' ? this.ENDBOSSBAR_IMAGES[this.resolveImageIndex()]
             : this.BOTTLEBAR_IMAGES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }

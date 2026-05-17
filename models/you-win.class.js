@@ -1,17 +1,17 @@
-    class GameOver extends DrawableObject {
+class YouWin extends DrawableObject {
     constructor(world) {
         super();
         this.world = world;
-        this.loadImage('./img/9_intro_outro_screens/game_over/game over.png');
+        this.loadImage('./img/You won, you lost/You won A.png');
         this.x = 0;
         this.y = 0;
         this.width = 720;
         this.height = 480;
 
-        this.addGameOverButtons();
+        this.addWinButtons();
     }
 
-    addGameOverButtons() {
+    addWinButtons() {
         this.restartButton = document.getElementById('restart-button');
         if (this.restartButton) {
             this.restartButton.onclick = () => {
@@ -28,9 +28,9 @@
     }
 
     restartGame() {
-        if (this.restartButton) {
-            this.gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
-            this.gameOverButtonsDiv.style.display = 'none';
+        const gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
+        if (gameOverButtonsDiv) {
+            gameOverButtonsDiv.style.display = 'none';
         }
         if (this.world) {
             this.world.restart();
@@ -38,11 +38,13 @@
     }
 
     showMainScreen() {
-        if (this.mainScreenButton) {
-            this.gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
-            this.gameOverButtonsDiv.style.display = 'none';
-            this.startScreenButtonsDiv = document.getElementById('start-screen-buttons');
-            this.startScreenButtonsDiv ? this.startScreenButtonsDiv.style.display = 'flex' : null;
+        const gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
+        if (gameOverButtonsDiv) {
+            gameOverButtonsDiv.style.display = 'none';
+        }
+        const startButtonsDiv = document.getElementById('start-screen-buttons');
+        if (startButtonsDiv) {
+            startButtonsDiv.style.display = 'flex';
         }
         if (this.world) {
             this.world.showMainScreen();

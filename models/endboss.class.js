@@ -80,7 +80,7 @@ class Endboss extends MovableObject {
     }
 
     updateState() {
-        if (!this.world.character || this.attackPhase !== 'idle') return;
+        if (!this.world.character || this.attackPhase !== 'idle' || this.isHurt() || this.isDead()) return;
         const distance = Math.abs(this.world.character.x - this.x);
 
         distance < 200 ? this.startAttack() :
@@ -112,7 +112,7 @@ class Endboss extends MovableObject {
     }
 
     moveEndBoss() {
-        if (!this.world?.gameStarted || !this.world.character) return;
+        if (!this.world?.gameStarted || !this.world.character || this.isHurt() || this.isDead()) return;
 
         if (this.attackPhase !== 'idle') {
             this.performAttack();

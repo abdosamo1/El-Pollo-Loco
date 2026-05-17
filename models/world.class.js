@@ -13,9 +13,13 @@ class World {
     deathDelay = 0;
     startButtonsShown = false;
     gameOverButtonsShown = false;
+    winButtonsShown = false;
     healthBar = new StatusBar('health');
     coinBar = new StatusBar('coin');
     bottleBar = new StatusBar('bottle');
+    endBossBar = null;
+    youWinScreen = null;
+    youWin = false;
     Coins = new CollectableItems();
     CoinsCollected = 0;
 
@@ -44,6 +48,34 @@ class World {
 
     restart() {
         this.gameOver = false;
+        this.youWin = false;
+        this.characterDied = false;
+        this.deathDelay = 0;
+        this.healthBar.setPercentage(100);
+        this.coinBar.setPercentage(0);
+        this.bottleBar.setPercentage(0);
+        this.endBossBar = null;
+        this.youWinScreen = null;
+        this.camera_x = 0;
+        this.character = new Character();
+        this.level = createLevel1();
+        this.throwableObjects = [];
+        this.endBossSpawned = false;
+        this.gameStarted = true;
+        this.startScreen = null;
+        this.startButtonsShown = false;
+        this.gameOverButtonsShown = false;
+        this.winButtonsShown = false;
+        this.hideAllButtons();
+        this.setWorld();
+        this.run();
+    }
+
+    showMainScreen() {
+        this.gameOver = false;
+        this.youWin = false;
+        this.gameStarted = false;
+        this.startScreen = new startGame(this);
         this.characterDied = false;
         this.deathDelay = 0;
         this.healthBar.setPercentage(100);
@@ -53,26 +85,14 @@ class World {
         this.character = new Character();
         this.level = createLevel1();
         this.throwableObjects = [];
+        this.endBossBar = null;
+        this.youWinScreen = null;
         this.endBossSpawned = false;
-        this.setWorld();
-        this.gameOverButtonsShown = false;
-        this.run();
-    }
-
-    showMainScreen() {
-        this.gameOver = false;
-        this.gameStarted = false;
-        this.startScreen = new startGame(this);
-        this.characterDied = false;
-        this.deathDelay = 0;
-        this.healthBar.setPercentage(100);
-        this.camera_x = 0;
-        this.character = new Character();
-        this.level = createLevel1();
-        this.throwableObjects = [];
+        this.hideAllButtons();
         this.setWorld();
         this.startButtonsShown = false;
         this.gameOverButtonsShown = false;
+        this.winButtonsShown = false;
     }
 
 
@@ -96,6 +116,7 @@ class World {
 
         this.dropCoin(enemy);
         this.character.jump(15);
+        this.maybeSpawnEndboss();
         return;
     }
 
@@ -103,6 +124,21 @@ class World {
         const droppedCoin = new CollectableItems(enemy.x + enemy.width / 2, enemy.y, false, true);
         droppedCoin.world = this;
         this.level.collectables.push(droppedCoin);
+    }
+
+    maybeSpawnEndboss() {
+        if (this.endBossSpawned) return;
+        const regularEnemiesAlive = this.level.enemies.some(enemy => !(enemy instanceof Endboss) && !enemy.isDead());
+        if (!regularEnemiesAlive) {
+            const endboss = new Endboss(this.character.x + 500);
+            endboss.world = this;
+            this.level.enemies.push(endboss);
+            this.endBossSpawned = true;
+            this.endBossBar = new StatusBar('endboss');
+            this.endBossBar.x = 520;
+            this.endBossBar.y = 20;
+            this.endBossBar.setPercentage(endboss.energy);
+        }
     }
 
     damgeCharacter(enemy) {
@@ -119,7 +155,7 @@ class World {
     }
 
     runGameLogic() {
-        if (this.gameOver) return;
+        if (this.gameOver || this.youWin) return;
         if (this.characterDied) {
             this.deathDelay += 200;
             if (this.deathDelay >= 1000) {
@@ -130,6 +166,8 @@ class World {
         this.checkCollisions();
         this.checkCollectables();
         this.checkThrowObjects();
+        this.checkThrowableCollisions();
+        this.updateBossBar();
         this.cleanDeadEnemies();
     }
 
@@ -160,13 +198,24 @@ class World {
             if (!enemy.deathTime) enemy.deathTime = now;
             return now - enemy.deathTime < 4000;
         });
+    }
 
-        // Spawn Endboss when all regular enemies are defeated
-        if (!this.endBossSpawned && this.level.enemies.length === 0) {
-            const endboss = new Endboss(this.character.x + 500);
-            endboss.world = this;
-            this.level.enemies.push(endboss);
-            this.endBossSpawned = true;
+    updateBossBar() {
+        if (!this.endBossBar) return;
+        const endboss = this.level.enemies.find(enemy => enemy instanceof Endboss);
+        if (!endboss) return;
+        this.endBossBar.setPercentage(endboss.energy);
+    }
+
+    winGame() {
+        this.youWin = true;
+        this.youWinScreen = new YouWin(this);
+        this.gameOver = false;
+        this.characterDied = false;
+        stopGame();
+        const startButtons = document.getElementById('start-screen-buttons');
+        if (startButtons) {
+            startButtons.style.display = 'none';
         }
     }
 
@@ -178,11 +227,33 @@ class World {
     checkThrowObjects() {
         if (this.keyboard.D && this.bottleBar.percentage > 0) {
             const direction = this.character.otherDirection;
-            let bottle = new ThrowableObject(this.character.otherDirection ? this.character.x : this.character.x + 100, this.character.y + 100, direction);
+            const bottle = new ThrowableObject(this.character.otherDirection ? this.character.x : this.character.x + 100, this.character.y + 100, direction);
             bottle.world = this;
             this.throwableObjects.push(bottle);
             this.bottleBar.setPercentage(this.bottleBar.percentage - 10);
         }
+    }
+
+    checkThrowableCollisions() {
+        this.throwableObjects = this.throwableObjects.filter(bottle => {
+            if (bottle.isSplashing) {
+                return !bottle.splashDone;
+            }
+            const hitEndboss = this.level.enemies.find(enemy =>
+                enemy instanceof Endboss && !enemy.isDead() && bottle.isColliding(enemy)
+            );
+            if (hitEndboss) {
+                hitEndboss.hit(20);
+                bottle.startSplash();
+                if (hitEndboss.isDead()) {
+                    hitEndboss.speed = 0;
+                    hitEndboss.deathTime = Date.now();
+                    this.winGame();
+                }
+                return true;
+            }
+            return true;
+        });
     }
 
     setWorld() {
@@ -192,10 +263,26 @@ class World {
         this.level.collectables.forEach(collectable => collectable.world = this);
     }
 
+    hideAllButtons() {
+        const startButtons = document.getElementById('start-screen-buttons');
+        if (startButtons) {
+            startButtons.style.display = 'none';
+        }
+        const gameOverButtons = document.getElementById('gameover-screen-buttons');
+        if (gameOverButtons) {
+            gameOverButtons.style.display = 'none';
+        }
+        const winScore = document.getElementById('win-score');
+        if (winScore) {
+            winScore.style.display = 'none';
+        }
+    }
+
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.startScreen ? this.drawStartScreen() :
+            this.youWin ? this.drawWinScreen() :
             this.gameOver ? this.drawGameOverScreen() : this.startGame();
 
         requestAnimationFrame(() => this.draw());
@@ -206,9 +293,9 @@ class World {
 
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
+        this.addObjectsToMap(this.level.collectables);
         this.addToMap(this.character);
         this.addObjectsToMap(this.level.enemies);
-        this.addObjectsToMap(this.level.collectables);
         this.addObjectsToMap(this.throwableObjects);
 
         this.ctx.translate(-this.camera_x, 0); // reset camera
@@ -216,6 +303,9 @@ class World {
         this.addToMap(this.healthBar);
         this.addToMap(this.coinBar);
         this.addToMap(this.bottleBar);
+        if (this.endBossBar) {
+            this.addToMap(this.endBossBar);
+        }
     }
 
     drawStartScreen() {
@@ -237,6 +327,24 @@ class World {
                 gameOverButtons.style.display = 'flex';
             }
             this.gameOverButtonsShown = true;
+        }
+    }
+
+    drawWinScreen() {
+        if (this.youWinScreen) {
+            this.addToMap(this.youWinScreen);
+        }
+        if (!this.winButtonsShown) {
+            const gameOverButtons = document.getElementById('gameover-screen-buttons');
+            if (gameOverButtons) {
+                gameOverButtons.style.display = 'flex';
+            }
+            this.winButtonsShown = true;
+        }
+        const winScore = document.getElementById('win-score');
+        if (winScore && this.coinBar) {
+            winScore.innerText = `Level Completed - Your Score is: ${this.coinBar.percentage}%`;
+            winScore.style.display = 'block';
         }
     }
 
