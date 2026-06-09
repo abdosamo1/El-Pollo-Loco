@@ -7,9 +7,20 @@ function init() {
     canvas = document.getElementById("canvas");
     world = new World(canvas , keyboard);
     updateCanvasSize();
-    window.addEventListener('resize', updateCanvasSize);
-    document.addEventListener('fullscreenchange', updateCanvasSize);
-    document.addEventListener('webkitfullscreenchange', updateCanvasSize);
+    updatePortraitOverlay();
+    window.addEventListener('resize', () => {
+        updateCanvasSize();
+        updatePortraitOverlay();
+    });
+    window.addEventListener('orientationchange', updatePortraitOverlay);
+    document.addEventListener('fullscreenchange', () => {
+        updateCanvasSize();
+        updatePortraitOverlay();
+    });
+    document.addEventListener('webkitfullscreenchange', () => {
+        updateCanvasSize();
+        updatePortraitOverlay();
+    });
 }
 
 function updateCanvasSize() {
@@ -22,6 +33,28 @@ function updateCanvasSize() {
 
     canvas.style.width = `${canvas.width}px`;
     canvas.style.height = `${canvas.height}px`;
+
+    if (world && typeof world.updateStatusBarPositions === 'function') {
+        world.updateStatusBarPositions();
+    }
+}
+
+function updatePortraitOverlay() {
+    const container = document.getElementById('canvas-container');
+    const overlay = document.getElementById('portrait-overlay');
+    if (!overlay || !container) return;
+
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isPortrait) {
+        overlay.classList.add('active');
+        container.classList.add('portrait-active');
+        if (overlay.paused) {
+            overlay.play().catch(() => {});
+        }
+    } else {
+        overlay.classList.remove('active');
+        container.classList.remove('portrait-active');
+    }
 }
 
 function showTutorial() {
