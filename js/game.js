@@ -78,10 +78,14 @@ function updatePortraitOverlay() {
 
 function updatePauseButtonVisibility() {
     const pauseButton = document.getElementById('pause-button');
+    const mobileControls = document.getElementById('mobile-controls');
     if (!pauseButton) return;
 
     const shouldShow = world && world.gameStarted && !world.gameOver && !world.youWin;
     pauseButton.style.display = shouldShow ? 'block' : 'none';
+    if (mobileControls) {
+        mobileControls.style.display = shouldShow ? 'block' : 'none';
+    }
 
     if (!shouldShow) {
         isPaused = false;

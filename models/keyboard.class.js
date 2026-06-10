@@ -5,6 +5,10 @@ class Keyboard {
     DOWN = false;
     SPACE = false;
     D = false;
+    mobileLeft = false;
+    mobileRight = false;
+    mobileUp = false;
+    mobileD = false;
 
 
     constructor() {

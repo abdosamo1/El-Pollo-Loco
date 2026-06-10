@@ -90,18 +90,22 @@ class Character extends MovableObject {
     movment() {
         if (!this.isGameStarted()) return;
         let moved = false;
-        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+        if ((this.world.keyboard.RIGHT || this.world.keyboard.mobileRight) && this.x < this.world.level.level_end_x) {
             this.moveRight();
             this.otherDirection = false;
             moved = true;
         }
-        if (this.world.keyboard.LEFT && this.x > -this.world.level.level_end_x) {
+        if ((this.world.keyboard.LEFT || this.world.keyboard.mobileLeft) && this.x > -this.world.level.level_end_x) {
             this.moveLeft();
             this.otherDirection = true;
             moved = true;
         }
-        if (this.world.keyboard.SPACE && !this.aboveGround()) {
+        if ((this.world.keyboard.SPACE || this.world.keyboard.UP || this.world.keyboard.mobileUp) && !this.aboveGround()) {
             this.jump();
+            moved = true;
+        }
+        const isThrowing = this.world.keyboard.D && this.world.bottleBar.percentage > 0;
+        if (isThrowing) {
             moved = true;
         }
         if (moved || this.aboveGround()) {
@@ -132,7 +136,8 @@ class Character extends MovableObject {
     }
 
     isWalking() {
-        return this.world?.keyboard.RIGHT || this.world?.keyboard.LEFT;
+        return this.world?.keyboard.RIGHT || this.world?.keyboard.LEFT ||
+            this.world?.keyboard.mobileRight || this.world?.keyboard.mobileLeft;
     }
 
     longStanding() {

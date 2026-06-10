@@ -44,12 +44,12 @@ class World {
         const windowWidth = window.innerWidth;
         const narrow = windowWidth <= 1020;
 
-        this.healthBar.y = 20;
-        this.coinBar.y = narrow ? 50 : 68;
-        this.bottleBar.y = narrow ? 80: 116;
+        this.healthBar.y = 24;
+        this.coinBar.y = narrow ? 54 : 72;
+        this.bottleBar.y = narrow ? 84: 120;
 
         if (this.endBossBar) {
-            this.endBossBar.y = 20;
+            this.endBossBar.y = 40;
         }
     }
 
@@ -158,7 +158,6 @@ class World {
             this.endBossSpawned = true;
             this.endBossBar = new StatusBar('endboss');
             this.endBossBar.x = 520;
-            this.endBossBar.y = 20;
             this.endBossBar.setPercentage(endboss.energy);
         }
     }
@@ -249,7 +248,7 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D && this.bottleBar.percentage > 0) {
+        if ((this.keyboard.D || this.keyboard.mobileD) && this.bottleBar.percentage > 0) {
             const direction = this.character.otherDirection;
             const bottle = new ThrowableObject(this.character.otherDirection ? this.character.x : this.character.x + 100, this.character.y + 100, direction);
             bottle.world = this;

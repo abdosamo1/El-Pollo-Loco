@@ -20,6 +20,40 @@
         </video>
         <button id="pause-button" title="Pause game" onclick="togglePause()">⏸</button>
         <button id="fullscreen-button" title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
+        <div id="mobile-controls">
+            <div id="mobile-left-controls">
+                <button id="mobile-up" class="control-button" title="Jump"
+                    onpointerdown="keyboard.mobileUp = true"
+                    onpointerup="keyboard.mobileUp = false"
+                    onpointerleave="keyboard.mobileUp = false"
+                    ontouchstart="keyboard.mobileUp = true"
+                    ontouchend="keyboard.mobileUp = false"
+                    ontouchcancel="keyboard.mobileUp = false">▲</button>
+                <button id="mobile-left" class="control-button" title="Move left"
+                    onpointerdown="keyboard.mobileLeft = true"
+                    onpointerup="keyboard.mobileLeft = false"
+                    onpointerleave="keyboard.mobileLeft = false"
+                    ontouchstart="keyboard.mobileLeft = true"
+                    ontouchend="keyboard.mobileLeft = false"
+                    ontouchcancel="keyboard.mobileLeft = false">◀</button>
+            </div>
+            <div id="mobile-right-controls">
+                <button id="mobile-throw" class="control-button" title="Throw bottle"
+                    onpointerdown="keyboard.mobileD = true"
+                    onpointerup="keyboard.mobileD = false"
+                    onpointerleave="keyboard.mobileD = false"
+                    ontouchstart="keyboard.mobileD = true"
+                    ontouchend="keyboard.mobileD = false"
+                    ontouchcancel="keyboard.mobileD = false">🧴</button>
+                <button id="mobile-right" class="control-button" title="Move right"
+                    onpointerdown="keyboard.mobileRight = true"
+                    onpointerup="keyboard.mobileRight = false"
+                    onpointerleave="keyboard.mobileRight = false"
+                    ontouchstart="keyboard.mobileRight = true"
+                    ontouchend="keyboard.mobileRight = false"
+                    ontouchcancel="keyboard.mobileRight = false">▶</button>
+            </div>
+        </div>
 
         <div id="start-screen-buttons">
             <button id="start-button">Start Game</button>

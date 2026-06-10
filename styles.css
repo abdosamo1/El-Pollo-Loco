@@ -1,6 +1,6 @@
 *{
     font-size: larger;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: cursive;
     margin: 0;
     padding: 0;
 }
@@ -24,6 +24,7 @@ h1{
 }
 
 #canvas-container{
+    margin: 8px;
     position: relative;
     display: flex;
     justify-content: center;
@@ -59,7 +60,8 @@ h1{
 #canvas-container.portrait-active #gameover-screen-buttons,
 #canvas-container.portrait-active #win-score,
 #canvas-container.portrait-active #tutorial-screen,
-#canvas-container.portrait-active #pause-button {
+#canvas-container.portrait-active #pause-button,
+#canvas-container.portrait-active .control-button {
     visibility: hidden;
 }
 
@@ -87,9 +89,8 @@ canvas{
 }
 
 #pause-button,
-#fullscreen-button{
-    position: absolute;
-    top: -16px;
+#fullscreen-button,
+.control-button{
     z-index: 1000;
     width: 42px;
     height: 42px;
@@ -105,17 +106,41 @@ canvas{
 }
 
 #pause-button {
+    position: absolute;
+    top: -16px;
     right: 60px;
 }
 
 #fullscreen-button{
+    position: absolute;
+    top: -16px;
     right: -16px;
 }
 
+
 #pause-button:hover,
-#fullscreen-button:hover{
+#fullscreen-button:hover,
+.control-button:hover{
     transform: scale(1.05);
     background: rgba(255, 255, 255, 1);
+}
+
+#mobile-controls {
+    display: none;
+}
+
+#mobile-left-controls,
+#mobile-right-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#mobile-up,
+#mobile-left,
+#mobile-throw,
+#mobile-right {
+    display: none;
 }
 
 #start-screen-buttons{
@@ -239,6 +264,52 @@ button:hover , #back-button:hover{
     button {
         font-size: 18px;
         padding: 12px 24px;
+    }
+    #mobile-controls {
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+        position: absolute;
+        bottom: 20px;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+    .control-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+    #mobile-up,
+    #mobile-left,
+    #mobile-throw,
+    #mobile-right {
+        display: flex;
+        position: absolute;
+    }
+    #mobile-up,
+    #mobile-throw{
+        bottom: 40px;
+    } 
+
+    #mobile-left,
+    #mobile-right {
+        bottom: 0;
+    }    
+    #mobile-left {
+        left: 40px;
+    }
+    #mobile-right {
+        right: 24px;
+    }
+    #mobile-throw {
+        right: -16px;
+    }
+    #mobile-up:hover,
+    #mobile-left:hover,
+    #mobile-throw:hover,
+    #mobile-right:hover {
+        color: #d02828;
     }
     h2{
         font-size: 24px;

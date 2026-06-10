@@ -50,11 +50,11 @@ class StatusBar extends DrawableObject {
         this.setPercentage(this.type == 'health' ? 100 : 0);
         this.x = 20;
         switch (this.type) {
-            case 'health': this.y = 20; break;
-            case 'coin': this.y = 68; break;
-            case 'bottle': this.y = 116; break;
-            case 'endboss': this.y = 20; break;
-            default: this.y = 20; break;
+            case 'health': this.y = 24; break;
+            case 'coin': this.y = 72; break;
+            case 'bottle': this.y = 120; break;
+            case 'endboss': this.y = 60; break;
+            default: this.y = 24; break;
         }
         this.width = 160;
         this.height = 48;
