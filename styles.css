@@ -55,12 +55,16 @@ h1{
 
 
 #canvas-container.portrait-active canvas,
-#canvas-container.portrait-active #fullscreen-button,
 #canvas-container.portrait-active #start-screen-buttons,
 #canvas-container.portrait-active #gameover-screen-buttons,
 #canvas-container.portrait-active #win-score,
-#canvas-container.portrait-active #tutorial-screen {
+#canvas-container.portrait-active #tutorial-screen,
+#canvas-container.portrait-active #pause-button {
     visibility: hidden;
+}
+
+#canvas-container.portrait-active #fullscreen-button {
+    visibility: visible;
 }
 
 #canvas-container:fullscreen,
@@ -82,10 +86,10 @@ canvas{
     height: 100%;
 }
 
+#pause-button,
 #fullscreen-button{
     position: absolute;
     top: -16px;
-    right: -16px;
     z-index: 1000;
     width: 42px;
     height: 42px;
@@ -100,6 +104,15 @@ canvas{
     transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
+#pause-button {
+    right: 60px;
+}
+
+#fullscreen-button{
+    right: -16px;
+}
+
+#pause-button:hover,
 #fullscreen-button:hover{
     transform: scale(1.05);
     background: rgba(255, 255, 255, 1);

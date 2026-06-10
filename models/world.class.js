@@ -59,6 +59,7 @@ class World {
         this.startScreen = null;
         this.gameOver = false;
         this.run();
+        if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
 
     restart() {
@@ -84,6 +85,7 @@ class World {
         this.hideAllButtons();
         this.setWorld();
         this.run();
+        if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
 
     showMainScreen() {
@@ -108,6 +110,7 @@ class World {
         this.startButtonsShown = false;
         this.gameOverButtonsShown = false;
         this.winButtonsShown = false;
+        if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
 
 
@@ -236,11 +239,13 @@ class World {
         if (startButtons) {
             startButtons.style.display = 'none';
         }
+        if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
 
     endGame() {
         this.gameOver = true;
         stopGame();
+        if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
 
     checkThrowObjects() {

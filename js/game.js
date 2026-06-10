@@ -2,12 +2,25 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let intervalIds = [];
+let isPaused = false;
+let autoPausedByPortrait = false;
+
+function setPause(paused, isAuto = false) {
+    isPaused = paused;
+    autoPausedByPortrait = isAuto ? paused : false;
+    const pauseButton = document.getElementById('pause-button');
+    if (pauseButton) {
+        pauseButton.textContent = isPaused ? '▶' : '⏸';
+        pauseButton.title = isPaused ? 'Resume game' : 'Pause game';
+    }
+}
 
 function init() {
     canvas = document.getElementById("canvas");
     world = new World(canvas , keyboard);
     updateCanvasSize();
     updatePortraitOverlay();
+    updatePauseButtonVisibility();
     window.addEventListener('resize', () => {
         updateCanvasSize();
         updatePortraitOverlay();
@@ -51,9 +64,29 @@ function updatePortraitOverlay() {
         if (overlay.paused) {
             overlay.play().catch(() => {});
         }
+        if (!isPaused && world && world.gameStarted && !world.gameOver && !world.youWin) {
+            setPause(true, true);
+        }
     } else {
         overlay.classList.remove('active');
         container.classList.remove('portrait-active');
+        if (autoPausedByPortrait) {
+            setPause(false, true);
+        }
+    }
+}
+
+function updatePauseButtonVisibility() {
+    const pauseButton = document.getElementById('pause-button');
+    if (!pauseButton) return;
+
+    const shouldShow = world && world.gameStarted && !world.gameOver && !world.youWin;
+    pauseButton.style.display = shouldShow ? 'block' : 'none';
+
+    if (!shouldShow) {
+        isPaused = false;
+        pauseButton.textContent = '⏸';
+        pauseButton.title = 'Pause game';
     }
 }
 
@@ -76,6 +109,10 @@ function toggleFullscreen() {
     }
 }
 
+function togglePause() {
+    setPause(!isPaused, false);
+}
+
 // Close tutorial when clicking outside
 document.addEventListener('click', (e) => {
     const tutorialScreen = document.getElementById("tutorial-screen");
@@ -87,7 +124,11 @@ document.addEventListener('click', (e) => {
 
 
 function setStopableInterval(intervalFunction, delay) {
-    let intervalId = setInterval(intervalFunction, delay);
+    let intervalId = setInterval(() => {
+        if (!isPaused) {
+            intervalFunction();
+        }
+    }, delay);
     intervalIds.push(intervalId);
     return intervalId;
 }
