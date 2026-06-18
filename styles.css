@@ -129,6 +129,12 @@ canvas{
     display: none;
 }
 
+@media (pointer: fine) {
+    #mobile-controls {
+        display: none !important;
+    }
+}
+
 #mobile-left-controls,
 #mobile-right-controls {
     display: flex;
@@ -256,7 +262,7 @@ button:hover , #back-button:hover{
 }
 
 
-@media (max-width: 1020px) {
+@media (pointer: coarse) {
     h1{
         font-size: 32px;
         margin-bottom: 8px;

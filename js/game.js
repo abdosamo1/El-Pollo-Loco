@@ -84,7 +84,7 @@ function updatePauseButtonVisibility() {
     const shouldShow = world && world.gameStarted && !world.gameOver && !world.youWin;
     pauseButton.style.display = shouldShow ? 'block' : 'none';
     if (mobileControls) {
-        mobileControls.style.display = shouldShow ? 'block' : 'none';
+        mobileControls.style.display = shouldShow ? 'flex' : 'none';
     }
 
     if (!shouldShow) {

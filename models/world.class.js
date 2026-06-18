@@ -67,13 +67,13 @@ class World {
         this.youWin = false;
         this.characterDied = false;
         this.deathDelay = 0;
+        this.camera_x = 0;
+        this.character = new Character();
         this.healthBar.setPercentage(100);
         this.coinBar.setPercentage(0);
         this.bottleBar.setPercentage(0);
         this.endBossBar = null;
         this.youWinScreen = null;
-        this.camera_x = 0;
-        this.character = new Character();
         this.level = createLevel1();
         this.throwableObjects = [];
         this.endBossSpawned = false;
@@ -95,11 +95,11 @@ class World {
         this.startScreen = new startGame(this);
         this.characterDied = false;
         this.deathDelay = 0;
+        this.camera_x = 0;
+        this.character = new Character();
         this.healthBar.setPercentage(100);
         this.coinBar.setPercentage(0);
         this.bottleBar.setPercentage(0);
-        this.camera_x = 0;
-        this.character = new Character();
         this.level = createLevel1();
         this.throwableObjects = [];
         this.endBossBar = null;
@@ -378,8 +378,8 @@ class World {
             this.addObjectsToMap(this.level.backgroundObjects);
             this.addObjectsToMap(this.level.clouds);
         }
-        this.addObjectsToMap(this.level.collectables);
         this.addToMap(this.character);
+        this.addObjectsToMap(this.level.collectables);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
 

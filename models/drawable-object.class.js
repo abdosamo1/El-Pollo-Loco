@@ -21,6 +21,9 @@ class DrawableObject {
     }
 
     drawImage(ctx, scale = 1) {
+        if (!this.img || !this.img.complete || this.img.naturalWidth === 0) {
+            return;
+        }
         if (scale === 1) {
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
             return;

@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-    x = 50;
+    x = 120;
     y = 125;
     width = 150;
     height = 300;
@@ -68,6 +68,8 @@ class Character extends MovableObject {
     world;
     idleTicks = 0;
     LONG_IDLE_THRESHOLD = 500;
+    currentJumpImage = 0;
+    jumpImageTick = 0;
 
     constructor() {
         super();
@@ -113,7 +115,7 @@ class Character extends MovableObject {
         } else {
             this.idleTicks++;
         }
-        this.world.camera_x = -this.x + 100;
+        this.world.camera_x = -this.x + 150;
     }
 
     playPepeAnimation() {
@@ -123,12 +125,60 @@ class Character extends MovableObject {
         } else if (this.isHurt()) {
             this.playAnimation(this.IMAGES_HURT);
         } else if (this.aboveGround()) {
-            this.playAnimation(this.IMAGES_JUMPING);
+            this.playJumpAnimation();
         } else {
+            this.currentJumpImage = 0;
+            this.jumpImageTick = 0;
             this.isWalking() ? this.playAnimation(this.IMAGES_WALKING) 
             : this.longStanding() ? this.playAnimation(this.IMAGES_LONG_IDLE)
             : this.playAnimation(this.IMAGES_IDLE);
         }
+    }
+
+    playJumpAnimation() {
+        let i;
+        if (this.speedY > 2) {
+            // Rising phase (up to the highest point)
+            if (this.currentJumpImage < 0 || this.currentJumpImage > 3) {
+                this.currentJumpImage = 0;
+                this.jumpImageTick = 0;
+            }
+            i = this.currentJumpImage;
+            this.jumpImageTick++;
+            if (this.jumpImageTick >= 2) { // Slows down rising (change to 1 for original speed)
+                if (this.currentJumpImage < 3) {
+                    this.currentJumpImage++;
+                }
+                this.jumpImageTick = 0;
+            }
+        } else if (this.speedY >= -2 && this.speedY <= 2) {
+            // Highest point / Peak
+            i = 4;
+            this.jumpImageTick = 0;
+        } else {
+            // Falling phase (this.speedY < -2)
+            if (this.currentJumpImage < 5 || this.currentJumpImage > 8) {
+                this.currentJumpImage = 5;
+                this.jumpImageTick = 0;
+            }
+            i = this.currentJumpImage;
+            this.jumpImageTick++;
+            if (this.jumpImageTick >= 3) { // Slows down falling (increase 3 to 4 or more for even slower)
+                if (this.currentJumpImage < 8) {
+                    this.currentJumpImage++;
+                }
+                this.jumpImageTick = 0;
+            }
+        }
+
+        let path = this.IMAGES_JUMPING[i];
+        this.img = this.imageCache[path];
+    }
+
+    jump(height = 20) {
+        super.jump(height);
+        this.currentJumpImage = 0;
+        this.jumpImageTick = 0;
     }
 
     isAbove(object) {

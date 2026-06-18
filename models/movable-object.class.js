@@ -34,8 +34,14 @@ class MovableObject extends DrawableObject {
         setInterval(() => {
             if (!this.isGameStarted()) return;
             if (this.aboveGround() || this.speedY > 0) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
+                let nextY = this.y - this.speedY;
+                if (nextY > 125 && !(this instanceof ThrowableObject)) {
+                    this.y = 125;
+                    this.speedY = 0;
+                } else {
+                    this.y = nextY;
+                    this.speedY -= this.acceleration;
+                }
             }
         }, 1000 / 25);
     }
