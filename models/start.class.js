@@ -28,5 +28,8 @@ class startGame extends DrawableObject {
         if (this.world) {
             this.world.start();
         }
+        if (typeof maybeStartTutorialHints === 'function') {
+            maybeStartTutorialHints();
+        }
     }
 }

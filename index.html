@@ -15,7 +15,7 @@
     <div id="canvas-container">
         <canvas width="720" height="480" id="canvas"></canvas>
         <video id="portrait-overlay" muted autoplay loop playsinline>
-            <source src="./video/0609 (2)(1).mp4" type="video/mp4">
+            <source src="./video/0609 (2).mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <button id="pause-button" title="Pause game" onclick="togglePause()">⏸</button>
@@ -26,38 +26,39 @@
                     onpointerdown="keyboard.mobileUp = true"
                     onpointerup="keyboard.mobileUp = false"
                     onpointerleave="keyboard.mobileUp = false"
-                    ontouchstart="keyboard.mobileUp = true"
-                    ontouchend="keyboard.mobileUp = false"
-                    ontouchcancel="keyboard.mobileUp = false">▲</button>
+                    ontouchstart="event.preventDefault(); keyboard.mobileUp = true"
+                    ontouchend="event.preventDefault(); keyboard.mobileUp = false"
+                    ontouchcancel="event.preventDefault(); keyboard.mobileUp = false">▲</button>
                 <button id="mobile-left" class="control-button" title="Move left"
                     onpointerdown="keyboard.mobileLeft = true"
                     onpointerup="keyboard.mobileLeft = false"
                     onpointerleave="keyboard.mobileLeft = false"
-                    ontouchstart="keyboard.mobileLeft = true"
-                    ontouchend="keyboard.mobileLeft = false"
-                    ontouchcancel="keyboard.mobileLeft = false">◀</button>
+                    ontouchstart="event.preventDefault(); keyboard.mobileLeft = true"
+                    ontouchend="event.preventDefault(); keyboard.mobileLeft = false"
+                    ontouchcancel="event.preventDefault(); keyboard.mobileLeft = false">◀</button>
             </div>
             <div id="mobile-right-controls">
                 <button id="mobile-throw" class="control-button" title="Throw bottle"
                     onpointerdown="keyboard.mobileD = true"
                     onpointerup="keyboard.mobileD = false"
                     onpointerleave="keyboard.mobileD = false"
-                    ontouchstart="keyboard.mobileD = true"
-                    ontouchend="keyboard.mobileD = false"
-                    ontouchcancel="keyboard.mobileD = false">🧴</button>
+                    ontouchstart="event.preventDefault(); keyboard.mobileD = true"
+                    ontouchend="event.preventDefault(); keyboard.mobileD = false"
+                    ontouchcancel="event.preventDefault(); keyboard.mobileD = false">🧴</button>
                 <button id="mobile-right" class="control-button" title="Move right"
                     onpointerdown="keyboard.mobileRight = true"
                     onpointerup="keyboard.mobileRight = false"
                     onpointerleave="keyboard.mobileRight = false"
-                    ontouchstart="keyboard.mobileRight = true"
-                    ontouchend="keyboard.mobileRight = false"
-                    ontouchcancel="keyboard.mobileRight = false">▶</button>
+                    ontouchstart="event.preventDefault(); keyboard.mobileRight = true"
+                    ontouchend="event.preventDefault(); keyboard.mobileRight = false"
+                    ontouchcancel="event.preventDefault(); keyboard.mobileRight = false">▶</button>
             </div>
         </div>
 
         <div id="start-screen-buttons">
             <button id="start-button">Start Game</button>
-            <button id="tutorial-button" onclick="showTutorial()">Tutorial</button>
+            <button id="tutorial-button" onclick="showOverlay('tutorial')">Tutorial</button>
+            <button id="impressum-button" onclick="showOverlay('impressum')">Impressum</button>
         </div>
         <div id="gameover-screen-buttons" >
             <button id="restart-button">Restart Game</button>
@@ -66,14 +67,49 @@
 
         <div id="win-score"></div>
 
+        <div id="tutorial-hint-overlay">
+            <div id="tutorial-hint-box">
+                <button id="tutorial-hint-close" onclick="closeTutorialHint()">X</button>
+                <span id="tutorial-hint-step"></span>
+                <div id="tutorial-hint-text"></div>
+            </div>
+        </div>
+
         <div id="tutorial-screen">
             <h2>Tutorial</h2>
-            <button id="back-button" onclick="closeTutorial()">X</button>
+            <button id="back-button" onclick="closeOverlay()">X</button>
             <p>Use the arrow keys to move right and left,
                 and space to jump. Collect bottles and press 'D' to throw them on enimies. 
                 You can also jump on chickens to kill them, but be careful not to get hit by them!
                 Collect coins from killing chickens to increase your score.
                 Endboss will spawn after killing all chickens. Defeat the Endboss to win the game!</p>
+        </div>
+        <div id="impressum-screen">
+            <h2>Impressum</h2>
+            <button id="back-button" onclick="closeOverlay()">X</button>
+            <p>Angaben gemäß § 5 DDG <br>
+                Muki GmbH<br>
+                Landstr. 12<br>
+                73030 Weinstadt<br>
+                Vertreten durch: Mohamad AbdulRazak Samouneh (Geschäftsführer)<br>
+                Kontakt<br>
+                Telefon: +49 (0) 123 456789<br>
+                E-Mail: info@muki27.de<br>
+                Registereintrag<br>
+                Eintragung im Handelsregister.<br>
+                Registergericht: Amtsgericht Weinstadt<br>
+                Registernummer: HRB 12345<br>
+                Umsatzsteuer-ID<br>
+                Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: DE 123456789<br>
+                Redaktionell verantwortlich<br>
+                Mohamad AbdulRazak Samouneh<br>
+                Landstr. 12<br>
+                73030 Weinstadt<br>
+                EU-Streitschlichtung<br>
+                Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: europa.eu.<br>
+                Unsere E-Mail-Adresse finden Sie oben im Impressum.<br>
+                Verbraucher­streit­beilegung/Universal­schlichtungs­stelle<br>
+                Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
         </div>
     </div>
 

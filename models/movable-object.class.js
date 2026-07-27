@@ -6,6 +6,7 @@ class MovableObject extends DrawableObject {
     acceleration = 1;
     lastHit = 0;
     energy = 1000;
+    groundY = 125;
 
     isColliding(object) {
         return this.x + this.width > object.x &&
@@ -35,8 +36,8 @@ class MovableObject extends DrawableObject {
             if (!this.isGameStarted()) return;
             if (this.aboveGround() || this.speedY > 0) {
                 let nextY = this.y - this.speedY;
-                if (nextY > 125 && !(this instanceof ThrowableObject)) {
-                    this.y = 125;
+                if (nextY > this.groundY && !(this instanceof ThrowableObject)) {
+                    this.y = this.groundY;
                     this.speedY = 0;
                 } else {
                     this.y = nextY;
@@ -47,7 +48,7 @@ class MovableObject extends DrawableObject {
     }
 
     aboveGround() {
-        return this instanceof ThrowableObject ? true : this.y < 125;
+        return this instanceof ThrowableObject ? true : this.y < this.groundY;
     }
 
     isGameStarted() {
