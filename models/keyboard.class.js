@@ -1,3 +1,4 @@
+/** Tracks keyboard input state used to control the character. */
 class Keyboard {
     LEFT = false;
     RIGHT = false;
@@ -10,55 +11,55 @@ class Keyboard {
     mobileUp = false;
     mobileD = false;
 
+    /** Maps native key values to the tracked state property they control. */
+    static KEY_TO_PROPERTY = {
+        'ArrowLeft': 'LEFT',
+        'ArrowRight': 'RIGHT',
+        'ArrowUp': 'UP',
+        'ArrowDown': 'DOWN',
+        ' ': 'SPACE',
+        'd': 'D'
+    };
 
     constructor() {
         this.init();
     }
 
-    init() {    
-        window.addEventListener('keydown', (e) => {
-            switch (e.key) {
-                case 'ArrowLeft':
-                    this.LEFT = true;
-                    break;
-                case 'ArrowRight':
-                    this.RIGHT = true;
-                    break;
-                case 'ArrowUp':
-                    this.UP = true;
-                    break;
-                case 'ArrowDown':
-                    this.DOWN = true;
-                    break;
-                case ' ':
-                    this.SPACE = true;
-                    break;
-                case 'd':
-                    this.D = true;
-                    break;
-            }
-        });
-        window.addEventListener('keyup', (e) => {
-            switch (e.key) {
-                case 'ArrowLeft':
-                    this.LEFT = false;
-                    break;
-                case 'ArrowRight':
-                    this.RIGHT = false;
-                    break;
-                case 'ArrowUp':
-                    this.UP = false;
-                    break;
-                case 'ArrowDown':
-                    this.DOWN = false;
-                    break;
-                case ' ':
-                    this.SPACE = false;
-                    break;
-                case 'd':
-                    this.D = false;
-                    break;
-            }
-        });
+    /**
+     * Registers window key event listeners that flip the tracked key states.
+     * @returns {void}
+     */
+    init() {
+        this.bindKeyDown();
+        this.bindKeyUp();
+    }
+
+    /**
+     * Listens for keydown events and marks the matching tracked key as pressed.
+     * @returns {void}
+     */
+    bindKeyDown() {
+        window.addEventListener('keydown', (e) => this.setKeyState(e.key, true));
+    }
+
+    /**
+     * Listens for keyup events and marks the matching tracked key as released.
+     * @returns {void}
+     */
+    bindKeyUp() {
+        window.addEventListener('keyup', (e) => this.setKeyState(e.key, false));
+    }
+
+    /**
+     * Updates the tracked state property for a given native key, if any.
+     * @param {string} key - The native `KeyboardEvent.key` value.
+     * @param {boolean} isPressed - True on keydown, false on keyup.
+     * @returns {void}
+     */
+    setKeyState(key, isPressed) {
+        const property = Keyboard.KEY_TO_PROPERTY[key];
+        if (property) {
+            this[property] = isPressed;
+        }
     }
 }

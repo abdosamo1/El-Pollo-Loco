@@ -19,7 +19,7 @@
             <source src="./video/0609 (2).mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <button id="pause-button" title="Pause game" onclick="togglePause()">⏸</button>
+        <button id="pause-button" title="Pause game" onclick="togglePause()"><span class="pause-icon" id="pause-icon" aria-hidden="true"></span></button>
         <button id="fullscreen-button" title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
 
         <div id="mobile-controls">
@@ -28,12 +28,12 @@
                     onpointerup="keyboard.mobileUp = false" onpointerleave="keyboard.mobileUp = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileUp = true"
                     ontouchend="event.preventDefault(); keyboard.mobileUp = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileUp = false">▲&#xFE0E;</button>
+                    ontouchcancel="event.preventDefault(); keyboard.mobileUp = false"><span class="arrow-icon arrow-up" aria-hidden="true"></span></button>
                 <button id="mobile-left" class="control-button" title="Move left" onpointerdown="keyboard.mobileLeft = true"
                     onpointerup="keyboard.mobileLeft = false" onpointerleave="keyboard.mobileLeft = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileLeft = true"
                     ontouchend="event.preventDefault(); keyboard.mobileLeft = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileLeft = false">◀&#xFE0E;</button>
+                    ontouchcancel="event.preventDefault(); keyboard.mobileLeft = false"><span class="arrow-icon arrow-left" aria-hidden="true"></span></button>
             </div>
             <div id="mobile-right-controls">
                 <button id="mobile-throw" class="control-button" title="Throw bottle"
@@ -46,7 +46,7 @@
                     onpointerleave="keyboard.mobileRight = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileRight = true"
                     ontouchend="event.preventDefault(); keyboard.mobileRight = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileRight = false">▶&#xFE0E;</button>
+                    ontouchcancel="event.preventDefault(); keyboard.mobileRight = false"><span class="arrow-icon arrow-right" aria-hidden="true"></span></button>
             </div>
         </div>
 
@@ -62,6 +62,8 @@
         </div>
 
         <div id="win-score"></div>
+
+        <div id="endboss-warning">You must kill all chickens to spawn the Endboss if you want to win</div>
 
         <div id="tutorial-hint-overlay">
             <div id="tutorial-hint-box">

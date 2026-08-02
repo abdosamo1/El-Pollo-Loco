@@ -1,3 +1,4 @@
+/** The end-level boss chicken: alerts, walks toward, and attacks the character. */
 class Endboss extends MovableObject {
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -41,6 +42,7 @@ class Endboss extends MovableObject {
     ]
     currentImage = 0;
 
+    /** @param {number} startX - Horizontal spawn position, ahead of the character. */
     constructor(startX) {
         super();
         this.loadAllImages();
@@ -57,6 +59,10 @@ class Endboss extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Resets the attack/alert state machine to idle.
+     * @returns {void}
+     */
     laodAllStates() {
         this.isAttacking = false;
         this.isAlert = false;
@@ -65,6 +71,10 @@ class Endboss extends MovableObject {
     }
 
 
+    /**
+     * Preloads every sprite sheet used by the boss.
+     * @returns {void}
+     */
     loadAllImages() {
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_ALERT);
@@ -73,11 +83,20 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
     }
 
+    /**
+     * Starts the recurring intervals that drive the boss's animation and movement.
+     * @returns {void}
+     */
     animate() {
         setStopableInterval(() => this.playEndBossAnimations(), 200);
         setStopableInterval(() => this.moveEndBoss(), 100 / 12);
     }
 
+    /**
+     * Updates the attack/alert state, then plays the animation matching the
+     * boss's current state (hurt, dead, attacking, alert, or walking).
+     * @returns {void}
+     */
     playEndBossAnimations() {
         if (!this.isGameStarted()) return;
 
@@ -89,6 +108,11 @@ class Endboss extends MovableObject {
                     this.isAlert ? this.playAnimation(this.IMAGES_ALERT) : this.playAnimation(this.IMAGES_WALKING);
     }
 
+    /**
+     * Chooses attack/alert/idle-walk behavior based on distance to the
+     * character, unless already mid-attack, hurt, or dead.
+     * @returns {void}
+     */
     updateState() {
         if (!this.world.character || this.attackPhase !== 'idle' || this.isHurt() || this.isDead()) return;
         const distance = Math.abs(this.world.character.x - this.x);
@@ -97,6 +121,11 @@ class Endboss extends MovableObject {
             distance < 300 ? this.startAlert() : this.startWalking();
     }
 
+    /**
+     * Begins the multi-phase attack sequence (lunge, then retreat to a
+     * safe distance) if not already attacking.
+     * @returns {void}
+     */
     startAttack() {
         if (this.attackPhase !== 'idle') return;
         this.attackPhase = 'attacking';
@@ -109,18 +138,25 @@ class Endboss extends MovableObject {
         this.startY = this.y;
     }
 
+    /** Switches the boss to the alert (aware, not yet attacking) state. @returns {void} */
     startAlert() {
         this.isAlert = true,
             this.isAttacking = false,
             this.attackPhase = 'idle'
     }
 
+    /** Switches the boss to the idle-walking state. @returns {void} */
     startWalking() {
         this.isAlert = false,
             this.isAttacking = false,
             this.attackPhase = 'idle'
     }
 
+    /**
+     * Per-tick movement update: continues an in-progress attack, or otherwise
+     * walks toward, gets alerted by, or attacks the character based on distance.
+     * @returns {void}
+     */
     moveEndBoss() {
         if (!this.world?.gameStarted || !this.world.character || this.isHurt() || this.isDead()) return;
 
@@ -137,6 +173,10 @@ class Endboss extends MovableObject {
     
 
 
+    /**
+     * Moves the boss toward the character at alert speed while marking it as alert.
+     * @returns {void}
+     */
     bossAllerted() {
         this.isAlert = true;
         this.isAttacking = false;
@@ -149,6 +189,10 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Walks the boss toward the character at normal speed.
+     * @returns {void}
+     */
     moveToCharacter() {
         this.isAlert = false;
         this.isAttacking = false;
@@ -161,27 +205,57 @@ class Endboss extends MovableObject {
         }
     }
 
+    /**
+     * Advances the current attack phase (lunge, retreat, then idle) based on
+     * elapsed attack time.
+     * @returns {void}
+     */
     performAttack() {
         this.attackTimer += 8.333;
         const attackStage = this.attackTimer;
 
         if (attackStage < 500) {
-            this.y = this.startY - Math.sin((attackStage / 500) * Math.PI) * 15;
-            this.x += this.attackDirection * 2.5;
+            this.performLungePhase(attackStage);
         } else if (attackStage < 1300) {
-            this.y = this.startY;
-            this.isAlert = true;
-            const targetX = this.alertTargetX;
-            if (Math.abs(this.x - targetX) > 2) {
-                this.x += this.x < targetX ? 2.5 : -2.5;
-                this.otherDirection = this.x < targetX;
-            }
+            this.performRetreatPhase();
         } else {
-            this.attackPhase = 'idle';
-            this.isAttacking = false;
-            this.isAlert = true;
-            this.attackTimer = 0;
-            this.y = this.startY;
+            this.finishAttack();
         }
+    }
+
+    /**
+     * Lunges the boss toward its attack target with a small vertical arc.
+     * @param {number} attackStage - Milliseconds elapsed into the attack.
+     * @returns {void}
+     */
+    performLungePhase(attackStage) {
+        this.y = this.startY - Math.sin((attackStage / 500) * Math.PI) * 15;
+        this.x += this.attackDirection * 2.5;
+    }
+
+    /**
+     * Retreats the boss back to its alert distance after lunging.
+     * @returns {void}
+     */
+    performRetreatPhase() {
+        this.y = this.startY;
+        this.isAlert = true;
+        const targetX = this.alertTargetX;
+        if (Math.abs(this.x - targetX) > 2) {
+            this.x += this.x < targetX ? 2.5 : -2.5;
+            this.otherDirection = this.x < targetX;
+        }
+    }
+
+    /**
+     * Ends the attack sequence, returning the boss to an alert idle state.
+     * @returns {void}
+     */
+    finishAttack() {
+        this.attackPhase = 'idle';
+        this.isAttacking = false;
+        this.isAlert = true;
+        this.attackTimer = 0;
+        this.y = this.startY;
     }
 }

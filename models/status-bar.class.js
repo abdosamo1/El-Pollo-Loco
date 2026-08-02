@@ -1,3 +1,4 @@
+/** A HUD status bar (health, coins, bottles, or endboss health) rendered from percentage-tiered sprites. */
 class StatusBar extends DrawableObject {
     HELTHBAR_IMAGES = [
         './img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
@@ -37,39 +38,57 @@ class StatusBar extends DrawableObject {
 
     percentage = 0;
 
+    /** @param {'health'|'coin'|'bottle'|'endboss'} type - Which status bar this instance represents. */
     constructor(type) {
         super();
         this.type = String(type).toLowerCase();
-
-        const images = this.type == 'health' ? this.HELTHBAR_IMAGES
-            : this.type == 'coin' ? this.COINBAR_IMAGES
-            : this.type == 'bottle' ? this.BOTTLEBAR_IMAGES
-            : (this.type == 'endboss' || this.type == 'endbos') ? this.ENDBOSSBAR_IMAGES
-            : this.BOTTLEBAR_IMAGES;
-        this.loadImages(images);
+        this.loadImages(this.resolveImageSet());
         this.setPercentage(this.type == 'health' ? 100 : 0);
         this.x = 20;
-        switch (this.type) {
-            case 'health': this.y = 24; break;
-            case 'coin': this.y = 72; break;
-            case 'bottle': this.y = 120; break;
-            case 'endboss': this.y = 60; break;
-            default: this.y = 24; break;
-        }
+        this.y = this.resolveYPosition();
         this.width = 160;
         this.height = 48;
     }
 
-    setPercentage(percentage) {
-        this.percentage = percentage; 
-        let path = 
-            this.type == 'health' ? this.HELTHBAR_IMAGES[this.resolveImageIndex()]
-            : this.type == 'coin' ? this.COINBAR_IMAGES[this.resolveImageIndex()]
-            : this.type == 'bottle' ? this.BOTTLEBAR_IMAGES[this.resolveImageIndex()]
-            : this.type == 'endboss' ? this.ENDBOSSBAR_IMAGES[this.resolveImageIndex()]
-            : this.BOTTLEBAR_IMAGES[this.resolveImageIndex()];
-        this.img = this.imageCache[path];
+    /**
+     * @returns {string[]} The tiered sprite set matching this bar's type.
+     */
+    resolveImageSet() {
+        if (this.type == 'health') return this.HELTHBAR_IMAGES;
+        if (this.type == 'coin') return this.COINBAR_IMAGES;
+        if (this.type == 'bottle') return this.BOTTLEBAR_IMAGES;
+        if (this.type == 'endboss' || this.type == 'endbos') return this.ENDBOSSBAR_IMAGES;
+        return this.BOTTLEBAR_IMAGES;
     }
+
+    /**
+     * @returns {number} The HUD y position matching this bar's type.
+     */
+    resolveYPosition() {
+        switch (this.type) {
+            case 'health': return 24;
+            case 'coin': return 72;
+            case 'bottle': return 120;
+            case 'endboss': return 60;
+            default: return 24;
+        }
+    }
+
+    /**
+     * Updates the bar's percentage and swaps in the matching tiered sprite.
+     * @param {number} percentage - New percentage value (0-100).
+     * @returns {void}
+     */
+    setPercentage(percentage) {
+        this.percentage = percentage;
+        const images = this.resolveImageSet();
+        this.img = this.imageCache[images[this.resolveImageIndex()]];
+    }
+
+    /**
+     * Maps the current percentage to one of the 6 sprite tiers (0/1/20/40/60/80/100).
+     * @returns {number} Index into the tiered image array.
+     */
     resolveImageIndex() {
         const percentage = Math.max(0, Math.min(100, this.percentage));
         return percentage == 100 ? 5 :

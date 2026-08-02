@@ -1,3 +1,4 @@
+/** A regular walking chicken enemy that patrols back and forth. */
 class Chicken extends MovableObject {
     y = 325;
     width = 100;
@@ -13,27 +14,37 @@ class Chicken extends MovableObject {
     ];
     currentImage = 0;
 
+    /**
+     * @param {number} [startX] - Starting horizontal position; also the right
+     * patrol boundary.
+     */
     constructor(startX = 500 + Math.random() * 500) {
         super();
         this.loadImage(this.WALK_IMAGES[0]);
         this.loadImages(this.WALK_IMAGES);
         this.loadImages(this.DEAD_IMAGES);
         this.fullscreenY = 500;
-
-
         this.x = startX;
         this.patrolStartX = startX;
         this.movingLeft = true;
         this.speed = 0.5;
-
         this.animate();
     }
 
+    /**
+     * Starts the recurring intervals that drive patrol movement and animation.
+     * @returns {void}
+     */
     animate() {
         setStopableInterval(() => this.chickenMovement(), 100 / 12);
         setStopableInterval(() => this.playChickenAnimation(), 100);
     }
 
+    /**
+     * Moves the chicken left/right between its patrol bounds, flipping
+     * direction at the edges. No-op if the game hasn't started or it's dead.
+     * @returns {void}
+     */
     chickenMovement() {
         if (!this.world?.gameStarted || this.isDead()) return;
 
@@ -50,6 +61,10 @@ class Chicken extends MovableObject {
         }
     }
 
+    /**
+     * Plays the death animation if dead, otherwise the walking animation.
+     * @returns {void}
+     */
     playChickenAnimation() {
         if (!this.world?.gameStarted) return;
         this.isDead() ? this.playAnimation(this.DEAD_IMAGES) : this.playAnimation(this.WALK_IMAGES);

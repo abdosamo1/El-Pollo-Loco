@@ -1,4 +1,6 @@
+/** The victory overlay screen and its restart/main-menu button wiring. */
 class YouWin extends DrawableObject {
+    /** @param {World} world - The game world, used to restart or return to the main screen. */
     constructor(world) {
         super();
         this.world = world;
@@ -11,6 +13,10 @@ class YouWin extends DrawableObject {
         this.addWinButtons();
     }
 
+    /**
+     * Wires up the restart and main-screen buttons' click handlers.
+     * @returns {void}
+     */
     addWinButtons() {
         this.restartButton = document.getElementById('restart-button');
         if (this.restartButton) {
@@ -27,6 +33,10 @@ class YouWin extends DrawableObject {
         }
     }
 
+    /**
+     * Hides the win-screen buttons and restarts the game world.
+     * @returns {void}
+     */
     restartGame() {
         const gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
         if (gameOverButtonsDiv) {
@@ -37,6 +47,11 @@ class YouWin extends DrawableObject {
         }
     }
 
+    /**
+     * Hides the win-screen buttons, shows the start-screen buttons, and
+     * returns the world to its main screen state.
+     * @returns {void}
+     */
     showMainScreen() {
         const gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
         if (gameOverButtonsDiv) {

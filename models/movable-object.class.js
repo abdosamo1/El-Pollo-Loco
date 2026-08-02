@@ -1,3 +1,4 @@
+/** Base class for drawable objects that move, collide, take damage, and fall under gravity. */
 class MovableObject extends DrawableObject {
     
     speed = 0.15;
@@ -9,6 +10,11 @@ class MovableObject extends DrawableObject {
     groundY = 125;
     offset = { top: 0, left: 0, right: 0, bottom: 0 };
 
+    /**
+     * Checks whether this object's offset-adjusted hitbox overlaps another object's.
+     * @param {MovableObject} object - The other object to test against.
+     * @returns {boolean} True if the hitboxes overlap.
+     */
     isColliding(object) {
         const thisOffset = this.offset;
         const objectOffset = object.offset ?? { top: 0, left: 0, right: 0, bottom: 0 };
@@ -18,6 +24,11 @@ class MovableObject extends DrawableObject {
             this.y + this.height - thisOffset.bottom > object.y + objectOffset.top;
     }
 
+    /**
+     * Applies damage unless the object is still in its hurt-invincibility window.
+     * @param {number} damge - Amount of energy to subtract.
+     * @returns {void}
+     */
     hit(damge){
         if (this.isHurt()) return;
         this.energy -= damge;
@@ -25,16 +36,28 @@ class MovableObject extends DrawableObject {
             this.lastHit = new Date().getTime();
     }
 
+    /**
+     * @returns {boolean} True if the object was hit within the last 1.5 seconds.
+     */
     isHurt(){
         let timepassed = new Date().getTime() - this.lastHit; // difference in ms
         timepassed = timepassed / 1000; // difference in s
         return timepassed < 1.5;
     }
 
+    /**
+     * @returns {boolean} True if the object's energy has reached zero.
+     */
     isDead(){
         return this.energy == 0;
     }
 
+    /**
+     * Starts a repeating interval that simulates gravity: while airborne or
+     * still rising, moves the object vertically by its current speed and
+     * decelerates it, clamping to the ground once it lands.
+     * @returns {void}
+     */
     applyGravity() {
         setInterval(() => {
             if (!this.isGameStarted()) return;
@@ -51,14 +74,26 @@ class MovableObject extends DrawableObject {
         }, 1000 / 25);
     }
 
+    /**
+     * @returns {boolean} True if the object is above its resting ground level
+     * (always true for {@link ThrowableObject}, which flies until it splashes).
+     */
     aboveGround() {
         return this instanceof ThrowableObject ? true : this.y < this.groundY;
     }
 
+    /**
+     * @returns {boolean} True if this object's world has started the game.
+     */
     isGameStarted() {
         return this.world?.gameStarted ?? false;
     }
 
+    /**
+     * Advances and renders the next frame of a looping image animation.
+     * @param {string[]} arr - Array of image paths to cycle through.
+     * @returns {void}
+     */
     playAnimation(arr) {
         let i = this.currentImage % arr.length;
         let path = arr[i];
@@ -66,14 +101,21 @@ class MovableObject extends DrawableObject {
         this.currentImage++;
     }
 
+    /** Moves the object one step to the right by its current speed. @returns {void} */
     moveRight() {
         this.x += this.speed;
     }
 
+    /** Moves the object one step to the left by its current speed. @returns {void} */
     moveLeft() {
         this.x -= this.speed;
     }
 
+    /**
+     * Starts a jump by setting the initial upward vertical speed.
+     * @param {number} [height=20] - Initial vertical speed applied for the jump.
+     * @returns {void}
+     */
     jump(height = 20) {
         this.speedY = height;
     }

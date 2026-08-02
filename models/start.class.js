@@ -1,4 +1,6 @@
+/** The start-screen overlay and its start-button wiring. */
 class startGame extends DrawableObject {
+    /** @param {World} world - The game world to start when the start button is clicked. */
     constructor(world) {
         super();
         this.world = world;
@@ -11,6 +13,10 @@ class startGame extends DrawableObject {
         this.addStartButtons();
     }
 
+    /**
+     * Wires up the start button's click handler.
+     * @returns {void}
+     */
     addStartButtons() {
         this.startButton = document.getElementById('start-button');
         if (this.startButton) {
@@ -20,6 +26,11 @@ class startGame extends DrawableObject {
         }
     }
 
+    /**
+     * Hides the start-screen buttons, starts the world, and triggers the
+     * first-run tutorial hints if applicable.
+     * @returns {void}
+     */
     startGame() {
         if (this.startButton) {
             this.startButtonsDiv = document.getElementById('start-screen-buttons');

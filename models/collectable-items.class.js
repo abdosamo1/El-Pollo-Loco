@@ -1,3 +1,4 @@
+/** A collectable pickup: a coin, a ground/dropped bottle, or the base class for {@link ThrowableObject}. */
 class CollectableItems extends MovableObject {
 
     coins = [
@@ -20,6 +21,13 @@ class CollectableItems extends MovableObject {
 
 
 
+    /**
+     * @param {number} x - Horizontal position.
+     * @param {number} y - Vertical position.
+     * @param {boolean} [isBottle=false] - True for a bottle pickup, false for a coin.
+     * @param {boolean} [isDropped=false] - True if this item was dropped by a
+     * defeated enemy and should fall/bounce into place before becoming collectable.
+     */
     constructor(x, y, isBottle = false, isDropped = false) {
         super();
         this.x = x;
@@ -30,53 +38,92 @@ class CollectableItems extends MovableObject {
         this.isDropped = isDropped;
         this.canBeCollected = !isDropped;
         this.currentImage = 0;
+        this.setupBehavior();
+    }
 
-        isBottle ? this.loadBottleImages() : this.loadCoinsImages();
-
-        if (!isBottle && !isDropped) {
+    /**
+     * Loads the correct sprites and starts the matching animation/drop behavior.
+     * @returns {void}
+     */
+    setupBehavior() {
+        this.isBottle ? this.loadBottleImages() : this.loadCoinsImages();
+        if (!this.isBottle && !this.isDropped) {
             this.animate();
         }
-
-        if (isDropped) {
+        if (this.isDropped) {
             this.startMovement();
         }
     }
 
+    /**
+     * Starts the recurring interval that cycles the pickup's idle animation.
+     * @returns {void}
+     */
     animate() {
         setStopableInterval(() => {
             this.playAnimation(this.isBottle ? this.bottleRotation : this.coins);
         }, 200);
     }
 
+    /**
+     * Starts a dropped item's fall: applies gravity/drift and keeps animating
+     * until it lands.
+     * @returns {void}
+     */
     startMovement() {
         this.speedY = 10;
         this.speed = 5;
         this.acceleration = 0.5;
         this.animate();
-
-        const movementInterval = setStopableInterval(() => {
-            // Horizontal movement
-            this.moveRight();
-
-            // Apply gravity
-            this.y -= this.speedY;
-            this.speedY -= this.acceleration;
-
-            // Stop when landed
-            if (this.speedY <= 0 && this.y >= 350) {
-                clearInterval(movementInterval);
-                this.speed = 0;
-                this.speedY = 0;
-                this.y = 350;
-                this.canBeCollected = true;
-            }
-        }, 1000 / 60);
+        const movementInterval = setStopableInterval(() => this.updateDroppedItem(movementInterval), 1000 / 60);
     }
 
+    /**
+     * Per-tick physics update for a falling dropped item.
+     * @param {number} intervalId - Id of the interval driving this update, cleared on landing.
+     * @returns {void}
+     */
+    updateDroppedItem(intervalId) {
+        this.moveRight();
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+        if (this.hasLanded()) {
+            this.finishLanding(intervalId);
+        }
+    }
+
+    /**
+     * @returns {boolean} True if the dropped item has reached the ground.
+     */
+    hasLanded() {
+        return this.speedY <= 0 && this.y >= 350;
+    }
+
+    /**
+     * Snaps a dropped item to its resting position and marks it collectable.
+     * @param {number} intervalId - Id of the falling-physics interval to stop.
+     * @returns {void}
+     */
+    finishLanding(intervalId) {
+        clearInterval(intervalId);
+        this.speed = 0;
+        this.speedY = 0;
+        this.y = 350;
+        this.canBeCollected = true;
+    }
+
+    /**
+     * Marks the item as collected by zeroing its energy (removed by the world).
+     * @returns {void}
+     */
     getCollected() {
         this.energy = 0;
     }
 
+    /**
+     * Loads bottle sprites, picking a random ground-bottle variant when placed on the ground.
+     * @returns {void}
+     */
     loadBottleImages() {
         this.loadImages(this.salsaBottles);
         this.y === 330 ? (() => {
@@ -85,6 +132,10 @@ class CollectableItems extends MovableObject {
         })() : this.loadImage(this.salsaBottles[0]);
     }
 
+    /**
+     * Loads coin sprites.
+     * @returns {void}
+     */
     loadCoinsImages() {
         this.loadImages(this.coins);
         this.loadImage(this.coins[0]);

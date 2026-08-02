@@ -1,6 +1,6 @@
 *{
     font-size: larger;
-    font-family: cursive;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     -webkit-user-select: none;
@@ -65,6 +65,7 @@ h1{
 #canvas-container.portrait-active #start-screen-buttons,
 #canvas-container.portrait-active #gameover-screen-buttons,
 #canvas-container.portrait-active #win-score,
+#canvas-container.portrait-active #endboss-warning,
 #canvas-container.portrait-active #tutorial-screen,
 #canvas-container.portrait-active #impressum-screen,
 #canvas-container.portrait-active #pause-button,
@@ -147,6 +148,68 @@ canvas{
 .control-button:hover{
     transform: scale(1.05);
     background: rgba(255, 255, 255, 1);
+}
+
+.arrow-icon {
+    width: 0;
+    height: 0;
+    display: inline-block;
+}
+
+.arrow-icon.arrow-up {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid black;
+}
+
+.arrow-icon.arrow-left {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid black;
+}
+
+.arrow-icon.arrow-right {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid black;
+}
+
+.pause-icon {
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+}
+
+.pause-icon::before,
+.pause-icon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 4px;
+    height: 14px;
+    background: black;
+}
+
+.pause-icon::before {
+    left: 0;
+}
+
+.pause-icon::after {
+    left: 9px;
+}
+
+.pause-icon.playing {
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 12px solid black;
+}
+
+.pause-icon.playing::before,
+.pause-icon.playing::after {
+    content: none;
 }
 
 #mobile-controls {
@@ -401,6 +464,22 @@ button:hover , #back-button:hover{
     font-size:24px;
     text-align:center;
     z-index:1000;
+}
+
+#endboss-warning{
+    display: none;
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    max-width: 80%;
+    padding: 10px 16px;
+    background: rgba(255, 99, 71, 0.85);
+    transform: translateX(-50%);
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    z-index: 1000;
 }
 
 

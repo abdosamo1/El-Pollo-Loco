@@ -1,4 +1,6 @@
-    class GameOver extends DrawableObject {
+/** The game-over overlay screen and its restart/main-menu button wiring. */
+class GameOver extends DrawableObject {
+    /** @param {World} world - The game world, used to restart or return to the main screen. */
     constructor(world) {
         super();
         this.world = world;
@@ -11,6 +13,10 @@
         this.addGameOverButtons();
     }
 
+    /**
+     * Wires up the restart and main-screen buttons' click handlers.
+     * @returns {void}
+     */
     addGameOverButtons() {
         this.restartButton = document.getElementById('restart-button');
         if (this.restartButton) {
@@ -27,6 +33,10 @@
         }
     }
 
+    /**
+     * Hides the game-over buttons and restarts the game world.
+     * @returns {void}
+     */
     restartGame() {
         if (this.restartButton) {
             this.gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
@@ -37,6 +47,11 @@
         }
     }
 
+    /**
+     * Hides the game-over buttons, shows the start-screen buttons, and
+     * returns the world to its main screen state.
+     * @returns {void}
+     */
     showMainScreen() {
         if (this.mainScreenButton) {
             this.gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');

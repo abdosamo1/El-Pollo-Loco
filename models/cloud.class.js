@@ -1,3 +1,4 @@
+/** A slow-moving decorative background cloud. */
 class Cloud extends MovableObject {
     x = 0;
     y = 20;
@@ -5,6 +6,7 @@ class Cloud extends MovableObject {
     height = 300;
     speed = 0.15;
 
+    /** @param {number} [startX=0] - Starting horizontal position. */
     constructor(startX = 0) {
         super();
         this.x = startX;
@@ -12,10 +14,18 @@ class Cloud extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Starts the recurring interval that drives the cloud's leftward drift.
+     * @returns {void}
+     */
     animate() {
         setStopableInterval(() => this.moveClouds(), 100 / 12);
     }
 
+    /**
+     * Moves the cloud left if the game has started.
+     * @returns {void}
+     */
     moveClouds() {
         if (!this.world?.gameStarted) return;
         this.moveLeft();

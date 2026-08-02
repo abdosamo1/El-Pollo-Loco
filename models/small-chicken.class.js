@@ -1,3 +1,4 @@
+/** A smaller, faster-hopping chicken variant that also bounces on the ground. */
 class SmallChicken extends Chicken {
     groundY = 375;
     y = 375;
@@ -17,6 +18,7 @@ class SmallChicken extends Chicken {
 
     currentImage = 0;
 
+    /** @param {number} [startX] - Starting horizontal position. */
     constructor(startX = 600 + Math.random() * 600) {
         super(startX);
         this.loadImage(this.WALK_IMAGES[0]);
@@ -25,6 +27,10 @@ class SmallChicken extends Chicken {
         this.applyGravity();
     }
 
+    /**
+     * Extends the base patrol animation with a repeated small hop.
+     * @returns {void}
+     */
     animate() {
         super.animate();
         setStopableInterval(() => {
@@ -35,6 +41,9 @@ class SmallChicken extends Chicken {
         }, 100 / 12);
     }
 
+    /**
+     * @returns {boolean} True if the small chicken is above its (lower) ground level.
+     */
     aboveGround() {
         return this.y < this.groundY;
     }
