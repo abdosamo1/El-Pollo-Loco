@@ -26,6 +26,7 @@ class World {
     CoinsCollected = 0;
 
     throwableObjects = [];
+    lastThrowTime = 0;
     endBossSpawned = false;
 
     constructor(canvas, keyboard) {
@@ -76,6 +77,7 @@ class World {
         this.youWinScreen = null;
         this.level = createLevel1();
         this.throwableObjects = [];
+        this.lastThrowTime = 0;
         this.endBossSpawned = false;
         this.gameStarted = true;
         this.startScreen = null;
@@ -102,6 +104,7 @@ class World {
         this.bottleBar.setPercentage(0);
         this.level = createLevel1();
         this.throwableObjects = [];
+        this.lastThrowTime = 0;
         this.endBossBar = null;
         this.youWinScreen = null;
         this.endBossSpawned = false;
@@ -248,12 +251,14 @@ class World {
     }
 
     checkThrowObjects() {
-        if ((this.keyboard.D || this.keyboard.mobileD) && this.bottleBar.percentage > 0) {
+        const canThrowAgain = Date.now() - this.lastThrowTime >= 500;
+        if ((this.keyboard.D || this.keyboard.mobileD) && this.bottleBar.percentage > 0 && canThrowAgain) {
             const direction = this.character.otherDirection;
             const bottle = new ThrowableObject(this.character.otherDirection ? this.character.x : this.character.x + 100, this.character.y + 100, direction);
             bottle.world = this;
             this.throwableObjects.push(bottle);
             this.bottleBar.setPercentage(this.bottleBar.percentage - 10);
+            this.lastThrowTime = Date.now();
         }
     }
 
@@ -378,13 +383,10 @@ class World {
             this.addObjectsToMap(this.level.backgroundObjects);
             this.addObjectsToMap(this.level.clouds);
         }
-        this.addToMap(this.character);
         this.addObjectsToMap(this.level.collectables);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
-
-        this.ctx.translate(-this.camera_x, 0); // reset camera
-
+        
         if (!skipStatusBars) {
             this.addToMap(this.healthBar);
             this.addToMap(this.coinBar);
@@ -393,6 +395,8 @@ class World {
                 this.addToMap(this.endBossBar);
             }
         }
+        this.addToMap(this.character);
+        this.ctx.translate(-this.camera_x, 0); // reset camera
     }
 
     drawStartScreen() {

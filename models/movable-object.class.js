@@ -7,15 +7,19 @@ class MovableObject extends DrawableObject {
     lastHit = 0;
     energy = 1000;
     groundY = 125;
+    offset = { top: 0, left: 0, right: 0, bottom: 0 };
 
     isColliding(object) {
-        return this.x + this.width > object.x &&
-            this.y + this.height > object.y &&
-            this.x < object.x + object.width &&
-            this.y < object.y + object.height;
+        const thisOffset = this.offset;
+        const objectOffset = object.offset ?? { top: 0, left: 0, right: 0, bottom: 0 };
+        return this.x + thisOffset.left < object.x + object.width - objectOffset.right &&
+            this.x + this.width - thisOffset.right > object.x + objectOffset.left &&
+            this.y + thisOffset.top < object.y + object.height - objectOffset.bottom &&
+            this.y + this.height - thisOffset.bottom > object.y + objectOffset.top;
     }
 
     hit(damge){
+        if (this.isHurt()) return;
         this.energy -= damge;
         this.energy < 6 ? this.energy = 0 :
             this.lastHit = new Date().getTime();

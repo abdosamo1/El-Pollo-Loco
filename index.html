@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,10 @@
     <link rel="icon" type="image/x-icon" href="./img/8_coin/coin_2.png">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body onload="init();">
 
     <h1>El Pollo Loco</h1>
-
     <div id="canvas-container">
         <canvas width="720" height="480" id="canvas"></canvas>
         <video id="portrait-overlay" muted autoplay loop playsinline>
@@ -20,47 +21,42 @@
         </video>
         <button id="pause-button" title="Pause game" onclick="togglePause()">⏸</button>
         <button id="fullscreen-button" title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
+
         <div id="mobile-controls">
             <div id="mobile-left-controls">
-                <button id="mobile-up" class="control-button" title="Jump"
-                    onpointerdown="keyboard.mobileUp = true"
-                    onpointerup="keyboard.mobileUp = false"
-                    onpointerleave="keyboard.mobileUp = false"
+                <button id="mobile-up" class="control-button" title="Jump" onpointerdown="keyboard.mobileUp = true"
+                    onpointerup="keyboard.mobileUp = false" onpointerleave="keyboard.mobileUp = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileUp = true"
                     ontouchend="event.preventDefault(); keyboard.mobileUp = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileUp = false">▲</button>
-                <button id="mobile-left" class="control-button" title="Move left"
-                    onpointerdown="keyboard.mobileLeft = true"
-                    onpointerup="keyboard.mobileLeft = false"
-                    onpointerleave="keyboard.mobileLeft = false"
+                    ontouchcancel="event.preventDefault(); keyboard.mobileUp = false">▲&#xFE0E;</button>
+                <button id="mobile-left" class="control-button" title="Move left" onpointerdown="keyboard.mobileLeft = true"
+                    onpointerup="keyboard.mobileLeft = false" onpointerleave="keyboard.mobileLeft = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileLeft = true"
                     ontouchend="event.preventDefault(); keyboard.mobileLeft = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileLeft = false">◀</button>
+                    ontouchcancel="event.preventDefault(); keyboard.mobileLeft = false">◀&#xFE0E;</button>
             </div>
             <div id="mobile-right-controls">
                 <button id="mobile-throw" class="control-button" title="Throw bottle"
-                    onpointerdown="keyboard.mobileD = true"
-                    onpointerup="keyboard.mobileD = false"
-                    onpointerleave="keyboard.mobileD = false"
-                    ontouchstart="event.preventDefault(); keyboard.mobileD = true"
+                    onpointerdown="keyboard.mobileD = true" onpointerup="keyboard.mobileD = false"
+                    onpointerleave="keyboard.mobileD = false" ontouchstart="event.preventDefault(); keyboard.mobileD = true"
                     ontouchend="event.preventDefault(); keyboard.mobileD = false"
                     ontouchcancel="event.preventDefault(); keyboard.mobileD = false">🧴</button>
                 <button id="mobile-right" class="control-button" title="Move right"
-                    onpointerdown="keyboard.mobileRight = true"
-                    onpointerup="keyboard.mobileRight = false"
+                    onpointerdown="keyboard.mobileRight = true" onpointerup="keyboard.mobileRight = false"
                     onpointerleave="keyboard.mobileRight = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileRight = true"
                     ontouchend="event.preventDefault(); keyboard.mobileRight = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileRight = false">▶</button>
+                    ontouchcancel="event.preventDefault(); keyboard.mobileRight = false">▶&#xFE0E;</button>
             </div>
         </div>
+
 
         <div id="start-screen-buttons">
             <button id="start-button">Start Game</button>
             <button id="tutorial-button" onclick="showOverlay('tutorial')">Tutorial</button>
             <button id="impressum-button" onclick="showOverlay('impressum')">Impressum</button>
         </div>
-        <div id="gameover-screen-buttons" >
+        <div id="gameover-screen-buttons">
             <button id="restart-button">Restart Game</button>
             <button id="main-screen-button">Back to Main Screen</button>
         </div>
@@ -79,7 +75,7 @@
             <h2>Tutorial</h2>
             <button id="back-button" onclick="closeOverlay()">X</button>
             <p>Use the arrow keys to move right and left,
-                and space to jump. Collect bottles and press 'D' to throw them on enimies. 
+                and space to jump. Collect bottles and press 'D' to throw them on enimies.
                 You can also jump on chickens to kill them, but be careful not to get hit by them!
                 Collect coins from killing chickens to increase your score.
                 Endboss will spawn after killing all chickens. Defeat the Endboss to win the game!</p>
@@ -109,9 +105,11 @@
                 Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: europa.eu.<br>
                 Unsere E-Mail-Adresse finden Sie oben im Impressum.<br>
                 Verbraucher­streit­beilegung/Universal­schlichtungs­stelle<br>
-                Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+                Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+                Verbraucherschlichtungsstelle teilzunehmen.</p>
         </div>
     </div>
+    
 
 
     <!-- JavaScript -->
@@ -121,7 +119,7 @@
     <script src="./models/collectable-items.class.js"></script>
     <script src="./js/game.js"></script>
     <script src="./models/cloud.class.js"></script>
-    <script src="./models/start.class.js"></script> 
+    <script src="./models/start.class.js"></script>
     <script src="./models/status-bar.class.js"></script>
     <script src="./models/character.class.js"></script>
     <script src="./models/chicken.class.js"></script>
@@ -135,4 +133,5 @@
     <script src="./levels/level1.js"></script>
     <script src="./models/world.class.js"></script>
 </body>
+
 </html>

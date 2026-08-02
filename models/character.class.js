@@ -4,6 +4,7 @@ class Character extends MovableObject {
     width = 150;
     height = 300;
     speed = 3;
+    offset = { top: 110, left: 20, right: 20, bottom: 15 };
 
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',
@@ -73,6 +74,12 @@ class Character extends MovableObject {
 
     constructor() {
         super();
+        this.loadAllImages();
+        this.animate();
+        this.applyGravity();
+    }
+
+    loadAllImages() {
         this.loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMPING);
@@ -80,9 +87,8 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_LONG_IDLE);
-        this.animate();
-        this.applyGravity();
-    }
+    } 
+
 
     animate() {
         setStopableInterval(() => this.movment(), 100 / 12);
@@ -138,32 +144,29 @@ class Character extends MovableObject {
     playJumpAnimation() {
         let i;
         if (this.speedY > 2) {
-            // Rising phase (up to the highest point)
             if (this.currentJumpImage < 0 || this.currentJumpImage > 3) {
                 this.currentJumpImage = 0;
                 this.jumpImageTick = 0;
             }
             i = this.currentJumpImage;
             this.jumpImageTick++;
-            if (this.jumpImageTick >= 2) { // Slows down rising (change to 1 for original speed)
+            if (this.jumpImageTick >= 2) {
                 if (this.currentJumpImage < 3) {
                     this.currentJumpImage++;
                 }
                 this.jumpImageTick = 0;
             }
         } else if (this.speedY >= -2 && this.speedY <= 2) {
-            // Highest point / Peak
             i = 4;
             this.jumpImageTick = 0;
         } else {
-            // Falling phase (this.speedY < -2)
             if (this.currentJumpImage < 5 || this.currentJumpImage > 8) {
                 this.currentJumpImage = 5;
                 this.jumpImageTick = 0;
             }
             i = this.currentJumpImage;
             this.jumpImageTick++;
-            if (this.jumpImageTick >= 3) { // Slows down falling (increase 3 to 4 or more for even slower)
+            if (this.jumpImageTick >= 3) { 
                 if (this.currentJumpImage < 8) {
                     this.currentJumpImage++;
                 }
@@ -182,7 +185,9 @@ class Character extends MovableObject {
     }
 
     isAbove(object) {
-        return this.y + this.height < object.y + 50;
+        const characterBottom = this.y + this.height - this.offset.bottom;
+        const enemyTop = object.y + (object.offset?.top ?? 0);
+        return characterBottom < enemyTop + 50;
     }
 
     isWalking() {

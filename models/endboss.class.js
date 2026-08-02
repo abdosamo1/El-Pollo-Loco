@@ -43,25 +43,34 @@ class Endboss extends MovableObject {
 
     constructor(startX) {
         super();
-        this.loadImage(this.IMAGES_WALKING[0]);
-        this.loadImages(this.IMAGES_WALKING);
-        this.loadImages(this.IMAGES_ALERT);
-        this.loadImages(this.IMAGES_ATTACK);
-        this.loadImages(this.IMAGES_HURT);
-        this.loadImages(this.IMAGES_DEAD);
+        this.loadAllImages();
         this.startX = startX;
         this.x = startX;
         this.fullscreenY = 450;
         this.width = 300;
         this.height = 400;
+        this.offset = { top: 60, left: 20, right: 20, bottom: 15 };
         this.energy = 100;
         this.y = 50;
         this.speed = 0.5;
+        this.laodAllStates();
+        this.animate();
+    }
+
+    laodAllStates() {
         this.isAttacking = false;
         this.isAlert = false;
         this.attackPhase = 'idle';
         this.attackTimer = 0;
-        this.animate();
+    }
+
+
+    loadAllImages() {
+        this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_ALERT);
+        this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_DEAD);
     }
 
     animate() {
@@ -125,6 +134,7 @@ class Endboss extends MovableObject {
         distance > 300 ? this.moveToCharacter() :
             distance > 200 ? this.bossAllerted() : this.startAttack();
     }
+    
 
 
     bossAllerted() {
