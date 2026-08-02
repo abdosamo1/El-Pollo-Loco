@@ -17,20 +17,21 @@ function createLevel1() {
 function buildLevel1Collectables() {
     const startX = 700;
     const spacing = 300;
+    const groundY = 330;
     return [
-        new CollectableItems(startX + spacing * 0, 150, true),
-        new CollectableItems(startX + spacing * 1, 180, true),
-        new CollectableItems(startX + spacing * 2, 330, true),
-        new CollectableItems(startX + spacing * 3, 250, true),
-        new CollectableItems(startX + spacing * 4, 200, true),
-        new CollectableItems(startX + spacing * 5, 330, true),
-        new CollectableItems(startX + spacing * 6, 150, true),
-        new CollectableItems(startX + spacing * 7, 300, true),
-        new CollectableItems(startX + spacing * 8, 250, true),
-        new CollectableItems(startX + spacing * 9, 200, true),
-        new CollectableItems(startX + spacing * 10, 150, true),
-        new CollectableItems(startX + spacing * 11, 180, true),
-        new CollectableItems(startX + spacing * 12, 320, true),
+        new CollectableItems(startX + spacing * 0, groundY, true),
+        new CollectableItems(startX + spacing * 1, groundY, true),
+        new CollectableItems(startX + spacing * 2, groundY, true),
+        new CollectableItems(startX + spacing * 3, groundY, true),
+        new CollectableItems(startX + spacing * 4, groundY, true),
+        new CollectableItems(startX + spacing * 5, groundY, true),
+        new CollectableItems(startX + spacing * 6, groundY, true),
+        new CollectableItems(startX + spacing * 7, groundY, true),
+        new CollectableItems(startX + spacing * 8, groundY, true),
+        new CollectableItems(startX + spacing * 9, groundY, true),
+        new CollectableItems(startX + spacing * 10, groundY, true),
+        new CollectableItems(startX + spacing * 11, groundY, true),
+        new CollectableItems(startX + spacing * 12, groundY, true),
     ];
 }
 

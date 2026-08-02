@@ -9,6 +9,8 @@ class MovableObject extends DrawableObject {
     energy = 1000;
     groundY = 125;
     offset = { top: 0, left: 0, right: 0, bottom: 0 };
+    /** Seconds an object stays hurt/invincible after being hit; override per subclass. */
+    HURT_DURATION = 1.5;
 
     /**
      * Checks whether this object's offset-adjusted hitbox overlaps another object's.
@@ -27,22 +29,23 @@ class MovableObject extends DrawableObject {
     /**
      * Applies damage unless the object is still in its hurt-invincibility window.
      * @param {number} damge - Amount of energy to subtract.
-     * @returns {void}
+     * @returns {boolean} True if the damage was applied (was not already hurt).
      */
     hit(damge){
-        if (this.isHurt()) return;
+        if (this.isHurt()) return false;
         this.energy -= damge;
         this.energy < 6 ? this.energy = 0 :
             this.lastHit = new Date().getTime();
+        return true;
     }
 
     /**
-     * @returns {boolean} True if the object was hit within the last 1.5 seconds.
+     * @returns {boolean} True if the object was hit within its hurt duration.
      */
     isHurt(){
         let timepassed = new Date().getTime() - this.lastHit; // difference in ms
         timepassed = timepassed / 1000; // difference in s
-        return timepassed < 1.5;
+        return timepassed < this.HURT_DURATION;
     }
 
     /**

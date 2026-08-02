@@ -1,11 +1,13 @@
 /** The player-controlled character (Pepe): movement, jumping, animation, and stomp detection. */
 class Character extends MovableObject {
-    x = 120;
+    x = 100;
     y = 125;
     width = 150;
     height = 300;
     speed = 3;
-    offset = { top: 110, left: 20, right: 20, bottom: 15 };
+    // Tighter left/right than the sprite's outer bounds so enemies must be
+    // visually closer to Pepe's body before a hit/hurt registers.
+    offset = { top: 110, left: 50, right: 40, bottom: 35 };
 
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',
@@ -72,6 +74,16 @@ class Character extends MovableObject {
     LONG_IDLE_THRESHOLD = 500;
     currentJumpImage = 0;
     jumpImageTick = 0;
+    KNOCKBACK_DISTANCE = 200;
+    KNOCKBACK_JUMP_HEIGHT = 10;
+    ENDBOSS_KNOCKBACK_DISTANCE = 320;
+    ENDBOSS_KNOCKBACK_JUMP_HEIGHT = 18;
+    KNOCKBACK_DURATION = 1000;
+    KNOCKBACK_TICK_DELAY = 1000 / 120;
+    isRecoveringFromHit = false;
+    isKnockedBack = false;
+    knockbackDirection = 0;
+    currentHurtImage = 0;
 
     constructor() {
         super();
@@ -106,16 +118,41 @@ class Character extends MovableObject {
 
     /**
      * Reads keyboard/mobile input, moves the character accordingly, updates
-     * idle tracking, and re-centers the camera on the character.
+     * idle tracking, and re-centers the camera on the character. Movement
+     * input is ignored while recovering from a hit (knockback slide + landing).
      * @returns {void}
      */
     movment() {
         if (!this.isGameStarted()) return;
-        const movedHorizontally = this.handleHorizontalInput();
-        const jumped = this.handleJumpInput();
-        const moved = movedHorizontally || jumped || this.isThrowing();
+        if (this.isRecoveringFromHit) {
+            this.updateRecoveryState();
+            this.updateCamera();
+            return;
+        }
+        const moved = this.processMovementInput();
         this.updateIdleTicks(moved);
         this.updateCamera();
+    }
+
+    /**
+     * Ends the post-hit recovery once the knockback slide has finished and
+     * the character has landed back on the ground.
+     * @returns {void}
+     */
+    updateRecoveryState() {
+        if (!this.isKnockedBack && !this.aboveGround()) {
+            this.isRecoveringFromHit = false;
+        }
+    }
+
+    /**
+     * Handles horizontal, jump, and throw input for the current tick.
+     * @returns {boolean} True if the character moved, jumped, or threw a bottle.
+     */
+    processMovementInput() {
+        const movedHorizontally = this.handleHorizontalInput();
+        const jumped = this.handleJumpInput();
+        return movedHorizontally || jumped || this.isThrowing();
     }
 
     /**
@@ -189,7 +226,7 @@ class Character extends MovableObject {
         if (this.isDead()) {
             this.playAnimation(this.IMAGES_DEAD);
         } else if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
+            this.playHurtAnimation();
         } else if (this.aboveGround()) {
             this.playJumpAnimation();
         } else {

@@ -40,11 +40,11 @@ class ThrowableObject extends CollectableItems {
      */
     throw() {
         const direction = this.otherDirection;
-        this.speedY = 10;
+        this.speedY = 13;
         this.applyGravity();
         this.moveInterval = setStopableInterval(() => {
             if (this.isSplashing) return;
-            direction ? this.x -= 5 : this.x += 5;
+            direction ? this.x -= 3 : this.x += 3;
         }, 10);
 
         this.animationInterval = setStopableInterval(() => {

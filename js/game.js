@@ -5,61 +5,6 @@ let intervalIds = [];
 let isPaused = false;
 let autoPausedByPortrait = false;
 
-const tutorialHints = [
-    { text: "Use the arrow keys (◀ ▶) or the on-screen buttons to move Pepe left and right.", position: "hint-step-1" },
-    { text: "Press Space (or ▲) to jump. Jump on chickens to defeat them, but watch out - don't get hit!", position: "hint-step-2" },
-    { text: "Collect bottles and press 'D' (or 🧴) to throw them at your enemies.", position: "hint-step-3" },
-    { text: "Defeat every chicken to make the Endboss appear. Beat him to win the game!", position: "hint-step-4" },
-];
-let tutorialHintShownThisSession = false;
-let tutorialHintStep = 0;
-
-/**
- * Shows the first-run tutorial hint sequence once per session, pausing the game while it's shown.
- * @returns {void}
- */
-function maybeStartTutorialHints() {
-    if (tutorialHintShownThisSession) return;
-    tutorialHintShownThisSession = true;
-    tutorialHintStep = 0;
-    setPause(true);
-    showTutorialHintStep();
-}
-
-/**
- * Renders the current tutorial hint step's text and position into the hint overlay.
- * @returns {void}
- */
-function showTutorialHintStep() {
-    const overlay = document.getElementById('tutorial-hint-overlay');
-    const box = document.getElementById('tutorial-hint-box');
-    const text = document.getElementById('tutorial-hint-text');
-    const stepLabel = document.getElementById('tutorial-hint-step');
-    if (!overlay || !box || !text || !stepLabel) return;
-
-    const hint = tutorialHints[tutorialHintStep];
-    text.textContent = hint.text;
-    stepLabel.textContent = `${tutorialHintStep + 1}/${tutorialHints.length}`;
-    box.className = hint.position;
-    overlay.classList.add('show-hint');
-}
-
-/**
- * Advances to the next tutorial hint, or closes the overlay and unpauses
- * the game once the last hint has been shown.
- * @returns {void}
- */
-function closeTutorialHint() {
-    tutorialHintStep++;
-    if (tutorialHintStep < tutorialHints.length) {
-        showTutorialHintStep();
-    } else {
-        const overlay = document.getElementById('tutorial-hint-overlay');
-        if (overlay) overlay.classList.remove('show-hint');
-        setPause(false);
-    }
-}
-
 /**
  * Sets the paused state and updates the pause button's icon/title.
  * @param {boolean} paused - Whether the game should be paused.
@@ -281,122 +226,6 @@ function closeOverlay() {
 }
 
 /**
- * Toggles native fullscreen (falling back to pseudo-fullscreen when the
- * native Fullscreen API is unavailable or blocked, e.g. on iOS).
- * @returns {void}
- */
-function toggleFullscreen() {
-    const canvasContainer = document.getElementById('canvas-container');
-    if (!canvasContainer) return;
-    isCurrentlyFullscreen(canvasContainer)
-        ? exitFullscreen(canvasContainer)
-        : enterFullscreen(canvasContainer);
-}
-
-/**
- * @param {HTMLElement} canvasContainer - The fullscreen-able container element.
- * @returns {boolean} True if the page is currently in native or pseudo fullscreen.
- */
-function isCurrentlyFullscreen(canvasContainer) {
-    return !!(document.fullscreenElement ||
-        document.webkitFullscreenElement ||
-        document.mozFullScreenElement ||
-        document.msFullscreenElement ||
-        canvasContainer.classList.contains('pseudo-fullscreen'));
-}
-
-/**
- * @returns {boolean} True if any vendor-prefixed Fullscreen API is available.
- */
-function isFullscreenSupported() {
-    return document.fullscreenEnabled ||
-        document.webkitFullscreenEnabled ||
-        document.mozFullScreenEnabled ||
-        document.msFullscreenEnabled;
-}
-
-/**
- * Exits native/pseudo fullscreen and re-fits the canvas afterward.
- * @param {HTMLElement} canvasContainer - The fullscreen-able container element.
- * @returns {void}
- */
-function exitFullscreen(canvasContainer) {
-    requestExitFullscreen();
-    canvasContainer.classList.remove('pseudo-fullscreen');
-    document.body.classList.remove('fullscreen-active');
-    document.documentElement.classList.remove('fullscreen-active');
-    setTimeout(() => {
-        updateCanvasSize();
-        updatePortraitOverlay();
-    }, 150);
-}
-
-/**
- * Calls whichever vendor-prefixed exitFullscreen method is available.
- * @returns {void}
- */
-function requestExitFullscreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-    } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-    } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-    }
-}
-
-/**
- * Requests native fullscreen if supported, otherwise falls back to pseudo-fullscreen.
- * @param {HTMLElement} canvasContainer - The fullscreen-able container element.
- * @returns {void}
- */
-function enterFullscreen(canvasContainer) {
-    if (!isFullscreenSupported()) {
-        enterPseudoFullscreen(canvasContainer); // e.g. iOS Safari
-        return;
-    }
-    requestNativeFullscreen(canvasContainer);
-}
-
-/**
- * Calls whichever vendor-prefixed requestFullscreen method is available,
- * falling back to pseudo-fullscreen if none exist or the request is rejected.
- * @param {HTMLElement} canvasContainer - The fullscreen-able container element.
- * @returns {void}
- */
-function requestNativeFullscreen(canvasContainer) {
-    const requestMethod = canvasContainer.requestFullscreen ||
-        canvasContainer.webkitRequestFullscreen ||
-        canvasContainer.mozRequestFullScreen ||
-        canvasContainer.msRequestFullscreen;
-    if (!requestMethod) {
-        enterPseudoFullscreen(canvasContainer);
-        return;
-    }
-    Promise.resolve(requestMethod.call(canvasContainer))
-        .then(() => {
-            document.body.classList.add('fullscreen-active');
-            document.documentElement.classList.add('fullscreen-active');
-        })
-        .catch(() => enterPseudoFullscreen(canvasContainer));
-}
-
-/**
- * Applies the CSS-based pseudo-fullscreen fallback (position:fixed, full viewport).
- * @param {HTMLElement} canvasContainer - The container element to expand.
- * @returns {void}
- */
-function enterPseudoFullscreen(canvasContainer) {
-    canvasContainer.classList.add('pseudo-fullscreen');
-    document.body.classList.add('fullscreen-active');
-    document.documentElement.classList.add('fullscreen-active');
-    updateCanvasSize();
-    updatePortraitOverlay();
-}
-
-/**
  * Toggles the paused state via the pause button.
  * @returns {void}
  */
@@ -416,15 +245,6 @@ document.addEventListener('click', (e) => {
         closeOverlay();
     }
 });
-
-// Close the in-game tutorial hint when clicking outside its box
-document.addEventListener('click', (e) => {
-    const hintOverlay = document.getElementById('tutorial-hint-overlay');
-    if (hintOverlay && hintOverlay.classList.contains('show-hint') && e.target === hintOverlay) {
-        closeTutorialHint();
-    }
-});
-
 
 /**
  * Starts a `setInterval` that skips its callback while the game is paused,

@@ -34,6 +34,7 @@ class CollectableItems extends MovableObject {
         this.y = y;
         this.width = 90;
         this.height = 90;
+        this.offset = { top: 15, left: 20, right: 20, bottom: 12 };
         this.isBottle = isBottle;
         this.isDropped = isDropped;
         this.canBeCollected = !isDropped;

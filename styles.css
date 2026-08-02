@@ -302,13 +302,16 @@ p{
 }
 
 #impressum-screen p, #tutorial-screen p{
-    width: 75%;
-    height: auto;
-    justify-content: flex-start;
+    width: 88%;
+    height: 64%;
     overflow-y: auto;
     padding-right: 12px;
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 68, 0, 0.6) transparent;
+    text-align: left;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 #impressum-screen p::-webkit-scrollbar,
