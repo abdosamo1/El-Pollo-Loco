@@ -182,6 +182,7 @@ class Character extends MovableObject {
     handleJumpInput() {
         if ((this.world.keyboard.SPACE || this.world.keyboard.UP || this.world.keyboard.mobileUp) && !this.aboveGround()) {
             this.jump();
+            soundManager.playJumpSound();
             return true;
         }
         return false;

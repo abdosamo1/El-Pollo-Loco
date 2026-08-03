@@ -77,6 +77,7 @@ class World {
         this.startScreen = null;
         this.gameOver = false;
         this.lastBottleSpawnTime = Date.now();
+        soundManager.playBackgroundMusic();
         this.run();
         if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
@@ -93,6 +94,7 @@ class World {
         this.resetButtonShownFlags();
         this.hideAllButtons();
         this.setWorld();
+        soundManager.playBackgroundMusic();
         this.run();
         if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
@@ -109,6 +111,7 @@ class World {
         this.resetButtonShownFlags();
         this.hideAllButtons();
         this.setWorld();
+        soundManager.stopAllMusic();
         if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }
 
@@ -243,6 +246,7 @@ class World {
         if (this.bottleBar.percentage >= 100) return true;
         this.bottleBar.setPercentage(Math.min(100, this.bottleBar.percentage + 10));
         collectable.getCollected();
+        soundManager.playBottleCollectedSound();
         return false;
     }
 
@@ -254,6 +258,7 @@ class World {
     collectCoin(collectable) {
         this.coinBar.setPercentage(Math.min(100, this.coinBar.percentage + 10));
         collectable.getCollected();
+        soundManager.playCoinCollectedSound();
         return false;
     }
 
@@ -292,6 +297,8 @@ class World {
         this.gameOver = false;
         this.characterDied = false;
         this.setEndbossWarningVisible(false);
+        soundManager.stopAllMusic();
+        soundManager.playWinSound();
         stopGame();
         const startButtons = document.getElementById('start-screen-buttons');
         if (startButtons) {
@@ -307,6 +314,8 @@ class World {
     endGame() {
         this.gameOver = true;
         this.setEndbossWarningVisible(false);
+        soundManager.stopAllMusic();
+        soundManager.playLoseSound();
         stopGame();
         if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
     }

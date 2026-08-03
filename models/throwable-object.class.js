@@ -62,6 +62,7 @@ class ThrowableObject extends CollectableItems {
         this.isSplashing = true;
         this.speed = 0;
         this.speedY = 0;
+        soundManager.playBottleSplashSound();
         clearInterval(this.moveInterval);
         setTimeout(() => {
             this.splashDone = true;

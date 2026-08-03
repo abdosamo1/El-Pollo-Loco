@@ -3,11 +3,6 @@
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
 }
 
 html, body{
@@ -69,6 +64,7 @@ h1{
 #canvas-container.portrait-active #tutorial-screen,
 #canvas-container.portrait-active #impressum-screen,
 #canvas-container.portrait-active #pause-button,
+#canvas-container.portrait-active #mute-button,
 #canvas-container.portrait-active .control-button {
     visibility: hidden;
 }
@@ -100,6 +96,7 @@ canvas{
 
 #pause-button,
 #fullscreen-button,
+#mute-button,
 .control-button{
     z-index: 1000;
     width: 42px;
@@ -114,18 +111,27 @@ canvas{
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
     touch-action: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #pause-button {
     position: absolute;
-    top: -16px;
-    right: 60px;
+    top: 0px;
+    right: 128px;
+}
+
+#mute-button {
+    position: absolute;
+    top: 0px;
+    right: 64px;
 }
 
 #fullscreen-button{
     position: absolute;
-    top: -16px;
-    right: -16px;
+    top: 0px;
+    right: 0px;
 }
 
 #canvas-container:fullscreen #fullscreen-button,
@@ -142,9 +148,17 @@ canvas{
     right: 76px !important;
 }
 
+#canvas-container:fullscreen #mute-button,
+#canvas-container:-webkit-full-screen #mute-button,
+#canvas-container.pseudo-fullscreen #mute-button {
+    top: 16px !important;
+    right: 136px !important;
+}
+
 
 #pause-button:hover,
 #fullscreen-button:hover,
+#mute-button:hover,
 .control-button:hover{
     transform: scale(1.05);
     background: rgba(255, 255, 255, 1);
@@ -212,8 +226,29 @@ canvas{
     content: none;
 }
 
+#mute-icon path {
+    fill: black;
+}
+
+#mute-icon .mute-cross {
+    display: none;
+}
+
+#mute-icon.muted .mute-waves {
+    display: none;
+}
+
+#mute-icon.muted .mute-cross {
+    display: block;
+}
+
 #mobile-controls {
     display: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
 @media (pointer: fine) {
@@ -236,16 +271,23 @@ canvas{
     display: none;
 }
 
-#start-screen-buttons{
+#start-screen-buttons,
+#gameover-screen-buttons{
     position: absolute;
-    top: 20%;
+    bottom: 0%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     display: none;
     flex-direction: row;
     justify-content: center;
     width: 100%;
     max-width: 720px;
+}
+
+#start-screen-buttons button,
+#gameover-screen-buttons button{
+    margin-bottom: 0;
+    border-radius: 16px 16px 0 0;
 }
 
 
@@ -351,7 +393,6 @@ p{
     background: rgba(255, 68, 0, 0.513);
 }
 
-/* In-game step-by-step tutorial hints */
 #tutorial-hint-overlay{
     position: absolute;
     inset: 0;
@@ -428,12 +469,12 @@ p{
 
 button{
     font-size: 24px;
-    font-weight: 600;
+    font-weight: 550;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     border-radius: 16px;
     padding: 16px 32px;
-    margin: 32px;
+    margin: 16px;
     border: rgba(255, 166, 0, 0.469);
     box-shadow: 8px 8px 32px rgba(255, 68, 0, 0.237);
     background: rgba(250, 235, 215, 0.568);
@@ -443,16 +484,9 @@ button:hover , #back-button:hover{
     background-color: rgba(255, 68, 0, 0.765);
     color: white;
     box-shadow: 12px 12px 48px orangered;
+    transform: scale(1.05);
 }
 
-#gameover-screen-buttons{
-    position: absolute;
-    top: 72%;
-    width: 100%;
-    display: none;
-    flex-direction: row;
-    justify-content: center;
-}
 
 #win-score{
     display:none; 

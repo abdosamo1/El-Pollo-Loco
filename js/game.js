@@ -36,6 +36,7 @@ function init() {
     updateCanvasSize();
     updatePortraitOverlay();
     updatePauseButtonVisibility();
+    updateMuteButtonIcon();
     bindResizeListeners();
     bindFullscreenListeners();
     bindContextMenuBlocker();
@@ -90,11 +91,14 @@ function exitPseudoFullscreenClasses() {
 }
 
 /**
- * Prevents the browser's native right-click context menu on the page.
+ * Prevents the browser's native right-click/long-press context menu on the
+ * mobile control buttons, without affecting the rest of the page.
  * @returns {void}
  */
 function bindContextMenuBlocker() {
-    window.addEventListener('contextmenu', (e) => {
+    const mobileControls = document.getElementById('mobile-controls');
+    if (!mobileControls) return;
+    mobileControls.addEventListener('contextmenu', (e) => {
         e.preventDefault();
     });
 }
@@ -231,6 +235,30 @@ function closeOverlay() {
  */
 function togglePause() {
     setPause(!isPaused, false);
+}
+
+/**
+ * Toggles mute for all game audio and updates the mute button's icon/title.
+ * @returns {void}
+ */
+function toggleMute() {
+    soundManager.toggleMute();
+    updateMuteButtonIcon();
+}
+
+/**
+ * Reflects the current mute state in the mute button's icon and title.
+ * @returns {void}
+ */
+function updateMuteButtonIcon() {
+    const muteButton = document.getElementById('mute-button');
+    const muteIcon = document.getElementById('mute-icon');
+    if (muteButton) {
+        muteButton.title = soundManager.isMuted ? 'Unmute' : 'Mute';
+    }
+    if (muteIcon) {
+        muteIcon.classList.toggle('muted', soundManager.isMuted);
+    }
 }
 
 // Close any overlay when clicking outside of it

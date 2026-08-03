@@ -50,6 +50,7 @@ Object.assign(World.prototype, {
         enemy.energy = 0;
         enemy.speed = 0;
         enemy.deathTime = Date.now();
+        soundManager.playEnemyKilledSound();
         this.dropCoin(enemy);
         this.maybeSpawnEndboss();
     },
@@ -98,6 +99,7 @@ Object.assign(World.prototype, {
         this.endBossBar = new StatusBar('endboss');
         this.endBossBar.x = 520;
         this.endBossBar.setPercentage(endboss.energy);
+        soundManager.playBossMusic();
     },
 
     /**
@@ -110,6 +112,7 @@ Object.assign(World.prototype, {
         const damage = enemy instanceof Endboss ? 50 : 5;
         const wasHit = this.character.hit(damage);
         if (wasHit) {
+            soundManager.playHurtSound();
             this.character.applyKnockback(enemy);
         }
         this.healthBar.setPercentage(this.character.energy / 10);
