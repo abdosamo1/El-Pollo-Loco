@@ -46,7 +46,7 @@ class Chicken extends MovableObject {
      * @returns {void}
      */
     chickenMovement() {
-        if (!this.world?.gameStarted || this.isDead()) return;
+        if (!this.isMovementActive() || this.isDead()) return;
 
         if ((this.movingLeft && this.x <= -50) || (!this.movingLeft && this.x >= this.patrolStartX)) {
             this.movingLeft = !this.movingLeft;
@@ -67,6 +67,7 @@ class Chicken extends MovableObject {
      */
     playChickenAnimation() {
         if (!this.world?.gameStarted) return;
+        if (this.world.characterDied && !this.isDead()) return;
         this.isDead() ? this.playAnimation(this.DEAD_IMAGES) : this.playAnimation(this.WALK_IMAGES);
     }
 

@@ -186,7 +186,7 @@ class World {
      * @returns {void}
      */
     handleDeathDelay() {
-        this.deathDelay += 1000 / 12;
+        this.deathDelay += 20;
         if (this.deathDelay >= 1000) {
             this.endGame();
         }

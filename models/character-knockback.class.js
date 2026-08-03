@@ -42,7 +42,14 @@ Object.assign(Character.prototype, {
         const stepDistance = distance / totalSteps;
         let stepsLeft = totalSteps;
         const intervalId = setStopableInterval(() => {
+            if (!this.isMovementActive()) {
+                clearInterval(intervalId);
+                this.isKnockedBack = false;
+                this.isRecoveringFromHit = false;
+                return;
+            }
             this.x += this.knockbackDirection * stepDistance;
+            this.x = Math.max(0, Math.min(this.x, this.world.level.level_end_x));
             stepsLeft--;
             if (stepsLeft <= 0) {
                 clearInterval(intervalId);

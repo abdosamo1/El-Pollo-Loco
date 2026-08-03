@@ -1,6 +1,7 @@
 /** The end-level boss chicken: alerts, walks toward, and attacks the character. */
 class Endboss extends MovableObject {
     HURT_DURATION = 0.2;
+    HURT_VISUAL_DURATION = 0.6;
 
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
@@ -43,6 +44,7 @@ class Endboss extends MovableObject {
         'img/4_enemie_boss_chicken/5_dead/G26.png'
     ]
     currentImage = 0;
+    lastHurtVisualHit = 0;
 
     /** @param {number} startX - Horizontal spawn position, ahead of the character. */
     constructor(startX) {
@@ -102,12 +104,32 @@ class Endboss extends MovableObject {
     playEndBossAnimations() {
         if (!this.isGameStarted()) return;
 
-        this.updateState();
+        if (!this.world.characterDied) {
+            this.updateState();
+        } else if (!this.isAttacking && !this.isDead()) {
+            return;
+        }
 
-        this.isHurt() ? this.playAnimation(this.IMAGES_HURT) :
+        this.isHurtVisualActive() ? this.playAnimation(this.IMAGES_HURT) :
             this.isDead() ? this.playAnimation(this.IMAGES_DEAD) :
                 this.isAttacking ? this.playAnimation(this.IMAGES_ATTACK) :
                     this.isAlert ? this.playAnimation(this.IMAGES_ALERT) : this.playAnimation(this.IMAGES_WALKING);
+    }
+
+    /**
+     * Applies damage and records a slightly longer visual hurt window.
+     * @param {number} damage - Amount of health to remove.
+     * @returns {boolean} True if damage was applied.
+     */
+    hit(damage) {
+        const wasHit = super.hit(damage);
+        if (wasHit) this.lastHurtVisualHit = Date.now();
+        return wasHit;
+    }
+
+    /** @returns {boolean} True while the hurt animation should stay visible. */
+    isHurtVisualActive() {
+        return (Date.now() - this.lastHurtVisualHit) / 1000 < this.HURT_VISUAL_DURATION;
     }
 
     /**
@@ -197,7 +219,7 @@ class Endboss extends MovableObject {
      * @returns {void}
      */
     moveEndBoss() {
-        if (!this.world?.gameStarted || !this.world.character || this.isDead()) return;
+        if (!this.isMovementActive() || !this.world.character || this.isDead()) return;
 
         if (this.attackPhase !== 'idle') {
             this.performAttack();

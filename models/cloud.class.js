@@ -27,7 +27,7 @@ class Cloud extends MovableObject {
      * @returns {void}
      */
     moveClouds() {
-        if (!this.world?.gameStarted) return;
+        if (!this.isMovementActive()) return;
         this.moveLeft();
     }
 }

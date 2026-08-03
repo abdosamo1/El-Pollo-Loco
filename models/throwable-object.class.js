@@ -43,6 +43,7 @@ class ThrowableObject extends CollectableItems {
         this.speedY = 13;
         this.applyGravity();
         this.moveInterval = setStopableInterval(() => {
+            if (!this.isMovementActive()) return;
             if (this.isSplashing) return;
             direction ? this.x -= 3 : this.x += 3;
         }, 10);

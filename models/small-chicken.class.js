@@ -34,7 +34,7 @@ class SmallChicken extends Chicken {
     animate() {
         super.animate();
         setStopableInterval(() => {
-            if (!this.world?.gameStarted || this.isDead()) return;
+            if (!this.isMovementActive() || this.isDead()) return;
             if (!this.aboveGround()) {
                 this.jump(5);
             }

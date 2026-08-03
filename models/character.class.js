@@ -124,6 +124,7 @@ class Character extends MovableObject {
      */
     movment() {
         if (!this.isGameStarted()) return;
+        if (!this.isMovementActive()) return;
         if (this.isRecoveringFromHit) {
             this.updateRecoveryState();
             this.updateCamera();
@@ -132,6 +133,13 @@ class Character extends MovableObject {
         const moved = this.processMovementInput();
         this.updateIdleTicks(moved);
         this.updateCamera();
+    }
+
+    /**
+     * @returns {boolean} True while the final-hit knockback is still running.
+     */
+    canMoveDuringDeathDelay() {
+        return this.world?.characterDied && this.isRecoveringFromHit;
     }
 
     /**

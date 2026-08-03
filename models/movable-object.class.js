@@ -63,7 +63,7 @@ class MovableObject extends DrawableObject {
      */
     applyGravity() {
         setInterval(() => {
-            if (!this.isGameStarted()) return;
+            if (!this.isMovementActive()) return;
             if (this.aboveGround() || this.speedY > 0) {
                 let nextY = this.y - this.speedY;
                 if (nextY > this.groundY && !(this instanceof ThrowableObject)) {
@@ -90,6 +90,22 @@ class MovableObject extends DrawableObject {
      */
     isGameStarted() {
         return this.world?.gameStarted ?? false;
+    }
+
+    /**
+     * @returns {boolean} True while movement/physics should progress.
+     */
+    isMovementActive() {
+        if (!this.world) return false;
+        const worldRunning = this.world.gameStarted && !this.world.gameOver && !this.world.youWin;
+        return worldRunning && (!this.world.characterDied || this.canMoveDuringDeathDelay());
+    }
+
+    /**
+     * @returns {boolean} True if this object may still move during death delay.
+     */
+    canMoveDuringDeathDelay() {
+        return false;
     }
 
     /**
