@@ -128,9 +128,18 @@ Object.assign(World.prototype, {
      * @returns {void}
      */
     checkThrowObjects() {
+        if (!this.isThrowInputActive()) {
+            this.throwInputLocked = false;
+            return;
+        }
         if (this.canThrow()) {
             this.throwBottle();
         }
+    },
+
+    /** @returns {boolean} True while the throw key or touch button is pressed. */
+    isThrowInputActive() {
+        return this.keyboard.D || this.keyboard.mobileD;
     },
 
     /**
@@ -139,7 +148,31 @@ Object.assign(World.prototype, {
      */
     canThrow() {
         const cooldownElapsed = Date.now() - this.lastThrowTime >= 500;
-        return (this.keyboard.D || this.keyboard.mobileD) && this.bottleBar.percentage > 0 && cooldownElapsed;
+        return this.isThrowInputActive() && !this.throwInputLocked && this.bottleBar.percentage > 0 &&
+            cooldownElapsed && !this.hasBlockingBottle();
+    },
+
+    /** @returns {boolean} True while a previous thrown bottle still blocks a new throw. */
+    hasBlockingBottle() {
+        return this.throwableObjects.some(bottle => this.isBottleBlockingThrow(bottle));
+    },
+
+    /**
+     * @param {ThrowableObject} bottle - The bottle to test.
+     * @returns {boolean} True if this bottle should still prevent a new throw.
+     */
+    isBottleBlockingThrow(bottle) {
+        return bottle.isSplashing ? !bottle.splashDone : this.isBottleInView(bottle);
+    },
+
+    /**
+     * @param {ThrowableObject} bottle - The bottle to test.
+     * @returns {boolean} True if the bottle still overlaps the visible canvas area.
+     */
+    isBottleInView(bottle) {
+        const leftEdge = -this.camera_x - bottle.width;
+        const rightEdge = -this.camera_x + this.canvas.width + bottle.width;
+        return bottle.x >= leftEdge && bottle.x <= rightEdge;
     },
 
     /**
@@ -151,6 +184,7 @@ Object.assign(World.prototype, {
         const bottle = new ThrowableObject(direction ? this.character.x : this.character.x + 30, this.character.y + 120, direction);
         bottle.world = this;
         this.throwableObjects.push(bottle);
+        this.throwInputLocked = true;
         this.bottleBar.setPercentage(this.bottleBar.percentage - 10);
         this.lastThrowTime = Date.now();
     },
@@ -171,6 +205,7 @@ Object.assign(World.prototype, {
      */
     updateThrowable(bottle) {
         if (bottle.isSplashing) return !bottle.splashDone;
+        if (!this.isBottleInView(bottle)) return false;
         const hitEnemy = this.findHitEnemy(bottle);
         if (hitEnemy) {
             this.applyBottleHit(bottle, hitEnemy);

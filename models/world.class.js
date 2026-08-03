@@ -27,6 +27,7 @@ class World {
     CoinsCollected = 0;
 
     throwableObjects = [];
+    throwInputLocked = false;
     lastThrowTime = 0;
     endBossSpawned = false;
     lastBottleSpawnTime = 0;
@@ -140,6 +141,7 @@ class World {
         this.youWinScreen = null;
         this.level = createLevel1();
         this.throwableObjects = [];
+        this.throwInputLocked = false;
         this.lastThrowTime = 0;
         this.lastBottleSpawnTime = Date.now();
         this.endBossSpawned = false;
