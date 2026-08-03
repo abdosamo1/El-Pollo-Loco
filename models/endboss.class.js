@@ -1,5 +1,7 @@
 /** The end-level boss chicken: alerts, walks toward, and attacks the character. */
 class Endboss extends MovableObject {
+    HURT_DURATION = 0.2;
+
     IMAGES_WALKING = [
         'img/4_enemie_boss_chicken/1_walk/G1.png',
         'img/4_enemie_boss_chicken/1_walk/G2.png',
@@ -116,9 +118,46 @@ class Endboss extends MovableObject {
     updateState() {
         if (!this.world.character || this.attackPhase !== 'idle' || this.isHurt() || this.isDead()) return;
         const distance = Math.abs(this.world.character.x - this.x);
+        const attackRange = this.getAttackRange();
+        const alertRange = this.getAlertRange();
 
-        distance < 200 ? this.startAttack() :
-            distance < 300 ? this.startAlert() : this.startWalking();
+        distance < attackRange ? this.startAttack() :
+            distance < alertRange ? this.startAlert() : this.startWalking();
+    }
+
+    /** @returns {boolean} True once the boss has dropped to half health. */
+    isEnraged() {
+        return this.energy <= 50 && !this.isDead();
+    }
+
+    /** @returns {number} Distance at which the boss starts attacking. */
+    getAttackRange() {
+        return this.isEnraged() ? 260 : 200;
+    }
+
+    /** @returns {number} Distance at which the boss enters alert mode. */
+    getAlertRange() {
+        return this.isEnraged() ? 380 : 300;
+    }
+
+    /** @returns {number} The boss's walk speed for the current phase. */
+    getWalkSpeed() {
+        return this.isEnraged() ? 1.1 : this.speed;
+    }
+
+    /** @returns {number} The boss's alert/run speed for the current phase. */
+    getAlertSpeed() {
+        return this.isEnraged() ? 2.4 : 1.5;
+    }
+
+    /** @returns {number} The boss's lunge and retreat speed for the current phase. */
+    getAttackSpeed() {
+        return this.isEnraged() ? 3.4 : 2.5;
+    }
+
+    /** @returns {number} How far the boss retreats after attacking. */
+    getRetreatDistance() {
+        return this.isEnraged() ? 220 : 300;
     }
 
     /**
@@ -134,7 +173,7 @@ class Endboss extends MovableObject {
         this.attackTimer = 0;
         this.attackDirection = this.world.character.x > this.x ? 1 : -1;
         this.attackTargetX = this.x + this.attackDirection * 40;
-        this.alertTargetX = this.world.character.x - this.attackDirection * 300;
+        this.alertTargetX = this.world.character.x - this.attackDirection * this.getRetreatDistance();
         this.startY = this.y;
     }
 
@@ -158,7 +197,7 @@ class Endboss extends MovableObject {
      * @returns {void}
      */
     moveEndBoss() {
-        if (!this.world?.gameStarted || !this.world.character || this.isHurt() || this.isDead()) return;
+        if (!this.world?.gameStarted || !this.world.character || this.isDead()) return;
 
         if (this.attackPhase !== 'idle') {
             this.performAttack();
@@ -166,9 +205,11 @@ class Endboss extends MovableObject {
         }
 
         const distance = Math.abs(this.world.character.x - this.x);
+        const attackRange = this.getAttackRange();
+        const alertRange = this.getAlertRange();
 
-        distance > 300 ? this.moveToCharacter() :
-            distance > 200 ? this.bossAllerted() : this.startAttack();
+        distance > alertRange ? this.moveToCharacter() :
+            distance > attackRange ? this.bossAllerted() : this.startAttack();
     }
     
 
@@ -180,11 +221,12 @@ class Endboss extends MovableObject {
     bossAllerted() {
         this.isAlert = true;
         this.isAttacking = false;
+        const alertSpeed = this.getAlertSpeed();
         if (this.world.character.x > this.x) {
-            this.x += 1.5;
+            this.x += alertSpeed;
             this.otherDirection = true;
         } else {
-            this.x -= 1.5;
+            this.x -= alertSpeed;
             this.otherDirection = false;
         }
     }
@@ -196,11 +238,12 @@ class Endboss extends MovableObject {
     moveToCharacter() {
         this.isAlert = false;
         this.isAttacking = false;
+        const walkSpeed = this.getWalkSpeed();
         if (this.world.character.x > this.x) {
-            this.moveRight();
+            this.x += walkSpeed;
             this.otherDirection = true;
         } else {
-            this.moveLeft();
+            this.x -= walkSpeed;
             this.otherDirection = false;
         }
     }
@@ -230,7 +273,7 @@ class Endboss extends MovableObject {
      */
     performLungePhase(attackStage) {
         this.y = this.startY - Math.sin((attackStage / 500) * Math.PI) * 15;
-        this.x += this.attackDirection * 2.5;
+        this.x += this.attackDirection * this.getAttackSpeed();
     }
 
     /**
@@ -241,8 +284,9 @@ class Endboss extends MovableObject {
         this.y = this.startY;
         this.isAlert = true;
         const targetX = this.alertTargetX;
+        const retreatSpeed = this.getAttackSpeed();
         if (Math.abs(this.x - targetX) > 2) {
-            this.x += this.x < targetX ? 2.5 : -2.5;
+            this.x += this.x < targetX ? retreatSpeed : -retreatSpeed;
             this.otherDirection = this.x < targetX;
         }
     }

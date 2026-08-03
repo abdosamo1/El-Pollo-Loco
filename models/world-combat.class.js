@@ -109,7 +109,7 @@ Object.assign(World.prototype, {
      * @returns {void}
      */
     damgeCharacter(enemy) {
-        const damage = enemy instanceof Endboss ? 50 : 5;
+        const damage = enemy instanceof Endboss ? 200 : 50;
         const wasHit = this.character.hit(damage);
         if (wasHit) {
             soundManager.playHurtSound();
