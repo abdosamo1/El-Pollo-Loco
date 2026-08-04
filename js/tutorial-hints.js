@@ -14,13 +14,13 @@ let tutorialHintStep = 0;
  */
 function maybeStartTutorialHints() {
     if (haveTutorialHintsBeenShown()) return;
-    markTutorialHintsShown();
     tutorialHintStep = 0;
     setPause(true);
     showTutorialHintStep();
 }
 
 /**
+ * Checks localStorage to determine if the tutorial hints have already been shown.
  * @returns {boolean} True if the tutorial hints were already shown on this computer before.
  */
 function haveTutorialHintsBeenShown() {
@@ -32,19 +32,17 @@ function haveTutorialHintsBeenShown() {
 }
 
 /**
- * Remembers that the tutorial hints have been shown, so they won't show again.
+ * Persists a flag in localStorage so the tutorial is not shown again on this computer.
  * @returns {void}
  */
 function markTutorialHintsShown() {
     try {
         localStorage.setItem(TUTORIAL_HINTS_STORAGE_KEY, 'true');
-    } catch {
-        // Ignore storage errors (e.g. private browsing mode).
-    }
+    } catch {}
 }
 
 /**
- * Renders the current tutorial hint step's text and position into the hint overlay.
+ * Renders the current hint step's text into the overlay and updates the navigation buttons.
  * @returns {void}
  */
 function showTutorialHintStep() {
@@ -53,34 +51,62 @@ function showTutorialHintStep() {
     const text = document.getElementById('tutorial-hint-text');
     const stepLabel = document.getElementById('tutorial-hint-step');
     if (!overlay || !box || !text || !stepLabel) return;
-
     const hint = tutorialHints[tutorialHintStep];
     text.textContent = hint.text;
     stepLabel.textContent = `${tutorialHintStep + 1}/${tutorialHints.length}`;
     box.className = hint.position;
     overlay.classList.add('show-hint');
+    updateHintNavButtons();
 }
 
 /**
- * Advances to the next tutorial hint, or closes the overlay and unpauses
- * the game once the last hint has been shown.
+ * Updates the previous and next navigation buttons to reflect the current step.
  * @returns {void}
  */
-function closeTutorialHint() {
-    tutorialHintStep++;
-    if (tutorialHintStep < tutorialHints.length) {
-        showTutorialHintStep();
-    } else {
-        const overlay = document.getElementById('tutorial-hint-overlay');
-        if (overlay) overlay.classList.remove('show-hint');
-        setPause(false);
+function updateHintNavButtons() {
+    const prev = document.getElementById('tutorial-hint-prev');
+    const next = document.getElementById('tutorial-hint-next');
+    if (prev) prev.style.visibility = tutorialHintStep === 0 ? 'hidden' : 'visible';
+    if (next) {
+        const isLast = tutorialHintStep === tutorialHints.length - 1;
+        next.textContent = isLast ? 'End Tutorial' : '→';
+        next.onclick = isLast ? endTutorialHintSession : showNextTutorialHint;
+        next.style.visibility = 'visible';
+        next.classList.toggle('end-tutorial-button', isLast);
+        next.classList.toggle('next-hint-button', !isLast);
     }
 }
 
-// Close the in-game tutorial hint when clicking outside its box
-document.addEventListener('click', (e) => {
-    const hintOverlay = document.getElementById('tutorial-hint-overlay');
-    if (hintOverlay && hintOverlay.classList.contains('show-hint') && e.target === hintOverlay) {
-        closeTutorialHint();
+/**
+ * Navigates to the previous hint if not already on the first one.
+ * @returns {void}
+ */
+function showPreviousTutorialHint() {
+    if (tutorialHintStep > 0) {
+        tutorialHintStep--;
+        showTutorialHintStep();
     }
-});
+}
+
+/**
+ * Navigates to the next hint if not already on the last one.
+ * @returns {void}
+ */
+function showNextTutorialHint() {
+    if (tutorialHintStep < tutorialHints.length - 1) {
+        tutorialHintStep++;
+        showTutorialHintStep();
+    }
+}
+
+/**
+ * Closes the hint overlay, saves the shown flag, and resumes the game.
+ * @returns {void}
+ */
+function endTutorialHintSession() {
+    const overlay = document.getElementById('tutorial-hint-overlay');
+    if (overlay) overlay.classList.remove('show-hint');
+    markTutorialHintsShown();
+    setPause(false);
+}
+

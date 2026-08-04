@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Pollo Loco</title>
 
-    <link rel="icon" type="image/x-icon" href="./img/8_coin/coin_2.png">
+    <link rel="icon" type="image/x-icon" href="./assets/img/8_coin/coin_2.png">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -16,7 +16,7 @@
     <div id="canvas-container">
         <canvas width="720" height="480" id="canvas"></canvas>
         <video id="portrait-overlay" muted autoplay loop playsinline>
-            <source src="./video/0609 (2).mp4" type="video/mp4">
+            <source src="./assets/video/0609 (2).mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <button id="mute-button" title="Mute" onclick="toggleMute()">
@@ -31,29 +31,32 @@
 
         <div id="mobile-controls">
             <div id="mobile-left-controls">
-                <button id="mobile-up" class="control-button" title="Jump" onpointerdown="keyboard.mobileUp = true"
-                    onpointerup="keyboard.mobileUp = false" onpointerleave="keyboard.mobileUp = false"
-                    ontouchstart="event.preventDefault(); keyboard.mobileUp = true"
-                    ontouchend="event.preventDefault(); keyboard.mobileUp = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileUp = false"><span class="arrow-icon arrow-up" aria-hidden="true"></span></button>
                 <button id="mobile-left" class="control-button" title="Move left" onpointerdown="keyboard.mobileLeft = true"
                     onpointerup="keyboard.mobileLeft = false" onpointerleave="keyboard.mobileLeft = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileLeft = true"
                     ontouchend="event.preventDefault(); keyboard.mobileLeft = false"
                     ontouchcancel="event.preventDefault(); keyboard.mobileLeft = false"><span class="arrow-icon arrow-left" aria-hidden="true"></span></button>
-            </div>
-            <div id="mobile-right-controls">
-                <button id="mobile-throw" class="control-button" title="Throw bottle"
-                    onpointerdown="keyboard.mobileD = true" onpointerup="keyboard.mobileD = false"
-                    onpointerleave="keyboard.mobileD = false" ontouchstart="event.preventDefault(); keyboard.mobileD = true"
-                    ontouchend="event.preventDefault(); keyboard.mobileD = false"
-                    ontouchcancel="event.preventDefault(); keyboard.mobileD = false">🧴</button>
                 <button id="mobile-right" class="control-button" title="Move right"
                     onpointerdown="keyboard.mobileRight = true" onpointerup="keyboard.mobileRight = false"
                     onpointerleave="keyboard.mobileRight = false"
                     ontouchstart="event.preventDefault(); keyboard.mobileRight = true"
                     ontouchend="event.preventDefault(); keyboard.mobileRight = false"
                     ontouchcancel="event.preventDefault(); keyboard.mobileRight = false"><span class="arrow-icon arrow-right" aria-hidden="true"></span></button>
+                
+            </div>
+            <div id="mobile-right-controls">
+                <button id="mobile-up" class="control-button" title="Jump" onpointerdown="keyboard.mobileUp = true"
+                    onpointerup="keyboard.mobileUp = false" onpointerleave="keyboard.mobileUp = false"
+                    ontouchstart="event.preventDefault(); keyboard.mobileUp = true"
+                    ontouchend="event.preventDefault(); keyboard.mobileUp = false"
+                    ontouchcancel="event.preventDefault(); keyboard.mobileUp = false"><span class="arrow-icon arrow-up" aria-hidden="true"></span></button>
+                
+                <button id="mobile-throw" class="control-button" title="Throw bottle"
+                    onpointerdown="keyboard.mobileD = true" onpointerup="keyboard.mobileD = false"
+                    onpointerleave="keyboard.mobileD = false" ontouchstart="event.preventDefault(); keyboard.mobileD = true"
+                    ontouchend="event.preventDefault(); keyboard.mobileD = false"
+                    ontouchcancel="event.preventDefault(); keyboard.mobileD = false">🧴</button>
+                
             </div>
         </div>
 
@@ -61,7 +64,7 @@
         <div id="start-screen-buttons">
             <button id="start-button">Start Game</button>
             <button id="tutorial-button" onclick="showOverlay('tutorial')">How To Play</button>
-            <button id="impressum-button" onclick="showOverlay('impressum')">Impressum</button>
+            <button id="impressum-button" onclick="showOverlay('impressum')">Legal Notice</button>
         </div>
         <div id="gameover-screen-buttons">
             <button id="restart-button">Restart Game</button>
@@ -74,9 +77,13 @@
 
         <div id="tutorial-hint-overlay">
             <div id="tutorial-hint-box">
-                <button id="tutorial-hint-close" onclick="closeTutorialHint()">X</button>
+                <button id="tutorial-hint-close" onclick="endTutorialHintSession()">X</button>
                 <span id="tutorial-hint-step"></span>
                 <div id="tutorial-hint-text"></div>
+                <div class="tutorial-hint-navigation">
+                    <button id="tutorial-hint-prev" onclick="showPreviousTutorialHint()" aria-label="Previous hint">←</button>
+                    <button id="tutorial-hint-next" onclick="showNextTutorialHint()" aria-label="Next hint">→</button>
+                </div>
             </div>
         </div>
 
@@ -107,29 +114,29 @@
             </p>
         </div>
         <div id="impressum-screen">
-            <h2>Impressum</h2>
+            <h2>Legal Notice</h2>
             <button id="back-button" onclick="closeOverlay()">X</button>
             <p>
-                <b>Anbieter</b><br>
+                <b>Provider</b><br>
                 Mohamad AbdulRazak Samouneh<br>
                 Landstr. 12<br>
                 73030 Weinstadt<br>
-                Kontakt<br>
-                Telefon: +49 (1) 689 451983<br>
+                Contact<br>
+                Phone: +49 (1) 689 451983<br>
                 E-Mail: info@muki27.de<br><br>
 
-                <b>Über das Projekt</b><br>
+                <b>About the Project</b><br>
                 
-                El Pollo Loco ist ein 2D-Browsergame, das im Rahmen meiner Ausbildung bei der Developer Akademie als Lern- und Portfolio-Projekt entwickelt wurde.<br>
-                Die Nutzung des Spiels erfolgt auf eigene Verantwortung. Das Spiel wird zu Lern- und Demonstrationszwecken bereitgestellt.<br><br>
+                El Pollo Loco is a 2D browser game developed as a learning and portfolio project during my training at the Developer Academy.<br>
+                Use of the game is at your own risk. The game is provided for learning and demonstration purposes.<br><br>
 
-                <b>Nutzungsbedingungen</b><br>
-                Eine Garantie für die jederzeitige Verfügbarkeit, Fehlerfreiheit oder Funktionsfähigkeit des Spiels wird nicht übernommen.<br>
+                <b>Terms of Use</b><br>
+                No guarantee is given for the availability, error-free operation, or functionality of the game.<br>
 
-                Die Inhalte und der Quellcode dieses Projekts sind, soweit nicht anders gekennzeichnet, urheberrechtlich geschützt.<br><br>
+                The content and source code of this project are protected by copyright, unless otherwise noted.<br><br>
 
-                <b>Urheberrecht</b><br>
-                Eine Verwendung, Vervielfältigung oder Weitergabe ohne entsprechende Zustimmung ist nicht gestattet, soweit keine gesetzlichen Ausnahmen bestehen.
+                <b>Copyright</b><br>
+                Use, reproduction, or distribution without appropriate consent is not permitted, unless otherwise allowed by law.
             </p>
         </div>
     </div>
@@ -141,8 +148,9 @@
     <script src="./models/drawable-object.class.js"></script>
     <script src="./models/movable-object.class.js"></script>
     <script src="./models/collectable-items.class.js"></script>
+    <script src="./models/level.class.js"></script>
+    <script src="./levels/level1.js"></script>
     <script src="./models/sound-manager.class.js"></script>
-    <script src="./js/game.js"></script>
     <script src="./js/tutorial-hints.js"></script>
     <script src="./js/fullscreen.js"></script>
     <script src="./models/cloud.class.js"></script>
@@ -157,12 +165,11 @@
     <script src="./models/throwable-object.class.js"></script>
     <script src="./models/game-over.class.js"></script>
     <script src="./models/you-win.class.js"></script>
-    <script src="./models/level.class.js"></script>
-    <script src="./levels/level1.js"></script>
     <script src="./models/world.class.js"></script>
     <script src="./models/world-combat.class.js"></script>
     <script src="./models/world-progression.class.js"></script>
     <script src="./models/world-renderer.class.js"></script>
+    <script src="./js/game.js"></script>
 </body>
 
 </html>

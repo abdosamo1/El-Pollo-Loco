@@ -12,6 +12,7 @@ function toggleFullscreen() {
 }
 
 /**
+ * Checks whether the page is currently in native or pseudo fullscreen.
  * @param {HTMLElement} canvasContainer - The fullscreen-able container element.
  * @returns {boolean} True if the page is currently in native or pseudo fullscreen.
  */
@@ -24,6 +25,7 @@ function isCurrentlyFullscreen(canvasContainer) {
 }
 
 /**
+ * Checks whether any vendor-prefixed Fullscreen API is available in this browser.
  * @returns {boolean} True if any vendor-prefixed Fullscreen API is available.
  */
 function isFullscreenSupported() {
@@ -72,7 +74,7 @@ function requestExitFullscreen() {
  */
 function enterFullscreen(canvasContainer) {
     if (!isFullscreenSupported()) {
-        enterPseudoFullscreen(canvasContainer); // e.g. iOS Safari
+        enterPseudoFullscreen(canvasContainer);
         return;
     }
     requestNativeFullscreen(canvasContainer);
@@ -94,11 +96,17 @@ function requestNativeFullscreen(canvasContainer) {
         return;
     }
     Promise.resolve(requestMethod.call(canvasContainer))
-        .then(() => {
-            document.body.classList.add('fullscreen-active');
-            document.documentElement.classList.add('fullscreen-active');
-        })
+        .then(() => applyFullscreenClasses())
         .catch(() => enterPseudoFullscreen(canvasContainer));
+}
+
+/**
+ * Adds the fullscreen CSS classes to body and html.
+ * @returns {void}
+ */
+function applyFullscreenClasses() {
+    document.body.classList.add('fullscreen-active');
+    document.documentElement.classList.add('fullscreen-active');
 }
 
 /**

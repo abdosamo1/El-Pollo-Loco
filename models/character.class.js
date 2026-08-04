@@ -5,68 +5,66 @@ class Character extends MovableObject {
     width = 150;
     height = 300;
     speed = 3;
-    // Tighter left/right than the sprite's outer bounds so enemies must be
-    // visually closer to Pepe's body before a hit/hurt registers.
-    offset = { top: 110, left: 50, right: 40, bottom: 35 };
+    offset = { top: 110, left: 30, right: 40, bottom: 20 };
 
     IMAGES_WALKING = [
-        './img/2_character_pepe/2_walk/W-21.png',
-        './img/2_character_pepe/2_walk/W-22.png',
-        './img/2_character_pepe/2_walk/W-23.png',
-        './img/2_character_pepe/2_walk/W-24.png',
-        './img/2_character_pepe/2_walk/W-25.png',
-        './img/2_character_pepe/2_walk/W-26.png'
+        './assets/img/2_character_pepe/2_walk/W-21.png',
+        './assets/img/2_character_pepe/2_walk/W-22.png',
+        './assets/img/2_character_pepe/2_walk/W-23.png',
+        './assets/img/2_character_pepe/2_walk/W-24.png',
+        './assets/img/2_character_pepe/2_walk/W-25.png',
+        './assets/img/2_character_pepe/2_walk/W-26.png'
     ];
     IMAGES_JUMPING = [
-        './img/2_character_pepe/3_jump/J-31.png',
-        './img/2_character_pepe/3_jump/J-32.png',
-        './img/2_character_pepe/3_jump/J-33.png',
-        './img/2_character_pepe/3_jump/J-34.png',
-        './img/2_character_pepe/3_jump/J-35.png',
-        './img/2_character_pepe/3_jump/J-36.png',
-        './img/2_character_pepe/3_jump/J-37.png',
-        './img/2_character_pepe/3_jump/J-38.png',
-        './img/2_character_pepe/3_jump/J-39.png'
+        './assets/img/2_character_pepe/3_jump/J-31.png',
+        './assets/img/2_character_pepe/3_jump/J-32.png',
+        './assets/img/2_character_pepe/3_jump/J-33.png',
+        './assets/img/2_character_pepe/3_jump/J-34.png',
+        './assets/img/2_character_pepe/3_jump/J-35.png',
+        './assets/img/2_character_pepe/3_jump/J-36.png',
+        './assets/img/2_character_pepe/3_jump/J-37.png',
+        './assets/img/2_character_pepe/3_jump/J-38.png',
+        './assets/img/2_character_pepe/3_jump/J-39.png'
     ];
     IMAGES_DEAD = [
-        './img/2_character_pepe/5_dead/D-51.png',
-        './img/2_character_pepe/5_dead/D-52.png',
-        './img/2_character_pepe/5_dead/D-53.png',
-        './img/2_character_pepe/5_dead/D-54.png',
-        './img/2_character_pepe/5_dead/D-55.png',
-        './img/2_character_pepe/5_dead/D-56.png',
-        './img/2_character_pepe/5_dead/D-57.png'
+        './assets/img/2_character_pepe/5_dead/D-51.png',
+        './assets/img/2_character_pepe/5_dead/D-52.png',
+        './assets/img/2_character_pepe/5_dead/D-53.png',
+        './assets/img/2_character_pepe/5_dead/D-54.png',
+        './assets/img/2_character_pepe/5_dead/D-55.png',
+        './assets/img/2_character_pepe/5_dead/D-56.png',
+        './assets/img/2_character_pepe/5_dead/D-57.png'
     ];
     IMAGES_HURT = [
-        './img/2_character_pepe/4_hurt/H-41.png',
-        './img/2_character_pepe/4_hurt/H-42.png',
-        './img/2_character_pepe/4_hurt/H-43.png'
+        './assets/img/2_character_pepe/4_hurt/H-41.png',
+        './assets/img/2_character_pepe/4_hurt/H-42.png',
+        './assets/img/2_character_pepe/4_hurt/H-43.png'
     ];    
 
     IMAGES_IDLE = [
-        './img/2_character_pepe/1_idle/idle/I-1.png',
-        './img/2_character_pepe/1_idle/idle/I-2.png',
-        './img/2_character_pepe/1_idle/idle/I-3.png',
-        './img/2_character_pepe/1_idle/idle/I-4.png',
-        './img/2_character_pepe/1_idle/idle/I-5.png',
-        './img/2_character_pepe/1_idle/idle/I-6.png',
-        './img/2_character_pepe/1_idle/idle/I-7.png',
-        './img/2_character_pepe/1_idle/idle/I-8.png',
-        './img/2_character_pepe/1_idle/idle/I-9.png',
-        './img/2_character_pepe/1_idle/idle/I-10.png'
+        './assets/img/2_character_pepe/1_idle/idle/I-1.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-2.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-3.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-4.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-5.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-6.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-7.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-8.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-9.png',
+        './assets/img/2_character_pepe/1_idle/idle/I-10.png'
     ];
 
     IMAGES_LONG_IDLE = [
-        './img/2_character_pepe/1_idle/long_idle/I-11.png',
-        './img/2_character_pepe/1_idle/long_idle/I-12.png',
-        './img/2_character_pepe/1_idle/long_idle/I-13.png',
-        './img/2_character_pepe/1_idle/long_idle/I-14.png',
-        './img/2_character_pepe/1_idle/long_idle/I-15.png',
-        './img/2_character_pepe/1_idle/long_idle/I-16.png',
-        './img/2_character_pepe/1_idle/long_idle/I-17.png',
-        './img/2_character_pepe/1_idle/long_idle/I-18.png',
-        './img/2_character_pepe/1_idle/long_idle/I-19.png',
-        './img/2_character_pepe/1_idle/long_idle/I-20.png'
+        './assets/img/2_character_pepe/1_idle/long_idle/I-11.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-12.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-13.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-14.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-15.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-16.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-17.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-18.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-19.png',
+        './assets/img/2_character_pepe/1_idle/long_idle/I-20.png'
     ];
 
     world;
@@ -85,6 +83,12 @@ class Character extends MovableObject {
     knockbackDirection = 0;
     currentHurtImage = 0;
 
+
+    /**
+     * Creates a new character instance, preloading all sprite sheets and starting 
+     * the animation loop.
+     * @returns {void}
+     */
     constructor() {
         super();
         this.loadAllImages();
@@ -97,7 +101,7 @@ class Character extends MovableObject {
      * @returns {void}
      */
     loadAllImages() {
-        this.loadImage('img/2_character_pepe/2_walk/W-21.png');
+        this.loadImage('assets/img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
@@ -136,6 +140,7 @@ class Character extends MovableObject {
     }
 
     /**
+     * Determines if the character can move during the death delay.
      * @returns {boolean} True while the final-hit knockback is still running.
      */
     canMoveDuringDeathDelay() {
@@ -197,6 +202,7 @@ class Character extends MovableObject {
     }
 
     /**
+     * Checks if the throw key/button is held and a bottle is available.
      * @returns {boolean} True if the throw key/button is held and a bottle is available.
      */
     isThrowing() {
@@ -212,8 +218,14 @@ class Character extends MovableObject {
     updateIdleTicks(moved) {
         if (moved || this.aboveGround()) {
             this.idleTicks = 0;
+            if (this.longIdleSoundPlaying) {
+                this.stopLongIdleSound();
+            }
         } else {
             this.idleTicks++;
+            if (this.longStanding() && !this.longIdleSoundPlaying) {
+                this.startLongIdleSound();
+            }
         }
     }
 
@@ -242,8 +254,19 @@ class Character extends MovableObject {
             this.currentJumpImage = 0;
             this.jumpImageTick = 0;
             this.isWalking() ? this.playAnimation(this.IMAGES_WALKING) 
-            : this.longStanding() ? this.playAnimation(this.IMAGES_LONG_IDLE)
-            : this.playAnimation(this.IMAGES_IDLE);
+            : this.handleIdleState();
+        }
+    }
+
+    /**
+     * Handles the character's idle state, choosing between long-idle and regular idle animations.
+     * @returns {void}
+     */
+    handleIdleState() {
+        if (this.longStanding()) {
+            this.playAnimation(this.IMAGES_LONG_IDLE);
+        } else {
+            this.playAnimation(this.IMAGES_IDLE);
         }
     }
 
@@ -260,6 +283,7 @@ class Character extends MovableObject {
     }
 
     /**
+     * Advances a frame counter within the rising (take-off) phase.
      * @returns {number} Next frame index for the rising (take-off) phase.
      */
     advanceRisingFrame() {
@@ -267,6 +291,7 @@ class Character extends MovableObject {
     }
 
     /**
+     * Advances a frame counter within the peak (top of the jump) phase.
      * @returns {number} Frame index for the peak (top of the jump) phase.
      */
     getPeakFrame() {
@@ -275,6 +300,7 @@ class Character extends MovableObject {
     }
 
     /**
+     * Advances a frame counter within the falling (landing) phase.
      * @returns {number} Next frame index for the falling (landing) phase.
      */
     advanceFallingFrame() {
@@ -330,6 +356,7 @@ class Character extends MovableObject {
     }
 
     /**
+     * Checks if a left/right movement key is currently held.
      * @returns {boolean} True if a left/right movement key is currently held.
      */
     isWalking() {
@@ -338,10 +365,29 @@ class Character extends MovableObject {
     }
 
     /**
+     * Checks if the character has been idle long enough to switch to the long-idle animation.
      * @returns {boolean} True if the character has been idle long enough to
      * switch to the long-idle animation.
      */
     longStanding() {
         return this.idleTicks > this.LONG_IDLE_THRESHOLD;
+    }
+
+    /**
+     * Starts the snore sound for the long-idle animation.
+     * @returns {void}
+     */
+    startLongIdleSound() {
+        this.longIdleSoundPlaying = true;
+        soundManager.playSnoreSound();
+    }
+
+    /**
+     * Stops the snore sound for the long-idle animation.
+     * @returns {void}
+     */
+    stopLongIdleSound() {
+        this.longIdleSoundPlaying = false;
+        soundManager.pauseSnoreSound();
     }
 }

@@ -2,15 +2,17 @@
 class ThrowableObject extends CollectableItems {
 
     bottleSplash = [
-        'img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png',
-        'img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png',
-        'img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png',
-        'img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png',
-        'img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
-        'img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
+        './assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png'
     ];
 
     /**
+     * Creates a new ThrowableObject instance at the specified position, 
+     * with an optional throw direction.
      * @param {number} x - Starting horizontal position.
      * @param {number} y - Starting vertical position.
      * @param {boolean} [direction=false] - True to throw left, false to throw right.
@@ -24,8 +26,6 @@ class ThrowableObject extends CollectableItems {
         this.y = y;
         this.width = 80;
         this.height = 100;
-        // Bottle sprite has transparent padding around it; shrink the hitbox
-        // so it only splashes once the bottle graphic actually touches an enemy.
         this.offset = { top: 15, left: 20, right: 20, bottom: 10 };
         this.otherDirection = direction;
         this.isSplashing = false;
@@ -71,6 +71,7 @@ class ThrowableObject extends CollectableItems {
     }
 
     /**
+     * Checks if the bottle is still airborne (not yet splashed).
      * @returns {boolean} True while the bottle hasn't splashed yet (keeps it airborne).
      */
     aboveGround() {

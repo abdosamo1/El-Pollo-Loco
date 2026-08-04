@@ -36,6 +36,8 @@ class World {
     COLLECT_ALIGNMENT_TOLERANCE = 40;
 
     /**
+     * Creates a new World instance, owning the game loop, canvas rendering, level state, and all gameplay rules.
+     * @constructor
      * @param {HTMLCanvasElement} canvas - Canvas element to render the game onto.
      * @param {Keyboard} keyboard - Shared keyboard input state.
      */
@@ -140,6 +142,14 @@ class World {
         this.endBossBar = null;
         this.youWinScreen = null;
         this.level = createLevel1();
+        this.resetThrowState();
+    }
+
+    /**
+     * Resets all throw-related state to its initial values.
+     * @returns {void}
+     */
+    resetThrowState() {
         this.throwableObjects = [];
         this.throwInputLocked = false;
         this.lastThrowTime = 0;
@@ -230,6 +240,7 @@ class World {
     }
 
     /**
+     * Checks whether the character's horizontal center is close enough to the item's center to collect it.
      * @param {CollectableItems} collectable - Candidate item to check alignment with.
      * @returns {boolean} True if the character's and item's horizontal centers are close enough.
      */
@@ -290,7 +301,7 @@ class World {
     }
 
     /**
-     * Ends the game in a win state, stops the loop, and shows the win screen/buttons.
+     * Ends the game in a win state, stops all loops and music, and shows the win screen.
      * @returns {void}
      */
     winGame() {
@@ -302,11 +313,17 @@ class World {
         soundManager.stopAllMusic();
         soundManager.playWinSound();
         stopGame();
-        const startButtons = document.getElementById('start-screen-buttons');
-        if (startButtons) {
-            startButtons.style.display = 'none';
-        }
+        this.hideStartScreenButtons();
         if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();
+    }
+
+    /**
+     * Hides the start-screen button bar if it is currently visible.
+     * @returns {void}
+     */
+    hideStartScreenButtons() {
+        const startButtons = document.getElementById('start-screen-buttons');
+        if (startButtons) startButtons.style.display = 'none';
     }
 
     /**

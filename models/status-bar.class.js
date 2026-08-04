@@ -1,44 +1,47 @@
 /** A HUD status bar (health, coins, bottles, or endboss health) rendered from percentage-tiered sprites. */
 class StatusBar extends DrawableObject {
-    HELTHBAR_IMAGES = [
-        './img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
-        './img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png',
-        './img/7_statusbars/1_statusbar/2_statusbar_health/blue/40.png',
-        './img/7_statusbars/1_statusbar/2_statusbar_health/blue/60.png',
-        './img/7_statusbars/1_statusbar/2_statusbar_health/blue/80.png',
-        './img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png'
+    HEALTHBAR_IMAGES = [
+        './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
+        './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png',
+        './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/40.png',
+        './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/60.png',
+        './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/80.png',
+        './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png'
     ];
 
     COINBAR_IMAGES = [
-        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png',
-        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png',
-        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/40.png',
-        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/60.png',
-        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png',
-        './img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png'
+        './assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png',
+        './assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png',
+        './assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/40.png',
+        './assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/60.png',
+        './assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png',
+        './assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png'
     ];
 
     BOTTLEBAR_IMAGES = [
-        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
-        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
-        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png',
-        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/60.png',
-        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/80.png',
-        './img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png'
+        './assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png',
+        './assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/20.png',
+        './assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/40.png',
+        './assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/60.png',
+        './assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/80.png',
+        './assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/100.png'
     ];
 
     ENDBOSSBAR_IMAGES = [
-        './img/7_statusbars/2_statusbar_endboss/orange/orange0.png',
-        './img/7_statusbars/2_statusbar_endboss/orange/orange20.png',
-        './img/7_statusbars/2_statusbar_endboss/orange/orange40.png',
-        './img/7_statusbars/2_statusbar_endboss/orange/orange60.png',
-        './img/7_statusbars/2_statusbar_endboss/orange/orange80.png',
-        './img/7_statusbars/2_statusbar_endboss/orange/orange100.png'
+        './assets/img/7_statusbars/2_statusbar_endboss/orange/orange0.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/orange/orange20.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/orange/orange40.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/orange/orange60.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/orange/orange80.png',
+        './assets/img/7_statusbars/2_statusbar_endboss/orange/orange100.png'
     ];
 
     percentage = 0;
 
-    /** @param {'health'|'coin'|'bottle'|'endboss'} type - Which status bar this instance represents. */
+    /** 
+     * creates a new StatusBar instance of the specified type, with its initial percentage and position set.
+     * @param {'health'|'coin'|'bottle'|'endboss'} type - Which status bar this instance represents. 
+     * */
     constructor(type) {
         super();
         this.type = String(type).toLowerCase();
@@ -51,10 +54,11 @@ class StatusBar extends DrawableObject {
     }
 
     /**
+     * Resolves the correct sprite set for this bar's type.
      * @returns {string[]} The tiered sprite set matching this bar's type.
      */
     resolveImageSet() {
-        if (this.type == 'health') return this.HELTHBAR_IMAGES;
+        if (this.type == 'health') return this.HEALTHBAR_IMAGES;
         if (this.type == 'coin') return this.COINBAR_IMAGES;
         if (this.type == 'bottle') return this.BOTTLEBAR_IMAGES;
         if (this.type == 'endboss' || this.type == 'endbos') return this.ENDBOSSBAR_IMAGES;
@@ -62,6 +66,7 @@ class StatusBar extends DrawableObject {
     }
 
     /**
+     * Resolves the correct y position for this bar's type.
      * @returns {number} The HUD y position matching this bar's type.
      */
     resolveYPosition() {

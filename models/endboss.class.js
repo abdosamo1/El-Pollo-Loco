@@ -4,49 +4,52 @@ class Endboss extends MovableObject {
     HURT_VISUAL_DURATION = 0.6;
 
     IMAGES_WALKING = [
-        'img/4_enemie_boss_chicken/1_walk/G1.png',
-        'img/4_enemie_boss_chicken/1_walk/G2.png',
-        'img/4_enemie_boss_chicken/1_walk/G3.png',
-        'img/4_enemie_boss_chicken/1_walk/G4.png'
+        './assets/img/4_enemie_boss_chicken/1_walk/G1.png',
+        './assets/img/4_enemie_boss_chicken/1_walk/G2.png',
+        './assets/img/4_enemie_boss_chicken/1_walk/G3.png',
+        './assets/img/4_enemie_boss_chicken/1_walk/G4.png'
     ]
 
     IMAGES_ALERT = [
-        'img/4_enemie_boss_chicken/2_alert/G5.png',
-        'img/4_enemie_boss_chicken/2_alert/G6.png',
-        'img/4_enemie_boss_chicken/2_alert/G7.png',
-        'img/4_enemie_boss_chicken/2_alert/G8.png',
-        'img/4_enemie_boss_chicken/2_alert/G9.png',
-        'img/4_enemie_boss_chicken/2_alert/G10.png',
-        'img/4_enemie_boss_chicken/2_alert/G11.png',
-        'img/4_enemie_boss_chicken/2_alert/G12.png'
+        './assets/img/4_enemie_boss_chicken/2_alert/G5.png',
+        './assets/img/4_enemie_boss_chicken/2_alert/G6.png',
+        './assets/img/4_enemie_boss_chicken/2_alert/G7.png',
+        './assets/img/4_enemie_boss_chicken/2_alert/G8.png',
+        './assets/img/4_enemie_boss_chicken/2_alert/G9.png',
+        './assets/img/4_enemie_boss_chicken/2_alert/G10.png',
+        './assets/img/4_enemie_boss_chicken/2_alert/G11.png',
+        './assets/img/4_enemie_boss_chicken/2_alert/G12.png'
     ]
 
     IMAGES_ATTACK = [
-        'img/4_enemie_boss_chicken/3_attack/G13.png',
-        'img/4_enemie_boss_chicken/3_attack/G14.png',
-        'img/4_enemie_boss_chicken/3_attack/G15.png',
-        'img/4_enemie_boss_chicken/3_attack/G16.png',
-        'img/4_enemie_boss_chicken/3_attack/G17.png',
-        'img/4_enemie_boss_chicken/3_attack/G18.png',
-        'img/4_enemie_boss_chicken/3_attack/G19.png',
-        'img/4_enemie_boss_chicken/3_attack/G20.png'
+        './assets/img/4_enemie_boss_chicken/3_attack/G13.png',
+        './assets/img/4_enemie_boss_chicken/3_attack/G14.png',
+        './assets/img/4_enemie_boss_chicken/3_attack/G15.png',
+        './assets/img/4_enemie_boss_chicken/3_attack/G16.png',
+        './assets/img/4_enemie_boss_chicken/3_attack/G17.png',
+        './assets/img/4_enemie_boss_chicken/3_attack/G18.png',
+        './assets/img/4_enemie_boss_chicken/3_attack/G19.png',
+        './assets/img/4_enemie_boss_chicken/3_attack/G20.png'
     ]
 
     IMAGES_HURT = [
-        'img/4_enemie_boss_chicken/4_hurt/G21.png',
-        'img/4_enemie_boss_chicken/4_hurt/G22.png',
-        'img/4_enemie_boss_chicken/4_hurt/G23.png'
+        './assets/img/4_enemie_boss_chicken/4_hurt/G21.png',
+        './assets/img/4_enemie_boss_chicken/4_hurt/G22.png',
+        './assets/img/4_enemie_boss_chicken/4_hurt/G23.png'
     ]
 
     IMAGES_DEAD = [
-        'img/4_enemie_boss_chicken/5_dead/G24.png',
-        'img/4_enemie_boss_chicken/5_dead/G25.png',
-        'img/4_enemie_boss_chicken/5_dead/G26.png'
+        './assets/img/4_enemie_boss_chicken/5_dead/G24.png',
+        './assets/img/4_enemie_boss_chicken/5_dead/G25.png',
+        './assets/img/4_enemie_boss_chicken/5_dead/G26.png'
     ]
     currentImage = 0;
     lastHurtVisualHit = 0;
 
-    /** @param {number} startX - Horizontal spawn position, ahead of the character. */
+    /** 
+     * creates a new Endboss instance at the specified horizontal position,
+     *  with its full set of sprites and behaviors.
+     * @param {number} startX - Horizontal spawn position, ahead of the character. */
     constructor(startX) {
         super();
         this.loadAllImages();
@@ -58,8 +61,8 @@ class Endboss extends MovableObject {
         this.offset = { top: 60, left: 20, right: 20, bottom: 15 };
         this.energy = 100;
         this.y = 50;
-        this.speed = 0.5;
-        this.laodAllStates();
+        this.speed = 0.9;
+        this.loadAllStates();
         this.animate();
     }
 
@@ -67,7 +70,7 @@ class Endboss extends MovableObject {
      * Resets the attack/alert state machine to idle.
      * @returns {void}
      */
-    laodAllStates() {
+    loadAllStates() {
         this.isAttacking = false;
         this.isAlert = false;
         this.attackPhase = 'idle';
@@ -97,19 +100,24 @@ class Endboss extends MovableObject {
     }
 
     /**
-     * Updates the attack/alert state, then plays the animation matching the
-     * boss's current state (hurt, dead, attacking, alert, or walking).
+     * Updates the attack/alert state, then plays the animation matching the boss's current state.
      * @returns {void}
      */
     playEndBossAnimations() {
         if (!this.isGameStarted()) return;
-
         if (!this.world.characterDied) {
             this.updateState();
         } else if (!this.isAttacking && !this.isDead()) {
             return;
         }
+        this.playStateAnimation();
+    }
 
+    /**
+     * Plays the animation sprite set that matches the boss's current state.
+     * @returns {void}
+     */
+    playStateAnimation() {
         this.isHurtVisualActive() ? this.playAnimation(this.IMAGES_HURT) :
             this.isDead() ? this.playAnimation(this.IMAGES_DEAD) :
                 this.isAttacking ? this.playAnimation(this.IMAGES_ATTACK) :
@@ -127,7 +135,9 @@ class Endboss extends MovableObject {
         return wasHit;
     }
 
-    /** @returns {boolean} True while the hurt animation should stay visible. */
+    /**
+     * Checks whether the hurt animation should stay visible for the extended visual window.
+     * @returns {boolean} True while the hurt animation should stay visible for the extended visual window. */
     isHurtVisualActive() {
         return (Date.now() - this.lastHurtVisualHit) / 1000 < this.HURT_VISUAL_DURATION;
     }
@@ -147,37 +157,51 @@ class Endboss extends MovableObject {
             distance < alertRange ? this.startAlert() : this.startWalking();
     }
 
-    /** @returns {boolean} True once the boss has dropped to half health. */
+    /**
+     *  checks whether the boss has dropped to half health, which triggers its enraged state.
+     *  @returns {boolean} True once the boss has dropped to half health. */
     isEnraged() {
         return this.energy <= 50 && !this.isDead();
     }
 
-    /** @returns {number} Distance at which the boss starts attacking. */
+    /**
+     * Gets the distance from Pepe at which the boss switches to its attack phase.
+     * @returns {number} Distance from Pepe at which the boss switches to its attack phase. */
     getAttackRange() {
         return this.isEnraged() ? 260 : 200;
     }
 
-    /** @returns {number} Distance at which the boss enters alert mode. */
+    /**
+     * Gets the distance from Pepe at which the boss enters its alert/run phase.
+     * @returns {number} Distance from Pepe at which the boss enters its alert/run phase. */
     getAlertRange() {
         return this.isEnraged() ? 380 : 300;
     }
 
-    /** @returns {number} The boss's walk speed for the current phase. */
+    /**
+     * Gets the horizontal speed used while the boss is patrolling.
+     * @returns {number} Horizontal speed used while the boss is patrolling. */
     getWalkSpeed() {
-        return this.isEnraged() ? 1.1 : this.speed;
+        return this.isEnraged() ? 1.9 : this.speed;
     }
 
-    /** @returns {number} The boss's alert/run speed for the current phase. */
+    /**
+     * Gets the horizontal speed used while the boss is running toward Pepe in alert mode.
+     * @returns {number} Horizontal speed used while the boss is running toward Pepe in alert mode. */
     getAlertSpeed() {
         return this.isEnraged() ? 2.4 : 1.5;
     }
 
-    /** @returns {number} The boss's lunge and retreat speed for the current phase. */
+    /**
+     * Gets the horizontal speed used during the boss's lunge and retreat.
+     * @returns {number} Horizontal speed used during the boss's lunge and retreat. */
     getAttackSpeed() {
         return this.isEnraged() ? 3.4 : 2.5;
     }
 
-    /** @returns {number} How far the boss retreats after attacking. */
+    /**
+     * Gets the horizontal distance the boss retreats after completing an attack lunge.
+     * @returns {number} Horizontal distance the boss retreats after completing an attack lunge. */
     getRetreatDistance() {
         return this.isEnraged() ? 220 : 300;
     }
@@ -199,14 +223,16 @@ class Endboss extends MovableObject {
         this.startY = this.y;
     }
 
-    /** Switches the boss to the alert (aware, not yet attacking) state. @returns {void} */
+    /** Switches the boss to the alert (aware, not yet attacking) state. 
+     * @returns {void} */
     startAlert() {
         this.isAlert = true,
             this.isAttacking = false,
             this.attackPhase = 'idle'
     }
 
-    /** Switches the boss to the idle-walking state. @returns {void} */
+    /** Switches the boss to the idle-walking state. 
+     * @returns {void} */
     startWalking() {
         this.isAlert = false,
             this.isAttacking = false,
@@ -233,8 +259,6 @@ class Endboss extends MovableObject {
         distance > alertRange ? this.moveToCharacter() :
             distance > attackRange ? this.bossAllerted() : this.startAttack();
     }
-    
-
 
     /**
      * Moves the boss toward the character at alert speed while marking it as alert.

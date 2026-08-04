@@ -21,6 +21,10 @@ class Keyboard {
         'd': 'D'
     };
 
+    /**
+     * Creates a new Keyboard instance and registers event listeners to track key state.
+     * @returns {void}
+     */
     constructor() {
         this.init();
     }

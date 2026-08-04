@@ -4,6 +4,9 @@ let keyboard = new Keyboard();
 let intervalIds = [];
 let isPaused = false;
 let autoPausedByPortrait = false;
+const level1 = createLevel1();
+var soundManager = new SoundManager();
+
 
 /**
  * Sets the paused state and updates the pause button's icon/title.
@@ -23,6 +26,19 @@ function setPause(paused, isAuto = false) {
     if (pauseIcon) {
         pauseIcon.classList.toggle('playing', isPaused);
     }
+    this.PauseSoundsState();
+}
+
+/**
+ * Pauses or resumes all game sounds based on the current pause state.
+ * @returns {void}
+ */
+function PauseSoundsState() {
+    if (soundManager.isMuted) return;
+
+    isPaused ? soundManager.AllSounds.forEach(sound => sound.pause()) :
+        (world && world.endBossSpawned ? soundManager.playBossMusic() : soundManager.playBackgroundMusic(),
+        soundManager.resumeSnoreSound());
 }
 
 /**
@@ -261,7 +277,6 @@ function updateMuteButtonIcon() {
     }
 }
 
-// Close any overlay when clicking outside of it
 document.addEventListener('click', (e) => {
     const tutorialScreen = document.getElementById("tutorial-screen");
     const impressumScreen = document.getElementById("impressum-screen");

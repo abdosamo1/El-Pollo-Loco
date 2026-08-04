@@ -38,6 +38,7 @@ Object.assign(World.prototype, {
     },
 
     /**
+     * Checks whether a candidate x-position is too close to any existing bottle.
      * @param {number} x - Candidate horizontal position for a new bottle.
      * @returns {boolean} True if an existing bottle is within {@link World#MIN_BOTTLE_SPACING}px of x.
      */

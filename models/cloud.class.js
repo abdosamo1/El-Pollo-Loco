@@ -6,11 +6,13 @@ class Cloud extends MovableObject {
     height = 300;
     speed = 0.15;
 
-    /** @param {number} [startX=0] - Starting horizontal position. */
+    /**
+     * Creates a new Cloud instance at the specified horizontal position.
+     * @param {number} [startX=0] - Starting horizontal position. */
     constructor(startX = 0) {
         super();
         this.x = startX;
-        this.loadImage('img/5_background/layers/4_clouds/full.png');
+        this.loadImage('./assets/img/5_background/layers/4_clouds/full.png');
         this.animate();
     }
 

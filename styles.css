@@ -13,7 +13,7 @@ html, body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('./img/background.jpg');
+    background-image: url('./assets/img/background.jpg');
     background-position: center;
 }
 
@@ -33,7 +33,7 @@ h1{
     max-width: 100%;
     max-height: calc(100vh - 16px);
     aspect-ratio: 3 / 2;
-    background-image: url('./img/background.jpg');
+    background-image: url('./assets/img/background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -79,7 +79,7 @@ h1{
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    background-image: url('./img/background.jpg');
+    background-image: url('./assets/img/background.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -93,6 +93,30 @@ canvas{
     width: 100%;
     height: 100%;
 }
+
+#tutorial-hint-next.end-tutorial-button{
+    width: auto !important;
+    padding: 0 12px !important;
+    border-radius: 16px !important;
+}
+
+#tutorial-hint-prev,
+#tutorial-hint-next{
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1003;
+}
+
+
 
 #pause-button,
 #fullscreen-button,
@@ -119,7 +143,7 @@ canvas{
 #pause-button {
     position: absolute;
     top: 0px;
-    right: 128px;
+    right: 8px;
 }
 
 #mute-button {
@@ -131,7 +155,7 @@ canvas{
 #fullscreen-button{
     position: absolute;
     top: 0px;
-    right: 0px;
+    right: 120px;
 }
 
 #canvas-container:fullscreen #fullscreen-button,
@@ -251,10 +275,36 @@ canvas{
     -webkit-touch-callout: none;
 }
 
-@media (pointer: fine) {
-    #mobile-controls {
-        display: none !important;
-    }
+
+#canvas-container.pseudo-fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 90vw !important;
+    height: 90vh !important;
+    max-width: 90vw !important;
+    max-height: 90vh !important;
+    max-height: 100dvh !important;
+    z-index: 99999 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+}
+
+body.fullscreen-active,
+html.fullscreen-active {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 90vw !important;
+    height: 90vh !important;
+    height: 90dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#canvas-container:fullscreen canvas,
+#canvas-container:-webkit-full-screen canvas,
+#canvas-container.pseudo-fullscreen canvas {
+    border-radius: 0 !important;
 }
 
 #mobile-left-controls,
@@ -410,11 +460,23 @@ p{
     pointer-events: auto;
 }
 
+.tutorial-hint-navigation{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 48px;
+}
+
 #tutorial-hint-box{
     position: absolute;
     max-width: 240px;
     background-color: rgb(250, 236, 194);
     padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 24px;
     border-radius: 16px;
     box-shadow: 8px 8px 32px rgba(255, 68, 0, 0.237);
     transition: top 0.3s ease, bottom 0.3s ease, left 0.3s ease, right 0.3s ease, transform 0.3s ease;
@@ -519,6 +581,18 @@ button:hover , #back-button:hover{
     z-index: 1000;
 }
 
+@media (max-width: 1000px) {
+    #fullscreen-button {
+        display: none !important;
+    }
+}
+
+@media (pointer: fine) {
+    #mobile-controls {
+        display: none !important;
+    }
+}
+
 
 @media (pointer: coarse) {
     h1{
@@ -557,19 +631,19 @@ button:hover , #back-button:hover{
 
     #mobile-up{
         bottom: 64px;
-        left: 24px;
+        right: 24px;
     }
     #mobile-right{
         bottom: 24px;
-        right: 64px;
+        left: 80px;
     }
     #mobile-left{
         bottom: 24px;
-        left: 64px;
+        left: 24px;
     }
     #mobile-throw{
-        bottom: 64px;
-        right: 24px;
+        bottom: 24px;
+        right: 64px;
     }
 
     #mobile-up:hover,
@@ -600,35 +674,4 @@ button:hover , #back-button:hover{
     #tutorial-hint-box.hint-step-3{
         bottom: 110px;
     }
-}
-
-#canvas-container.pseudo-fullscreen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 90vw !important;
-    height: 90vh !important;
-    max-width: 90vw !important;
-    max-height: 90vh !important;
-    max-height: 100dvh !important;
-    z-index: 99999 !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-}
-
-body.fullscreen-active,
-html.fullscreen-active {
-    overflow: hidden !important;
-    position: fixed !important;
-    width: 90vw !important;
-    height: 90vh !important;
-    height: 90dvh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-#canvas-container:fullscreen canvas,
-#canvas-container:-webkit-full-screen canvas,
-#canvas-container.pseudo-fullscreen canvas {
-    border-radius: 0 !important;
 }

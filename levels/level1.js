@@ -1,3 +1,5 @@
+
+
 /**
  * Builds level 1: a fixed layout of chickens, small chickens, bottles/coins, clouds, and background layers.
  * @returns {Level} The constructed level instance.
@@ -12,57 +14,30 @@ function createLevel1() {
 }
 
 /**
+ * Creates and returns all bottle collectables evenly spaced across level 1.
  * @returns {CollectableItems[]} The bottle pickups placed across level 1.
  */
 function buildLevel1Collectables() {
-    const startX = 700;
-    const spacing = 300;
-    const groundY = 330;
-    return [
-        new CollectableItems(startX + spacing * 0, groundY, true),
-        new CollectableItems(startX + spacing * 1, groundY, true),
-        new CollectableItems(startX + spacing * 2, groundY, true),
-        new CollectableItems(startX + spacing * 3, groundY, true),
-        new CollectableItems(startX + spacing * 4, groundY, true),
-        new CollectableItems(startX + spacing * 5, groundY, true),
-        new CollectableItems(startX + spacing * 6, groundY, true),
-        new CollectableItems(startX + spacing * 7, groundY, true),
-        new CollectableItems(startX + spacing * 8, groundY, true),
-        new CollectableItems(startX + spacing * 9, groundY, true),
-        new CollectableItems(startX + spacing * 10, groundY, true),
-        new CollectableItems(startX + spacing * 11, groundY, true),
-        new CollectableItems(startX + spacing * 12, groundY, true),
-    ];
+    const startX = 700, spacing = 300, groundY = 330;
+    return Array.from({ length: 13 }, (_, i) => new CollectableItems(startX + spacing * i, groundY, true));
 }
 
 /**
+ * Creates and returns the full mix of chickens and small chickens for level 1.
  * @returns {(Chicken|SmallChicken)[]} The regular and small chicken enemies placed across level 1.
  */
 function buildLevel1Enemies() {
-    const startX = 700;
-    const spacing = 300;
+    const startX = 700, spacing = 300;
+    const chickenSlots = [0, 1, 2, 4, 7, 9, 10, 13, 15, 16, 17];
+    const smallSlots = [3, 5, 6, 8, 11, 12];
     return [
-        new Chicken(startX + spacing * 0),
-        new Chicken(startX + spacing * 1),
-        new Chicken(startX + spacing * 2),
-        new Chicken(startX + spacing * 4),
-        new Chicken(startX + spacing * 7),
-        new Chicken(startX + spacing * 9),
-        new Chicken(startX + spacing * 10),
-        new Chicken(startX + spacing * 13),
-        new Chicken(startX + spacing * 15),
-        new Chicken(startX + spacing * 16),
-        new Chicken(startX + spacing * 17),
-        new SmallChicken(startX + spacing * 3),
-        new SmallChicken(startX + spacing * 5),
-        new SmallChicken(startX + spacing * 6),
-        new SmallChicken(startX + spacing * 8),
-        new SmallChicken(startX + spacing * 11),
-        new SmallChicken(startX + spacing * 12),
+        ...chickenSlots.map(i => new Chicken(startX + spacing * i)),
+        ...smallSlots.map(i => new SmallChicken(startX + spacing * i)),
     ];
 }
 
 /**
+ * Creates evenly spaced cloud objects for the level 1 background.
  * @returns {Cloud[]} The background clouds placed across level 1.
  */
 function buildLevel1Clouds() {
@@ -70,15 +45,16 @@ function buildLevel1Clouds() {
 }
 
 /**
+ * Returns the ordered image paths for level 1's tiled background layers.
  * @returns {string[]} The tiled background layer image paths for level 1.
  */
 function buildLevel1BackgroundPaths() {
-    return [
-        'img/5_background/layers/air.png',
-        'img/5_background/layers/3_third_layer/set.png',
-        'img/5_background/layers/2_second_layer/set.png',
-        'img/5_background/layers/1_first_layer/set.png',
+   return [
+        './assets/img/5_background/layers/air.png',
+        './assets/img/5_background/layers/3_third_layer/full.png',
+        './assets/img/5_background/layers/2_second_layer/full.png',
+        './assets/img/5_background/layers/1_first_layer/full.png',
     ];
 }
 
-const level1 = createLevel1();
+

@@ -2,26 +2,28 @@
 class CollectableItems extends MovableObject {
 
     coins = [
-        './img/8_coin/coin_1.png',
-        './img/8_coin/coin_2.png'
+        './assets/img/8_coin/coin_1.png',
+        './assets/img/8_coin/coin_2.png'
     ];
 
     salsaBottles = [
-        './img/6_salsa_bottle/salsa_bottle.png',
-        './img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
-        './img/6_salsa_bottle/2_salsa_bottle_on_ground.png',
+        './assets/img/6_salsa_bottle/salsa_bottle.png',
+        './assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
+        './assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png',
     ];
 
     bottleRotation = [
-        'img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
-        'img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
-        'img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png',
-        'img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png'
+        './assets/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png',
+        './assets/img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png'
     ];
 
 
 
     /**
+     * creates a new CollectableItems instance at the specified position,
+     *  with optional type and drop behavior.
      * @param {number} x - Horizontal position.
      * @param {number} y - Vertical position.
      * @param {boolean} [isBottle=false] - True for a bottle pickup, false for a coin.
@@ -94,6 +96,7 @@ class CollectableItems extends MovableObject {
     }
 
     /**
+     * Checks if the dropped item has reached the ground.
      * @returns {boolean} True if the dropped item has reached the ground.
      */
     hasLanded() {

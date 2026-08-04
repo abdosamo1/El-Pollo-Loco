@@ -1,10 +1,13 @@
 /** The game-over overlay screen and its restart/main-menu button wiring. */
 class GameOver extends DrawableObject {
-    /** @param {World} world - The game world, used to restart or return to the main screen. */
+
+    /** 
+     * creates a new GameOver instance with the game-over image and button wiring.
+     * @param {World} world - The game world, used to restart or return to the main screen. */
     constructor(world) {
         super();
         this.world = world;
-        this.loadImage('./img/You won, you lost/Game Over.png');
+        this.loadImage('./assets/img/You won, you lost/Game Over.png');
         this.x = (720 - 360) / 2;
         this.y = (480 - 240) / 2;
         this.width = 360;
@@ -18,16 +21,19 @@ class GameOver extends DrawableObject {
      * @returns {void}
      */
     addGameOverButtons() {
-        this.restartButton = document.getElementById('restart-button');
-        if (this.restartButton) {
-            this.restartButton.onclick = () => {
-                this.restartGame();
-            };
-        }
+        this.addButton('restart-button');
+        this.addButton('main-screen-button');
 
-        this.mainScreenButton = document.getElementById('main-screen-button');
-        if (this.mainScreenButton) {
-            this.mainScreenButton.onclick = () => {
+    }
+
+    /**
+     * adds a click handler to the button with the given ID, wiring it to show the main screen.
+     * @param {string} id - The ID of the button element.
+     */
+    addButton(id) {
+        this[id] = document.getElementById(id);
+        if (this[id]) {
+            this[id].onclick = () => {
                 this.showMainScreen();
             };
         }

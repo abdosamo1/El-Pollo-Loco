@@ -9,7 +9,6 @@ class MovableObject extends DrawableObject {
     energy = 1000;
     groundY = 125;
     offset = { top: 0, left: 0, right: 0, bottom: 0 };
-    /** Seconds an object stays hurt/invincible after being hit; override per subclass. */
     HURT_DURATION = 1.5;
 
     /**
@@ -40,15 +39,17 @@ class MovableObject extends DrawableObject {
     }
 
     /**
+     * Checks if the object was hit within its hurt duration (invincibility window).
      * @returns {boolean} True if the object was hit within its hurt duration.
      */
     isHurt(){
-        let timepassed = new Date().getTime() - this.lastHit; // difference in ms
-        timepassed = timepassed / 1000; // difference in s
+        let timepassed = new Date().getTime() - this.lastHit; 
+        timepassed = timepassed / 1000; 
         return timepassed < this.HURT_DURATION;
     }
 
     /**
+     * Checks if the object's energy has reached zero.
      * @returns {boolean} True if the object's energy has reached zero.
      */
     isDead(){
@@ -78,6 +79,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
+     * Checks if the object is above its resting ground level.
      * @returns {boolean} True if the object is above its resting ground level
      * (always true for {@link ThrowableObject}, which flies until it splashes).
      */
@@ -85,7 +87,8 @@ class MovableObject extends DrawableObject {
         return this instanceof ThrowableObject ? true : this.y < this.groundY;
     }
 
-    /**
+    /** 
+     * Checks if the game's world has started.
      * @returns {boolean} True if this object's world has started the game.
      */
     isGameStarted() {
@@ -93,6 +96,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
+     * Determines if movement/physics should currently progress for this object.
      * @returns {boolean} True while movement/physics should progress.
      */
     isMovementActive() {
@@ -102,6 +106,7 @@ class MovableObject extends DrawableObject {
     }
 
     /**
+     * Determines if this object may still move during death delay.
      * @returns {boolean} True if this object may still move during death delay.
      */
     canMoveDuringDeathDelay() {
@@ -120,12 +125,14 @@ class MovableObject extends DrawableObject {
         this.currentImage++;
     }
 
-    /** Moves the object one step to the right by its current speed. @returns {void} */
+    /** Moves the object one step to the right by its current speed. 
+     * @returns {void} */
     moveRight() {
         this.x += this.speed;
     }
 
-    /** Moves the object one step to the left by its current speed. @returns {void} */
+    /** Moves the object one step to the left by its current speed. 
+     * @returns {void} */
     moveLeft() {
         this.x -= this.speed;
     }

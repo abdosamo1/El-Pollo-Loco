@@ -80,6 +80,7 @@ Object.assign(World.prototype, {
     },
 
     /**
+     * Checks whether any non-endboss enemies are still alive (energy > 0).
      * @returns {boolean} True if any non-endboss enemy is still alive.
      */
     hasRegularEnemiesAlive() {
@@ -137,12 +138,17 @@ Object.assign(World.prototype, {
         }
     },
 
-    /** @returns {boolean} True while the throw key or touch button is pressed. */
+    /**
+     * detects whether the throw key or touch button is currently pressed.
+     *  @returns {boolean} True while the throw key or touch button is pressed. 
+     * */
     isThrowInputActive() {
         return this.keyboard.D || this.keyboard.mobileD;
     },
 
     /**
+     * detects whether the throw key/button is pressed, bottles are available, 
+     * and the throw cooldown has elapsed.
      * @returns {boolean} True if the throw input is active, bottles are
      * available, and the throw cooldown has elapsed.
      */
@@ -152,12 +158,16 @@ Object.assign(World.prototype, {
             cooldownElapsed && !this.hasBlockingBottle();
     },
 
-    /** @returns {boolean} True while a previous thrown bottle still blocks a new throw. */
+    /**
+     * Checks whether any thrown bottle is still in-flight or splashing, which blocks a new throw. 
+     * @returns {boolean} True while a previous thrown bottle still blocks a new throw. 
+     * */
     hasBlockingBottle() {
         return this.throwableObjects.some(bottle => this.isBottleBlockingThrow(bottle));
     },
 
     /**
+     * Checks whether a thrown bottle is still in-flight or splashing, which blocks a new throw.
      * @param {ThrowableObject} bottle - The bottle to test.
      * @returns {boolean} True if this bottle should still prevent a new throw.
      */
@@ -166,6 +176,7 @@ Object.assign(World.prototype, {
     },
 
     /**
+     * Checks whether a thrown bottle is still in-flight (not yet splashed) and still overlaps the visible canvas area.
      * @param {ThrowableObject} bottle - The bottle to test.
      * @returns {boolean} True if the bottle still overlaps the visible canvas area.
      */
@@ -214,6 +225,7 @@ Object.assign(World.prototype, {
     },
 
     /**
+     *  Finds the first living enemy that a thrown bottle is touching, if any.
      * @param {ThrowableObject} bottle - The bottle to test.
      * @returns {MovableObject|undefined} The living enemy this bottle is touching, if any.
      */

@@ -1,10 +1,14 @@
 /** The victory overlay screen and its restart/main-menu button wiring. */
 class YouWin extends DrawableObject {
-    /** @param {World} world - The game world, used to restart or return to the main screen. */
+    
+    /**
+     * creates a new YouWin instance with the victory image and button wiring.
+     *  @param {World} world - The game world, used to restart or return to the main screen. 
+     * */
     constructor(world) {
         super();
         this.world = world;
-        this.loadImage('./img/You won, you lost/You won A.png');
+        this.loadImage('./assets/img/You won, you lost/You won A.png');
         this.x = (720 - 360) / 2;
         this.y = (480 - 240) / 2;
         this.width = 360;

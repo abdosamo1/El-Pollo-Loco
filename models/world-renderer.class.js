@@ -108,8 +108,41 @@ Object.assign(World.prototype, {
     drawActiveGameplay(scale, offsetX, offsetY) {
         this.ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
         this.startGame(false, true);
-        this.drawStatusBars();
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.drawStatusBarsDirectly(scale, offsetX, offsetY);
+    },
+
+    /**
+     * Draws the three HUD bars and endboss bar in canvas pixel coordinates,
+     * bypassing the ctx transform so positions are always relative to the canvas edge.
+     * @param {number} scale - Current render scale.
+     * @param {number} offsetX - Unused; kept for signature symmetry with drawActiveGameplay.
+     * @param {number} offsetY - Unused; kept for signature symmetry with drawActiveGameplay.
+     * @returns {void}
+     */
+    drawStatusBarsDirectly(scale, offsetX, offsetY) {
+        [this.healthBar, this.coinBar, this.bottleBar].forEach(bar => {
+            if (!bar.img?.complete || bar.img.naturalWidth === 0) return;
+            this.ctx.drawImage(bar.img,
+                bar.x * scale, bar.y * scale,
+                bar.width * scale, bar.height * scale);
+        });
+        if (this.endBossBar?.img?.complete && this.endBossBar.img.naturalWidth > 0) {
+            this.drawEndBossBarAtCanvas(scale);
+        }
+    },
+
+    /**
+     * Draws the endboss HUD bar flush against the right edge of the canvas.
+     * @param {number} scale - Current render scale.
+     * @returns {void}
+     */
+    drawEndBossBarAtCanvas(scale) {
+        const bar = this.endBossBar;
+        const bw = bar.width * scale;
+        this.ctx.drawImage(bar.img,
+            this.canvas.width - bw - 20, bar.y * scale,
+            bw, bar.height * scale);
     },
 
     /**
@@ -130,8 +163,9 @@ Object.assign(World.prototype, {
      * @returns {void}
      */
     drawEndBossBarAtRightEdge() {
+        const { scale, offsetX } = this.computeRenderTransform();
         const originalX = this.endBossBar.x;
-        this.endBossBar.x = this.canvas.width - this.endBossBar.width - 20;
+        this.endBossBar.x = (this.canvas.width - offsetX) / scale - this.endBossBar.width - 20;
         this.addToMap(this.endBossBar);
         this.endBossBar.x = originalX;
     },
@@ -144,12 +178,12 @@ Object.assign(World.prototype, {
      * @returns {void}
      */
     startGame(skipBackground = false, skipStatusBars = false) {
-        this.ctx.translate(this.camera_x, 0); // camera movement
+        this.ctx.translate(this.camera_x, 0);
         this.drawBackgroundLayers(skipBackground);
         this.drawLevelObjects();
         this.drawInlineStatusBars(skipStatusBars);
         this.addToMap(this.character);
-        this.ctx.translate(-this.camera_x, 0); // reset camera
+        this.ctx.translate(-this.camera_x, 0);
     },
 
     /**
@@ -218,21 +252,30 @@ Object.assign(World.prototype, {
     },
 
     /**
-     * Draws the win-screen image, shows its HTML buttons once, and updates
-     * the final score text.
+     * Draws the win-screen image, shows its HTML buttons once, and updates the final score text.
      * @returns {void}
      */
     drawWinScreen() {
-        if (this.youWinScreen) {
-            this.addToMap(this.youWinScreen);
-        }
-        if (!this.winButtonsShown) {
-            const gameOverButtons = document.getElementById('gameover-screen-buttons');
-            if (gameOverButtons) {
-                gameOverButtons.style.display = 'flex';
-            }
-            this.winButtonsShown = true;
-        }
+        if (this.youWinScreen) this.addToMap(this.youWinScreen);
+        if (!this.winButtonsShown) this.showWinButtons();
+        this.updateWinScore();
+    },
+
+    /**
+     * Reveals the win-screen HTML buttons and marks them as shown.
+     * @returns {void}
+     */
+    showWinButtons() {
+        const gameOverButtons = document.getElementById('gameover-screen-buttons');
+        if (gameOverButtons) gameOverButtons.style.display = 'flex';
+        this.winButtonsShown = true;
+    },
+
+    /**
+     * Updates the win-score element with the player's final coin percentage.
+     * @returns {void}
+     */
+    updateWinScore() {
         const winScore = document.getElementById('win-score');
         if (winScore && this.coinBar) {
             winScore.innerText = `Level Completed - Your Score is: ${this.coinBar.percentage}%`;
@@ -273,8 +316,7 @@ Object.assign(World.prototype, {
         if (this.isFullscreen && (object instanceof Character || object instanceof Chicken || object instanceof Endboss)) {
             return this.fullscreenObjectScale;
         }
-        const uiScale = Math.min(1, this.canvas.width / 720, this.canvas.height / 480);
-        return object instanceof StatusBar ? uiScale : 1;
+        return 1;
     },
 
     /**

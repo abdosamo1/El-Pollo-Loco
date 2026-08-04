@@ -2,6 +2,7 @@
 class BackgroundObject extends MovableObject {
 
     /**
+     * Creates a new background object with the given image path and optional position/size.
      * @param {string} imgPath - Path to the background image.
      * @param {number} [x=0] - Horizontal position in the level.
      * @param {number} [y=0] - Vertical position in the level.

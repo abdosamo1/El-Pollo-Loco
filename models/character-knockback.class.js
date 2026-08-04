@@ -14,12 +14,15 @@ Object.assign(Character.prototype, {
         this.isKnockedBack = true;
         this.knockbackDirection = this.x < source.x ? -1 : 1;
         this.currentHurtImage = 0;
+        this.idleTicks = 0;
+        this.stopLongIdleSound();
         const { distance, jumpHeight } = this.resolveKnockbackStrength(source);
         this.jump(jumpHeight);
         this.startKnockbackSlide(distance);
     },
 
     /**
+     * Picks knockback distance and jump height based on whether the attacker is the endboss.
      * @param {MovableObject} source - The enemy/object the character was hit by.
      * @returns {{distance: number, jumpHeight: number}} The knockback slide
      * distance and hop height to use for this hit.
@@ -31,9 +34,7 @@ Object.assign(Character.prototype, {
     },
 
     /**
-     * Slides the character back in small steps at the same tick rate as
-     * gravity (instead of a few large jumps), over {@link Character#KNOCKBACK_DURATION}ms,
-     * for a smooth, non-stuttering motion.
+     * Slides the character back in small steps over KNOCKBACK_DURATION ms for smooth motion.
      * @param {number} distance - Total horizontal distance to cover.
      * @returns {void}
      */
@@ -42,20 +43,27 @@ Object.assign(Character.prototype, {
         const stepDistance = distance / totalSteps;
         let stepsLeft = totalSteps;
         const intervalId = setStopableInterval(() => {
-            if (!this.isMovementActive()) {
-                clearInterval(intervalId);
-                this.isKnockedBack = false;
-                this.isRecoveringFromHit = false;
-                return;
-            }
-            this.x += this.knockbackDirection * stepDistance;
-            this.x = Math.max(0, Math.min(this.x, this.world.level.level_end_x));
-            stepsLeft--;
-            if (stepsLeft <= 0) {
-                clearInterval(intervalId);
-                this.isKnockedBack = false;
-            }
+            if (this.tickKnockbackStep(intervalId, stepDistance)) stepsLeft--;
+            if (stepsLeft <= 0) { clearInterval(intervalId); this.isKnockedBack = false; }
         }, this.KNOCKBACK_TICK_DELAY);
+    },
+
+    /**
+     * Moves the character one step during knockback; cancels the interval if movement is no longer active.
+     * @param {number} intervalId - The interval to cancel if movement stops.
+     * @param {number} stepDistance - Pixels to move this tick.
+     * @returns {boolean} True if the step was applied, false if movement was cancelled.
+     */
+    tickKnockbackStep(intervalId, stepDistance) {
+        if (!this.isMovementActive()) {
+            clearInterval(intervalId);
+            this.isKnockedBack = false;
+            this.isRecoveringFromHit = false;
+            return false;
+        }
+        this.x += this.knockbackDirection * stepDistance;
+        this.x = Math.max(0, Math.min(this.x, this.world.level.level_end_x));
+        return true;
     },
 
     /**

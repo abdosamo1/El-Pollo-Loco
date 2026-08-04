@@ -5,16 +5,17 @@ class Chicken extends MovableObject {
     height = 100;
     offset = { top: 10, left: 8, right: 8, bottom: 5 };
     WALK_IMAGES = [
-        './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
-        './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
-        './img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
+        './assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
+        './assets/img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
+        './assets/img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
     ];
     DEAD_IMAGES = [
-        './img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
+        './assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
     ];
     currentImage = 0;
 
     /**
+     * creates a new Chicken instance with a random starting position and patrol behavior.
      * @param {number} [startX] - Starting horizontal position; also the right
      * patrol boundary.
      */

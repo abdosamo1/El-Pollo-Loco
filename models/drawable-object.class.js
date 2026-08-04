@@ -5,7 +5,6 @@ class DrawableObject {
     img;
     width;
     height;
-    /** @type {Object<string, HTMLImageElement>} Cache of preloaded images keyed by path. */
     imageCache = {};
     currentImage = 0;
 

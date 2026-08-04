@@ -1,23 +1,26 @@
 /** The start-screen overlay and its start-button wiring. */
 class startGame extends DrawableObject {
-    /** @param {World} world - The game world to start when the start button is clicked. */
+    
+    /** 
+     * creates a new startGame instance with the start-screen image and button wiring.
+     * @param {World} world - The game world to start when the start button is clicked. */
     constructor(world) {
         super();
         this.world = world;
-        this.loadImage('./img/9_intro_outro_screens/start/startscreen_2.png');
+        this.loadImage('./assets/img/9_intro_outro_screens/start/startscreen_2.png');
         this.x = 0;
         this.y = 0;
         this.width = 720;
         this.height = 480;
         
-        this.addStartButtons();
+        this.addStartButton();
     }
 
     /**
      * Wires up the start button's click handler.
      * @returns {void}
      */
-    addStartButtons() {
+    addStartButton() {
         this.startButton = document.getElementById('start-button');
         if (this.startButton) {
             this.startButton.onclick = () => {
@@ -33,14 +36,14 @@ class startGame extends DrawableObject {
      */
     startGame() {
         if (this.startButton) {
-            this.startButtonsDiv = document.getElementById('start-screen-buttons');
-            this.startButtonsDiv.style.display = 'none';
+            this.startButtonDiv = document.getElementById('start-screen-buttons');
+            this.startButtonDiv.style.display = 'none';
         }
         if (this.world) {
             this.world.start();
         }
         if (typeof maybeStartTutorialHints === 'function') {
-            maybeStartTutorialHints();
+            setTimeout(() => maybeStartTutorialHints(), 0);
         }
     }
 }

@@ -7,6 +7,7 @@ class Level {
     level_end_x = 500 * 10; // end of level in x direction
 
     /**
+     * Creates a new level with the given enemies, clouds, background layers, and collectables.
      * @param {MovableObject[]} enemies - Enemies placed in the level.
      * @param {Cloud[]} clouds - Background clouds.
      * @param {string[]} backgroundPaths - Background layer image paths (may contain the 'set' placeholder).
@@ -42,8 +43,7 @@ class Level {
      * @returns {void}
      */
     addBackgroundLayer(path, x, set) {
-        const realPath = path.includes('set') ? path.replace('set', `${set}`) : path;
-        this.backgroundObjects.push(new BackgroundObject(realPath, x));
+        this.backgroundObjects.push(new BackgroundObject(path, x));
     }
 
 }
