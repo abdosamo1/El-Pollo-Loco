@@ -1,0 +1,107 @@
+
+/* --- Responsive Media Queries --- */
+@media (max-width: 1000px) {
+    #fullscreen-button {
+        display: none !important;
+    }
+
+    canvas,
+    #canvas-container {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+    }
+
+    #pause-button,
+    #fullscreen-button,
+    #mute-button,
+    #inGame-restart,
+    #go-home,
+    .control-button {
+        width: 32px;
+        height: 32px;
+        font-size: 8px;
+    }
+}
+
+@media (pointer: fine) {
+    #mobile-controls {
+        display: none !important;
+    }
+}
+
+@media (pointer: coarse) {
+    h1 { display: none; }
+
+    button {
+        font-size: 14px;
+        padding: 12px 24px;
+    }
+
+    #mobile-controls {
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+        position: fixed;
+        bottom: 20px;
+        margin-left: 8px;
+        margin-right: 8px;
+        z-index: 10000;
+    }
+
+    .control-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+
+    #mobile-up,
+    #mobile-left,
+    #mobile-throw,
+    #mobile-right,
+    #mobile-left-controls,
+    #mobile-right-controls {
+        display: flex;
+        position: fixed;
+    }
+
+    #mobile-up { bottom: 64px; right: 24px; }
+    #mobile-right { bottom: 24px; left: 80px; }
+    #mobile-left { bottom: 24px; left: 24px; }
+    #mobile-throw { bottom: 24px; right: 64px; }
+
+    #mobile-up:hover,
+    #mobile-left:hover,
+    #mobile-throw:hover,
+    #mobile-right:hover {
+        color: #d02828;
+    }
+
+    h2 { font-size: 24px; }
+
+    #back-button {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+
+    p { font-size: 16px; }
+
+    #tutorial-hint-box {
+        max-width: 190px;
+        padding: 12px 16px;
+    }
+
+    #tutorial-hint-text {
+        font-size: 13px;
+        padding-right: 12px;
+    }
+
+    #tutorial-hint-box.hint-step-1,
+    #tutorial-hint-box.hint-step-3 {
+        bottom: 110px;
+    }
+}

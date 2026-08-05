@@ -102,6 +102,18 @@ class SoundManager {
     }
 
     /**
+     * Stops every sound and rewinds all audio back to the beginning.
+     * @returns {void}
+     */
+    resetAllSounds() {
+        this.AllSounds.forEach(sound => {
+            sound.pause();
+            sound.currentTime = 0;
+        });
+        this.shouldResumeSnore = false;
+    }
+
+    /**
      * Plays a one-shot sound effect from the start, allowing rapid replays.
      * @param {HTMLAudioElement} sound - The sound effect to play.
      * @returns {void}

@@ -87,8 +87,11 @@ class World {
      * @returns {void}
      */
     restart() {
+        stopGame();
         this.resetGameFlags();
+        soundManager.resetAllSounds();
         this.resetLevelObjects();
+        this.resetInputState();
         this.gameStarted = true;
         this.startScreen = null;
         this.resetButtonShownFlags();
@@ -104,8 +107,11 @@ class World {
      * @returns {void}
      */
     showMainScreen() {
+        stopGame();
         this.resetGameFlags();
+        soundManager.resetAllSounds();
         this.resetLevelObjects();
+        this.resetInputState();
         this.gameStarted = false;
         this.startScreen = new startGame(this);
         this.resetButtonShownFlags();
@@ -152,6 +158,22 @@ class World {
         this.lastThrowTime = 0;
         this.lastBottleSpawnTime = Date.now();
         this.endBossSpawned = false;
+    }
+
+    /**
+     * Clears all keyboard/touch input flags so a restarted run starts from a neutral input state.
+     * @returns {void}
+     */
+    resetInputState() {
+        this.keyboard.LEFT = false;
+        this.keyboard.RIGHT = false;
+        this.keyboard.UP = false;
+        this.keyboard.SPACE = false;
+        this.keyboard.D = false;
+        this.keyboard.mobileLeft = false;
+        this.keyboard.mobileRight = false;
+        this.keyboard.mobileUp = false;
+        this.keyboard.mobileD = false;
     }
 
     /**
@@ -307,7 +329,7 @@ class World {
         this.gameOver = false;
         this.characterDied = false;
         this.setEndbossWarningVisible(false);
-        soundManager.stopAllMusic();
+        soundManager.resetAllSounds();
         soundManager.playWinSound();
         stopGame();
         this.hideStartScreenButtons();
@@ -330,7 +352,7 @@ class World {
     endGame() {
         this.gameOver = true;
         this.setEndbossWarningVisible(false);
-        soundManager.stopAllMusic();
+        soundManager.resetAllSounds();
         soundManager.playLoseSound();
         stopGame();
         if (typeof updatePauseButtonVisibility === 'function') updatePauseButtonVisibility();

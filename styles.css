@@ -1,11 +1,13 @@
-*{
+* {
     font-size: larger;
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-html, body{
+html,
+body {
     height: 100%;
     width: 100%;
     min-height: 100vh;
@@ -13,335 +15,31 @@ html, body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url('./assets/img/background.jpg');
-    background-position: center;
+    background: url('./assets/img/background.jpg') center/cover no-repeat;
 }
 
-h1{
+h1 {
     font-size: 61px;
     font-weight: 900;
     margin-bottom: 48px;
 }
 
-#canvas-container{
-    margin: 8px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: min(100%, 720px);
-    max-width: 100%;
-    max-height: calc(100vh - 16px);
-    aspect-ratio: 3 / 2;
-    background-image: url('./assets/img/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 32px;
-    overflow: hidden;
+h2 {
+    font-size: 32px;
+    font-weight: 700;
 }
 
-#portrait-overlay{
-    position: absolute;
-    width: auto;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-    z-index: 1000;
-    background-color: black;
-}
-
-#portrait-overlay.active{
-    display: block;
-}
-
-
-#canvas-container.portrait-active canvas,
-#canvas-container.portrait-active #start-screen-buttons,
-#canvas-container.portrait-active #gameover-screen-buttons,
-#canvas-container.portrait-active #win-score,
-#canvas-container.portrait-active #endboss-warning,
-#canvas-container.portrait-active #tutorial-screen,
-#canvas-container.portrait-active #impressum-screen,
-#canvas-container.portrait-active #pause-button,
-#canvas-container.portrait-active #mute-button,
-#canvas-container.portrait-active .control-button {
-    visibility: hidden;
-}
-
-#canvas-container.portrait-active #fullscreen-button {
-    visibility: visible;
-}
-
-#canvas-container:fullscreen,
-#canvas-container:-webkit-full-screen,
-#canvas-container.pseudo-fullscreen {
-    width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    background-image: url('./assets/img/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-canvas{
-    background-color: transparent;
-    border-radius: 32px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-#tutorial-hint-next.end-tutorial-button{
-    width: auto !important;
-    padding: 0 12px !important;
-    border-radius: 16px !important;
-}
-
-#tutorial-hint-prev,
-#tutorial-hint-next{
-    width: 36px;
-    height: 36px;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 1003;
-}
-
-
-
-#pause-button,
-#fullscreen-button,
-#mute-button,
-.control-button{
-    z-index: 1000;
-    width: 42px;
-    height: 42px;
-    padding: 0;
-    border-radius: 50%;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: black;
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-    touch-action: none;
+p {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-#pause-button {
-    position: absolute;
-    top: 0px;
-    right: 394px;
-}
-
-#mute-button {
-    position: absolute;
-    top: 0px;
-    right: 330px;
-}
-
-#fullscreen-button{
-    position: absolute;
-    top: 0px;
-    right: 276px;
-}
-
-#canvas-container:fullscreen #fullscreen-button,
-#canvas-container:-webkit-full-screen #fullscreen-button,
-#canvas-container.pseudo-fullscreen #fullscreen-button {
-    top: 16px !important;
-    right: 16px !important;
-}
-
-#canvas-container:fullscreen #pause-button,
-#canvas-container:-webkit-full-screen #pause-button,
-#canvas-container.pseudo-fullscreen #pause-button {
-    top: 16px !important;
-    right: 76px !important;
-}
-
-#canvas-container:fullscreen #mute-button,
-#canvas-container:-webkit-full-screen #mute-button,
-#canvas-container.pseudo-fullscreen #mute-button {
-    top: 16px !important;
-    right: 136px !important;
-}
-
-
-#pause-button:hover,
-#fullscreen-button:hover,
-#mute-button:hover,
-.control-button:hover{
-    transform: scale(1.05);
-    background: rgba(255, 255, 255, 1);
-}
-
-.arrow-icon {
-    width: 0;
-    height: 0;
-    display: inline-block;
-}
-
-.arrow-icon.arrow-up {
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-bottom: 12px solid black;
-}
-
-.arrow-icon.arrow-left {
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-right: 12px solid black;
-}
-
-.arrow-icon.arrow-right {
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    border-left: 12px solid black;
-}
-
-.pause-icon {
-    position: relative;
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-}
-
-.pause-icon::before,
-.pause-icon::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 4px;
-    height: 14px;
-    background: black;
-}
-
-.pause-icon::before {
-    left: 0;
-}
-
-.pause-icon::after {
-    left: 9px;
-}
-
-.pause-icon.playing {
-    width: 0;
-    height: 0;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-left: 12px solid black;
-}
-
-.pause-icon.playing::before,
-.pause-icon.playing::after {
-    content: none;
-}
-
-#mute-icon path {
-    fill: black;
-}
-
-#mute-icon .mute-cross {
-    display: none;
-}
-
-#mute-icon.muted .mute-waves {
-    display: none;
-}
-
-#mute-icon.muted .mute-cross {
-    display: block;
-}
-
-#mobile-controls {
-    display: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-}
-
-
-#canvas-container.pseudo-fullscreen {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 90vw !important;
-    height: 90vh !important;
-    max-width: 90vw !important;
-    max-height: 90vh !important;
-    max-height: 100dvh !important;
-    z-index: 99999 !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-}
-
-body.fullscreen-active,
-html.fullscreen-active {
-    overflow: hidden !important;
-    position: fixed !important;
-    width: 90vw !important;
-    height: 90vh !important;
-    height: 90dvh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-#canvas-container:fullscreen canvas,
-#canvas-container:-webkit-full-screen canvas,
-#canvas-container.pseudo-fullscreen canvas {
-    border-radius: 0 !important;
-}
-
-#mobile-left-controls,
-#mobile-right-controls {
-    display: flex;
     flex-direction: column;
-    gap: 16px;
+    height: 100%;
 }
 
-#mobile-up,
-#mobile-left,
-#mobile-throw,
-#mobile-right {
-    display: none;
-}
-
-#start-screen-buttons,
-#gameover-screen-buttons{
-    position: absolute;
-    bottom: 0%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: none;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    max-width: 720px;
-}
-
-#start-screen-buttons button,
-#gameover-screen-buttons button{
-    margin-bottom: 0;
-    border-radius: 16px 16px 0 0;
-}
-
-
-#tutorial-screen, #impressum-screen{
+/* --- Modals & Overlays (Tutorial & Impressum) --- */
+#tutorial-screen,
+#impressum-screen {
     gap: 80px;
     position: absolute;
     top: 50%;
@@ -364,15 +62,7 @@ html.fullscreen-active {
     z-index: 1001;
 }
 
-#tutorial-screen.show-tutorial {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%);
-    pointer-events: auto;
-}
-
-
-
+#tutorial-screen.show-tutorial,
 #impressum-screen.show-impressum {
     opacity: 1;
     visibility: visible;
@@ -380,20 +70,8 @@ html.fullscreen-active {
     pointer-events: auto;
 }
 
-h2{
-    font-size: 32px;
-    font-weight: 700;
-}
-
-p{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 100%;
-}
-
-#impressum-screen p, #tutorial-screen p{
+#impressum-screen p,
+#tutorial-screen p {
     width: 88%;
     height: 64%;
     overflow-y: auto;
@@ -428,7 +106,7 @@ p{
     background-color: rgba(255, 68, 0, 0.85);
 }
 
-#back-button{
+#back-button {
     position: absolute;
     top: 16px;
     left: 16px;
@@ -443,129 +121,23 @@ p{
     background: rgba(255, 68, 0, 0.513);
 }
 
-#tutorial-hint-overlay{
+/* --- Score & Warnings --- */
+#win-score {
+    display: none;
     position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.25s ease, visibility 0.25s ease;
-    z-index: 1002;
-}
-
-#tutorial-hint-overlay.show-hint{
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-.tutorial-hint-navigation{
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 48px;
-}
-
-#tutorial-hint-box{
-    position: absolute;
-    max-width: 240px;
-    background-color: rgb(250, 236, 194);
-    padding: 16px 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 24px;
-    border-radius: 16px;
-    box-shadow: 8px 8px 32px rgba(255, 68, 0, 0.237);
-    transition: top 0.3s ease, bottom 0.3s ease, left 0.3s ease, right 0.3s ease, transform 0.3s ease;
-}
-
-#tutorial-hint-step{
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: rgba(255, 68, 0, 0.9);
-}
-
-#tutorial-hint-text{
-    font-size: 15px;
-    line-height: 1.35;
-    padding-right: 16px;
-}
-
-#tutorial-hint-close{
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 8px;
-    margin: 0;
-    border-radius: 10px;
-}
-
-#tutorial-hint-box.hint-step-1{
-    bottom: 90px;
-    left: 16px;
-}
-
-#tutorial-hint-box.hint-step-2{
-    top: 60px;
-    left: 16px;
-}
-
-#tutorial-hint-box.hint-step-3{
-    bottom: 90px;
-    right: 16px;
-}
-
-#tutorial-hint-box.hint-step-4{
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-
-button{
-    font-size: 24px;
-    font-weight: 550;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 16px;
-    padding: 16px 32px;
-    margin: 16px;
-    border: rgba(255, 166, 0, 0.469);
-    box-shadow: 8px 8px 32px rgba(255, 68, 0, 0.237);
-    background: rgba(250, 235, 215, 0.568);
-}
-
-button:hover , #back-button:hover{
-    background-color: rgba(255, 68, 0, 0.765);
-    color: white;
-    box-shadow: 12px 12px 48px orangered;
-    transform: scale(1.05);
-}
-
-
-#win-score{
-    display:none; 
-    position:absolute;
     top: 20%;
-    left:50%;
+    left: 50%;
     padding: 16px;
-    background: rgba(167, 251, 99, 0.663);    
-    transform:translate(-50%, -50%);
+    background: rgba(167, 251, 99, 0.663);
+    transform: translate(-50%, -50%);
     border-radius: 8px;
-    color:black;
-    font-size:24px;
-    text-align:center;
-    z-index:1000;
+    color: black;
+    font-size: 24px;
+    text-align: center;
+    z-index: 1000;
 }
 
-#endboss-warning{
+#endboss-warning {
     display: none;
     position: absolute;
     top: 12%;
@@ -579,107 +151,4 @@ button:hover , #back-button:hover{
     font-size: 16px;
     text-align: center;
     z-index: 1000;
-}
-
-@media (max-width: 1000px) {
-    #fullscreen-button {
-        display: none !important;
-    }
-    canvas, #canvas-container {
-        width: 100% !important;
-        height: auto !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
-        border-radius: 0 !important;
-        margin: 0 !important;
-    }
-}
-
-@media (pointer: fine) {
-    #mobile-controls {
-        display: none !important;
-    }
-}
-
-
-@media (pointer: coarse) {
-    h1{
-        display: none;
-    }
-    button {
-        font-size: 14px;
-        padding: 12px 24px;
-    }
-    #mobile-controls {
-        display: flex;
-        justify-content: space-between;
-        width: 90%;
-     
-        position: fixed;
-        bottom: 20px;
-        margin-left: 8px;
-        margin-right: 8px;
-        z-index: 10000;
-    }
-    .control-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-    }
-    #mobile-up,
-    #mobile-left,
-    #mobile-throw,
-    #mobile-right,
-    #mobile-left-controls,
-    #mobile-right-controls {
-        display: flex;
-        position: fixed;
-    }
-
-    #mobile-up{
-        bottom: 64px;
-        right: 24px;
-    }
-    #mobile-right{
-        bottom: 24px;
-        left: 80px;
-    }
-    #mobile-left{
-        bottom: 24px;
-        left: 24px;
-    }
-    #mobile-throw{
-        bottom: 24px;
-        right: 64px;
-    }
-
-    #mobile-up:hover,
-    #mobile-left:hover,
-    #mobile-throw:hover,
-    #mobile-right:hover {
-        color: #d02828;
-    }
-    h2{
-        font-size: 24px;
-    }
-    #back-button{
-        font-size: 14px;
-        padding: 6px 12px;
-    }
-    p{
-        font-size: 16px;
-    }
-    #tutorial-hint-box{
-        max-width: 190px;
-        padding: 12px 16px;
-    }
-    #tutorial-hint-text{
-        font-size: 13px;
-        padding-right: 12px;
-    }
-    #tutorial-hint-box.hint-step-1,
-    #tutorial-hint-box.hint-step-3{
-        bottom: 110px;
-    }
 }

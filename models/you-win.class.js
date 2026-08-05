@@ -13,28 +13,6 @@ class YouWin extends DrawableObject {
         this.y = (480 - 240) / 2;
         this.width = 360;
         this.height = 240;
-
-        this.addWinButtons();
-    }
-
-    /**
-     * Wires up the restart and main-screen buttons' click handlers.
-     * @returns {void}
-     */
-    addWinButtons() {
-        this.restartButton = document.getElementById('restart-button');
-        if (this.restartButton) {
-            this.restartButton.onclick = () => {
-                this.restartGame();
-            };
-        }
-
-        this.mainScreenButton = document.getElementById('main-screen-button');
-        if (this.mainScreenButton) {
-            this.mainScreenButton.onclick = () => {
-                this.showMainScreen();
-            };
-        }
     }
 
     /**
@@ -48,25 +26,6 @@ class YouWin extends DrawableObject {
         }
         if (this.world) {
             this.world.restart();
-        }
-    }
-
-    /**
-     * Hides the win-screen buttons, shows the start-screen buttons, and
-     * returns the world to its main screen state.
-     * @returns {void}
-     */
-    showMainScreen() {
-        const gameOverButtonsDiv = document.getElementById('gameover-screen-buttons');
-        if (gameOverButtonsDiv) {
-            gameOverButtonsDiv.style.display = 'none';
-        }
-        const startButtonsDiv = document.getElementById('start-screen-buttons');
-        if (startButtonsDiv) {
-            startButtonsDiv.style.display = 'flex';
-        }
-        if (this.world) {
-            this.world.showMainScreen();
         }
     }
 }

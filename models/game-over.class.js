@@ -34,7 +34,7 @@ class GameOver extends DrawableObject {
         this[id] = document.getElementById(id);
         if (this[id]) {
             this[id].onclick = () => {
-                this.showMainScreen();
+                id === 'restart-button' ? this.restartGame() : this.showMainScreen();
             };
         }
     }

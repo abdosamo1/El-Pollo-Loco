@@ -4,29 +4,26 @@ let keyboard = new Keyboard();
 let intervalIds = [];
 let isPaused = false;
 let autoPausedByPortrait = false;
+let inGameButtonsHideTimeout = null;
 const level1 = createLevel1();
 var soundManager = new SoundManager();
 
-
 /**
- * Sets the paused state and updates the pause button's icon/title.
- * @param {boolean} paused - Whether the game should be paused.
- * @param {boolean} [isAuto=false] - True if this pause was triggered automatically
- * (e.g. by portrait mode) rather than by the user, so it can be auto-resumed later.
+ * Entry point called on page load: creates the world, sizes the canvas, and
+ * wires up resize/orientation/fullscreen event listeners.
  * @returns {void}
  */
-function setPause(paused, isAuto = false) {
-    isPaused = paused;
-    autoPausedByPortrait = isAuto ? paused : false;
-    const pauseButton = document.getElementById('pause-button');
-    const pauseIcon = document.getElementById('pause-icon');
-    if (pauseButton) {
-        pauseButton.title = isPaused ? 'Resume game' : 'Pause game';
-    }
-    if (pauseIcon) {
-        pauseIcon.classList.toggle('playing', isPaused);
-    }
-    this.PauseSoundsState();
+function init() {
+    canvas = document.getElementById("canvas");
+    world = new World(canvas, keyboard);
+    updateCanvasSize();
+    updatePortraitOverlay();
+    updateButtonsVisibility();
+    updateMuteButtonIcon();
+    bindResizeListeners();
+    bindFullscreenListeners();
+    bindContextMenuBlocker();
+    bindOverlayClickOutside();
 }
 
 /**
@@ -39,24 +36,6 @@ function PauseSoundsState() {
     isPaused ? soundManager.AllSounds.forEach(sound => sound.pause()) :
         (world && world.endBossSpawned ? soundManager.playBossMusic() : soundManager.playBackgroundMusic(),
             soundManager.resumeSnoreSound());
-}
-
-/**
- * Entry point called on page load: creates the world, sizes the canvas, and
- * wires up resize/orientation/fullscreen event listeners.
- * @returns {void}
- */
-function init() {
-    canvas = document.getElementById("canvas");
-    world = new World(canvas, keyboard);
-    updateCanvasSize();
-    updatePortraitOverlay();
-    updatePauseButtonVisibility();
-    updateMuteButtonIcon();
-    bindResizeListeners();
-    bindFullscreenListeners();
-    bindContextMenuBlocker();
-    bindOverlayClickOutside();
 }
 
 /**
@@ -183,47 +162,6 @@ function exitPortraitMode(overlay, container) {
     if (autoPausedByPortrait) {
         setPause(false, true);
     }
-}
-
-/**
- * Shows or hides the pause button and mobile controls based on whether a
- * game is actively running, and resets the pause icon when hidden.
- * @returns {void}
- */
-function updatePauseButtonVisibility() {
-    const pauseButton = document.getElementById('pause-button');
-    if (!pauseButton) return;
-
-    const shouldShow = world && world.gameStarted && !world.gameOver && !world.youWin;
-    pauseButton.style.display = shouldShow ? 'block' : 'none';
-    updateMobileControlsVisibility(shouldShow);
-    if (!shouldShow) {
-        resetPauseButtonState(pauseButton);
-    }
-}
-
-/**
- * Shows or hides the mobile control buttons.
- * @param {boolean} shouldShow - Whether the controls should be visible.
- * @returns {void}
- */
-function updateMobileControlsVisibility(shouldShow) {
-    const mobileControls = document.getElementById('mobile-controls');
-    if (mobileControls) {
-        mobileControls.style.display = shouldShow ? 'flex' : 'none';
-    }
-}
-
-/**
- * Resets the pause button/icon back to their default (not-paused) look.
- * @param {HTMLElement} pauseButton - The pause button element.
- * @returns {void}
- */
-function resetPauseButtonState(pauseButton) {
-    isPaused = false;
-    const pauseIcon = document.getElementById('pause-icon');
-    if (pauseIcon) pauseIcon.classList.remove('playing');
-    pauseButton.title = 'Pause game';
 }
 
 /**

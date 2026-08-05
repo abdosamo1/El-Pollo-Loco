@@ -92,22 +92,40 @@ class StatusBar extends DrawableObject {
      */
     resolveYPosition() {
         if (this.mobileAndTabletCheck()) {
-            switch (this.type) {
-                case 'health': return 8;
-                case 'coin': return 48;
-                case 'bottle': return 88;
-                case 'endboss': return 8;
-                default: return 8;
-            }
+            const mobileYPositions = this.getMobileYPositions();
+            return mobileYPositions[this.type] ?? mobileYPositions.default;
         } else {
-            switch (this.type) {
-                case 'health': return 24;
-                case 'coin': return 72;
-                case 'bottle': return 120;
-                case 'endboss': return 24;
-                default: return 24;
-            }
+            const normalYPositions = this.getnormalYPositions();
+            return normalYPositions[this.type] ?? normalYPositions.default;
         }
+    }
+
+    /**
+     * returns the y positions for the mobile and tablet devices for each status bar type.
+     * @returns {Object} An object containing the y positions for each status bar type on mobile/tablet devices.
+     */
+    getMobileYPositions() {
+        return {
+            health: 8,
+            coin: 56,
+            bottle: 104,
+            endboss: 8,
+            default: 8,
+        };
+    }
+
+    /**
+     * returns the y positions for the normal devices for each status bar type.
+     * @returns {Object} An object containing the y positions for each status bar type on normal devices.
+     */
+    getnormalYPositions() {
+        return {
+            health: 24,
+            coin: 72,
+            bottle: 120,
+            endboss: 24,
+            default: 24,
+        };
     }
 
     /**

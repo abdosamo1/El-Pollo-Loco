@@ -1,5 +1,3 @@
-
-
 /**
  * Builds level 1: a fixed layout of chickens, small chickens, bottles/coins, clouds, and background layers.
  * @returns {Level} The constructed level instance.
@@ -8,7 +6,8 @@ function createLevel1() {
     return new Level(
         buildLevel1Enemies(),
         buildLevel1Clouds(),
-        buildLevel1BackgroundPaths(),
+        buildLevel1BackgroundPathsForSet(1),
+        buildLevel1BackgroundPathsForSet(2),
         buildLevel1Collectables()
     );
 }
@@ -44,17 +43,18 @@ function buildLevel1Clouds() {
     return Array.from({ length: 4 }, (_, i) => new Cloud(i * 1400));
 }
 
+
 /**
- * Returns the ordered image paths for level 1's tiled background layers.
- * @returns {string[]} The tiled background layer image paths for level 1.
+ * Returns the background image paths for level 1's tiled background layers, with the 'number' placeholder replaced by the given set number.
+ * @param {number} setNumber - The set number to replace the 'number' placeholder with.
+ * @returns {string[]} The background image paths with the 'number' placeholder replaced.
  */
-function buildLevel1BackgroundPaths() {
-   return [
+function buildLevel1BackgroundPathsForSet(setNumber) {
+    return [
         './assets/img/5_background/layers/air.png',
-        './assets/img/5_background/layers/3_third_layer/full.png',
-        './assets/img/5_background/layers/2_second_layer/full.png',
-        './assets/img/5_background/layers/1_first_layer/full.png',
+        `./assets/img/5_background/layers/3_third_layer/${setNumber}.png`,
+        `./assets/img/5_background/layers/2_second_layer/${setNumber}.png`,
+        `./assets/img/5_background/layers/1_first_layer/${setNumber}.png`,
     ];
 }
-
 
