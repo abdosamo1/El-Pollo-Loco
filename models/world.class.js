@@ -58,16 +58,13 @@ class World {
      * @returns {void}
      */
     updateStatusBarPositions() {
-        const windowWidth = window.innerWidth;
-        const narrow = windowWidth <= 1020;
-
-        this.healthBar.y = 24;
-        this.coinBar.y = narrow ? 54 : 72;
-        this.bottleBar.y = narrow ? 84: 120;
-
-        if (this.endBossBar) {
-            this.endBossBar.y = 40;
-        }
+        [this.healthBar, this.coinBar, this.bottleBar, this.endBossBar]
+            .filter(Boolean)
+            .forEach((bar) => {
+                if (typeof bar.updatePositionForViewport === 'function') {
+                    bar.updatePositionForViewport();
+                }
+            });
     }
 
     /**

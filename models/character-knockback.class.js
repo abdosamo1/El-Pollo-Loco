@@ -81,8 +81,9 @@ Object.assign(Character.prototype, {
     },
 
     /**
-     * @returns {boolean} True while recovering from a hit (knockback slide +
-     * landing), overriding the base timer-based hurt window.
+     * Returns true while the character is in the knockback recovery state, which overrides the base
+     * hurt timer and prevents movement input until the knockback slide finishes and the character lands.
+     * @returns {boolean} True while recovering from a hit and knockback slide.
      */
     isHurt() {
         return this.isRecoveringFromHit;

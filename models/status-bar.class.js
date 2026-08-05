@@ -1,5 +1,8 @@
 /** A HUD status bar (health, coins, bottles, or endboss health) rendered from percentage-tiered sprites. */
 class StatusBar extends DrawableObject {
+    static instances = new Set();
+    static viewportListenerAttached = false;
+
     HEALTHBAR_IMAGES = [
         './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png',
         './assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/20.png',
@@ -48,9 +51,27 @@ class StatusBar extends DrawableObject {
         this.loadImages(this.resolveImageSet());
         this.setPercentage(this.type == 'health' ? 100 : 0);
         this.x = 20;
-        this.y = this.resolveYPosition();
+        this.updatePositionForViewport();
         this.width = 160;
         this.height = 48;
+        StatusBar.instances.add(this);
+        StatusBar.attachViewportListener();
+    }
+
+    /**
+     * Attaches one global viewport listener so all status bars can recalculate Y on resize/orientation changes.
+     * @returns {void}
+     */
+    static attachViewportListener() {
+        if (StatusBar.viewportListenerAttached) return;
+
+        const refreshAllStatusBars = () => {
+            StatusBar.instances.forEach((statusBar) => statusBar.updatePositionForViewport());
+        };
+
+        window.addEventListener('resize', refreshAllStatusBars);
+        window.addEventListener('orientationchange', refreshAllStatusBars);
+        StatusBar.viewportListenerAttached = true;
     }
 
     /**
@@ -66,18 +87,45 @@ class StatusBar extends DrawableObject {
     }
 
     /**
-     * Resolves the correct y position for this bar's type.
+     * Resolves the correct y position for this bar's type and detectes if mobile device to adjust position accordingly.
      * @returns {number} The HUD y position matching this bar's type.
      */
     resolveYPosition() {
-        switch (this.type) {
-            case 'health': return 24;
-            case 'coin': return 72;
-            case 'bottle': return 120;
-            case 'endboss': return 60;
-            default: return 24;
+        if (this.mobileAndTabletCheck()) {
+            switch (this.type) {
+                case 'health': return 8;
+                case 'coin': return 48;
+                case 'bottle': return 88;
+                case 'endboss': return 8;
+                default: return 8;
+            }
+        } else {
+            switch (this.type) {
+                case 'health': return 24;
+                case 'coin': return 72;
+                case 'bottle': return 120;
+                case 'endboss': return 24;
+                default: return 24;
+            }
         }
     }
+
+    /**
+     * Recomputes the Y position based on current viewport characteristics.
+     * @returns {void}
+     */
+    updatePositionForViewport() {
+        this.y = this.resolveYPosition();
+    }
+
+    /**
+     * Checks if the device is mobile or tablet to adjust the status bar position accordingly.
+     * @returns {boolean} True if the device is mobile or tablet, false otherwise.
+     */
+    mobileAndTabletCheck() {
+        return window.innerWidth <= 1000 || window.innerHeight <= 600;
+    }
+    
 
     /**
      * Updates the bar's percentage and swaps in the matching tiered sprite.
@@ -97,10 +145,10 @@ class StatusBar extends DrawableObject {
     resolveImageIndex() {
         const percentage = Math.max(0, Math.min(100, this.percentage));
         return percentage == 100 ? 5 :
-        percentage >= 80 ? 4 :
-        percentage >= 60 ? 3 :
-        percentage >= 40 ? 2 :
-        percentage >= 1 ? 1 :
-        0;
+            percentage >= 80 ? 4 :
+                percentage >= 60 ? 3 :
+                    percentage >= 40 ? 2 :
+                        percentage >= 1 ? 1 :
+                            0;
     }
 }

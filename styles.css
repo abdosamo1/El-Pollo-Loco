@@ -143,19 +143,19 @@ canvas{
 #pause-button {
     position: absolute;
     top: 0px;
-    right: 8px;
+    right: 394px;
 }
 
 #mute-button {
     position: absolute;
     top: 0px;
-    right: 64px;
+    right: 330px;
 }
 
 #fullscreen-button{
     position: absolute;
     top: 0px;
-    right: 120px;
+    right: 276px;
 }
 
 #canvas-container:fullscreen #fullscreen-button,
@@ -584,6 +584,14 @@ button:hover , #back-button:hover{
 @media (max-width: 1000px) {
     #fullscreen-button {
         display: none !important;
+    }
+    canvas, #canvas-container {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
     }
 }
 

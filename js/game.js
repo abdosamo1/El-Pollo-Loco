@@ -38,7 +38,7 @@ function PauseSoundsState() {
 
     isPaused ? soundManager.AllSounds.forEach(sound => sound.pause()) :
         (world && world.endBossSpawned ? soundManager.playBossMusic() : soundManager.playBackgroundMusic(),
-        soundManager.resumeSnoreSound());
+            soundManager.resumeSnoreSound());
 }
 
 /**
@@ -56,6 +56,7 @@ function init() {
     bindResizeListeners();
     bindFullscreenListeners();
     bindContextMenuBlocker();
+    bindOverlayClickOutside();
 }
 
 /**
@@ -163,7 +164,7 @@ function enterPortraitMode(overlay, container) {
     overlay.classList.add('active');
     container.classList.add('portrait-active');
     if (overlay.paused) {
-        overlay.play().catch(() => {});
+        overlay.play().catch(() => { });
     }
     if (!isPaused && world && world.gameStarted && !world.gameOver && !world.youWin) {
         setPause(true, true);
@@ -232,7 +233,7 @@ function resetPauseButtonState(pauseButton) {
  */
 function showOverlay(type) {
     type === 'tutorial' ?
-        document.getElementById("tutorial-screen").classList.add("show-tutorial"):
+        document.getElementById("tutorial-screen").classList.add("show-tutorial") :
         document.getElementById("impressum-screen").classList.add("show-impressum");
 }
 
@@ -277,17 +278,23 @@ function updateMuteButtonIcon() {
     }
 }
 
-document.addEventListener('click', (e) => {
-    const tutorialScreen = document.getElementById("tutorial-screen");
-    const impressumScreen = document.getElementById("impressum-screen");
-    const tutorialButton = document.getElementById("tutorial-button");
-    const impressumButton = document.getElementById("impressum-button");
-    const clickedOutsideTutorial = tutorialScreen.classList.contains("show-tutorial") && !tutorialScreen.contains(e.target) && e.target !== tutorialButton;
-    const clickedOutsideImpressum = impressumScreen.classList.contains("show-impressum") && !impressumScreen.contains(e.target) && e.target !== impressumButton;
-    if (clickedOutsideTutorial || clickedOutsideImpressum) {
-        closeOverlay();
-    }
-});
+/**
+ * Closes the tutorial or impressum overlay when clicking outside of them.
+ * @returns {void}
+ */
+function bindOverlayClickOutside() {
+    document.addEventListener('click', (e) => {
+        const tutorialScreen = document.getElementById("tutorial-screen");
+        const impressumScreen = document.getElementById("impressum-screen");
+        const tutorialButton = document.getElementById("tutorial-button");
+        const impressumButton = document.getElementById("impressum-button");
+        const clickedOutsideTutorial = tutorialScreen.classList.contains("show-tutorial") && !tutorialScreen.contains(e.target) && e.target !== tutorialButton;
+        const clickedOutsideImpressum = impressumScreen.classList.contains("show-impressum") && !impressumScreen.contains(e.target) && e.target !== impressumButton;
+        if (clickedOutsideTutorial || clickedOutsideImpressum) {
+            closeOverlay();
+        }
+    });
+}
 
 /**
  * Starts a `setInterval` that skips its callback while the game is paused,
