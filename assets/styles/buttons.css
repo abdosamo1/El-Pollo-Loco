@@ -59,6 +59,7 @@ button:hover,
     visibility: visible;
     pointer-events: auto;
     transform: translateY(0) scale(1);
+    z-index: 1505;
 }
 
 #show-in-game-buttons {

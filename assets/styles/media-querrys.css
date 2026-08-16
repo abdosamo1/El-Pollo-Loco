@@ -5,6 +5,9 @@
         display: none !important;
     }
 
+    button {
+        font-size: 16px !important;
+    }
     canvas,
     #canvas-container {
         width: 100% !important;
